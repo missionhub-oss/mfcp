@@ -61,6 +61,16 @@
 
 每个任务使用原 Issue 组织沟通，任务合同保存负责人、导师、难度、规则版本、预期成果和验收条件。一个独立交付目标对应一个计分任务。
 
+GitHub 的唯一 Assignee 指定负责人，`difficulty/level0` 至 `difficulty/level4`
+标签指定难度，`year/YYYY` 标签指定任务年度。维护者使用
+`@mfcp-progress configure mentor @用户名` 指定 Mentor，Bot 读取原生字段
+保存任务配置。验收使用 `accept reproduction`、`accept validation`，结算使用
+`settle` 加上游 PR 链接。任务关闭与重新打开使用 GitHub 原生操作。
+
+Mentor 可以通过 `configure assignee @用户名` 让 Bot 设置 GitHub Assignee。
+目标成员必须已注册，且是 Issue 作者或已有评论的参与者。Bot 保留已有
+负责人及计分记录，通过 GitHub 分配事件避免重复执行过期命令。
+
 | 阶段 | 页面进度 | 验收依据 |
 | --- | --- | --- |
 | 复现与方案确认 | 20% | 真实复现记录、问题分析及导师确认 |

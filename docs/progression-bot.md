@@ -46,34 +46,62 @@ actual merged PRs.
 
 ## Task commands
 
-Post commands as new comments on a `kind/task` issue. Edited command comments
-are rejected. Put `@mfcp-progress configure` on the first line, followed by
-exactly one fenced `json` block. Substitute actual registered usernames and
-evidence URLs in the following field descriptions.
+Use GitHub Assignees to assign a task to exactly one registered contributor.
+Apply `kind/task`, one `difficulty/level0`–`difficulty/level4` label and one
+`year/YYYY` label, such as `year/2026`. The year must have published rules.
+These native fields determine the participant, difficulty and annual rules.
 
-| Command | JSON fields | Authorization |
-| --- | --- | --- |
-| `configure` | `participant`, `mentor`, `difficulty` (0–4), `year` | Annual maintainer; assign the issue to its participant first |
-| `stage` | `participant`, `stage` (`reproduced` or `validated`), `evidence` (URL array) | Assigned, authorized mentor |
-| `settle` | `participant`, `pull_requests` (canonical upstream PR URL array) | Annual maintainer |
-| `endorse` | `participant`, `level` (3 or 4), `passed` (true), `summary` | Independent authorized mentor |
-| `interview` | `participant`, `level` (3), `passed` (true), `summary`, `reference` | Independent authorized interviewer |
-| `recommend` | `participant`, `level` (4), `passed` (true), `summary`, `evidence` (URL array) | Independent registered L3/L4 contributor |
-| `promote` | `participant`, `level` (3 or 4), `summary`, `mentor_comment`, plus `interview_comment` for L3 or `recommendations` for L4 | Independent annual maintainer |
+A Mentor Team member without repository assignment permission can post
+`@mfcp-progress configure assignee @username`. The bot verifies registration,
+participation as the issue author or a commenter, and GitHub assignability,
+then adds that user as the native Assignee. This operation does not require
+the annual maintainer role. It applies to open task issues, preserves existing
+owners and recorded contributions, and uses assignment events to avoid
+replaying an old command after a later manual assignment or unassignment.
 
-Summaries contain at least ten characters. `mentor_comment`,
-`interview_comment` and entries in `recommendations` link to the corresponding
-immutable evidence comments in this repository. Store private interview notes
-outside the public repository; publish only the outcome and an appropriate
-reference.
+Post a new plain-text comment starting with a command on its first line.
+For example, `@mfcp-progress configure mentor @zevorn` assigns the mentor.
+A bare numeric GitHub ID is also accepted: `configure mentor 62325246`.
+Task commands resolve the contributor from the issue's single Assignee.
+
+| Command after `@mfcp-progress` | Authorization |
+| --- | --- |
+| `configure assignee @username` | Active Mentor Team member; target must be registered and participating in this issue |
+| `configure mentor @username` | Annual maintainer and active Mentor Team member |
+| `accept reproduction evidence-url ...` | Assigned mentor |
+| `accept validation evidence-url ...` | Assigned mentor, after reproduction acceptance |
+| `settle upstream-pr-url ...` | Annual maintainer and active Mentor Team member |
+| `endorse @candidate L3` or `endorse @candidate L4` | Independent Mentor Team member |
+| `interview @candidate L3 evidence-url` | Independent annual interviewer and Mentor Team member |
+| `recommend @candidate L4 evidence-url ...` | Independent L3/L4 contributor and Mentor Team member |
+| `promote @candidate L3 mentor comment-url interview comment-url` | Independent annual maintainer and Mentor Team member |
+| `promote @candidate L4 mentor comment-url recommend comment-url comment-url ...` | Independent annual maintainer and Mentor Team member |
+
+The endorsement, interview, recommendation and promotion commands require a
+public explanation of at least ten characters below the command line. They
+record a passing assessment; use ordinary comments to discuss incomplete
+assessments. Promotion links identify the corresponding immutable comments in
+this repository. Edited command comments are rejected. Quoted or fenced
+examples do not execute. Links use HTTPS and may include comment anchors.
+
+See [完整命令示例](bot-command-examples.md) for copyable comment templates,
+native task assignment, acceptance, settlement and L3/L4 review examples.
 
 Accept reproduction before validation. After validation and upstream merge,
-post settlement evidence and close the issue as completed. A maintainer must
+post `settle` with the upstream PR URLs and close the issue as completed.
+An open issue keeps the settlement command as evidence without awarding XP.
+A maintainer must
 close the issue for automatic close-event settlement; a maintainer can also
 post a new settlement command after closure. Every upstream commit must be
 attributed to the participant and include the author's and authorized mentor's
 DCO sign-offs. Each upstream PR receives credit once among active settlements.
 The 2026 rules currently accept GitHub PRs in `zephyrproject-rtos/zephyr`.
+
+Configuration records the native Assignee, difficulty and annual rule version.
+Acceptance and settlement require these issue fields to remain consistent with
+the recorded task. Label or Assignee edits do not rewrite contribution history.
+Correct accidental changes before continuing; use a separate issue for a new
+independent assignment or delivery scope.
 
 Reopening a credited task creates a reversal PR. Experience is deducted only
 when the PR merges. A fresh mentor validation after the reversal merge is
@@ -124,9 +152,10 @@ one contributor record and positive L0–L2 updates.
 
 Enable repository auto-merge for reviewed proposals and GitHub Pages with
 GitHub Actions as its build source. Keep the `github-pages` environment limited
-to the protected default branch. Annual mentor and reviewer rosters must be
-populated with real authorized people before mentor-dependent operations can
-succeed. An empty mentor roster does not prevent registration promotion.
+to the protected default branch. Populate annual maintainer, interviewer and
+reviewer roles with real authorized people for their respective operations.
+Record mentor DCO signature metadata before settlement. Mentor eligibility
+comes from the Team; registration promotion uses merged PR evidence.
 
 For read-only reconciliation, run `node scripts/progression.mjs --reconcile`
 with `GITHUB_TOKEN` and `MFCP_APP_SLUG`. To process queued events, manually run

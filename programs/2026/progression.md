@@ -6,6 +6,10 @@
 规则版本为 `2026.v1`，机器读取的数量与积分条件保存在
 [rules/v1.json](rules/v1.json)。每条晋级记录保存规则版本及文件 SHA。
 
+任务通过 `year/2026` 标签选择本年度规则，通过 `difficulty/level0` 至
+`difficulty/level4` 标签选择难度，并通过唯一 Assignee 分配负责人。
+Mentor 指定、阶段验收和经验结算使用 [Bot 简短命令](../../docs/bot-command-examples.md)。
+
 ## L0 → L1
 
 1. Fork 本仓库。
