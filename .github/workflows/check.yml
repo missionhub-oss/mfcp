@@ -21,6 +21,8 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
+      - name: Test trusted command handling
+        run: npm test
       - name: Read proposed merge as data
         if: github.event_name == 'pull_request_target'
         id: input

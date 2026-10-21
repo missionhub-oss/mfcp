@@ -1,36 +1,13 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
-import { marked } from 'marked';
-import { z } from 'zod';
 import { execFileSync } from 'node:child_process';
 import { REPOSITORY_ID } from './github.mjs';
 import { isMentor, requireMentor } from './mentors.mjs';
 import { participantPath, normalizeProfile, validateProfile, rulesSchema, governanceSchema,
   totals, eligible, activeSettlement, digest, equal } from './profile.mjs';
-
-const person = z.string().regex(/^[a-z0-9-]{1,39}$/i);
-const commands = {
-  configure: z.strictObject({participant: person, mentor: person, difficulty: z.number().int().min(0).max(4), year: z.number().int().min(2026)}),
-  stage: z.strictObject({participant: person, stage: z.enum(['reproduced', 'validated']), evidence: z.array(z.url()).nonempty()}),
-  settle: z.strictObject({participant: person, pull_requests: z.array(z.url()).nonempty()}),
-  promote: z.strictObject({participant: person, level: z.union([z.literal(3), z.literal(4)]), summary: z.string().min(10),
-    mentor_comment: z.url(), interview_comment: z.url().optional(), recommendations: z.array(z.url()).default([])}),
-  endorse: z.strictObject({participant: person, level: z.number().int().min(3).max(4), passed: z.literal(true), summary: z.string().min(10)}),
-  interview: z.strictObject({participant: person, level: z.literal(3), passed: z.literal(true), summary: z.string().min(10), reference: z.string().min(1)}),
-  recommend: z.strictObject({participant: person, level: z.literal(4), passed: z.literal(true), summary: z.string().min(10), evidence: z.array(z.url()).nonempty()}),
-};
-
-export function parseCommand(body, slug) {
-  const tokens = marked.lexer(body);
-  const first = tokens.find(t => t.type !== 'space');
-  if (first?.type !== 'paragraph') return null;
-  const match = /^@([a-z0-9-]+)(?:\[bot\])?\s+(configure|stage|settle|promote|endorse|interview|recommend)$/i.exec(first.text.trim());
-  if (!match || match[1].toLowerCase() !== slug?.toLowerCase()) return null;
-  const blocks = tokens.filter(t => t.type === 'code');
-  if (blocks.length !== 1 || blocks[0].lang !== 'json') throw new Error('Include exactly one JSON command block.');
-  const action = match[2].toLowerCase();
-  return {action, data: commands[action].parse(JSON.parse(blocks[0].text))};
-}
+import { parseCommand, taskSettings } from './commands.mjs';
+import { planAssignment } from './assignments.mjs';
+export { parseCommand } from './commands.mjs';
 
 const yearAt = time => Number(new Intl.DateTimeFormat('en', {timeZone: 'Asia/Shanghai', year: 'numeric'}).format(new Date(time)));
 const eventKey = source => `${source.kind}-${source.comment ?? source.pr ?? source.event}`;
@@ -133,14 +110,24 @@ export async function hasPendingReversal(client, participantId, slug) {
 
 export async function buildProposal(client, source, ref, {slug, reviewPr = null} = {}) {
   const profiles = await readProfiles(client, ref);
-  let selected, proof, action, data, issue, settlementAuthor;
+  let selected, proof, action, data, issue, settlementAuthor, settings, commandSource;
   if (source.kind === 'comment') {
     const read = await readComment(client, source, slug);
     ({action, data} = read.command);
     proof = read.proof;
-    if (['endorse', 'interview', 'recommend'].includes(action)) return null;
-    selected = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
+    if (['endorse', 'interview', 'recommend'].includes(action)) {
+      const candidate = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
+      if (!candidate) throw new Error('The candidate must be registered.');
+      const {governance} = await currentRules(client, ref, proof.at);
+      await evidenceComment(client, read.comment.html_url, action, candidate.profile, data.level, governance, ref, slug);
+      return {mode: 'evidence', action, participant: candidate.profile.github_login, source};
+    }
     issue = await client.request(`${client.root}/issues/${source.issue}`);
+    if (action === 'assign') return planAssignment(client, issue, profiles, data.assignee, proof);
+    if (['configure', 'stage', 'settle'].includes(action)) {
+      settings = taskSettings(issue);
+      selected = profiles.find(p => p.profile.github_id === settings.participant_id);
+    } else selected = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
   } else if (source.kind === 'registration') {
     const pr = await client.request(`${client.root}/pulls/${source.pr}`);
     const repo = await client.metadata();
@@ -163,14 +150,21 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     const comments = await client.list(`${client.root}/issues/${source.issue}/comments`);
     const contract = profiles.find(p => p.profile.contributions.some(c => c.issue === source.issue));
     if (!contract) return null;
+    settings = taskSettings(issue);
+    if (settings.participant_id !== contract.profile.github_id) throw new Error('Issue Assignee differs from the recorded task owner.');
     await requireMentor(event.actor);
+    const closingRules = await currentRules(client, ref, event.created_at);
     const candidates = comments.filter(c => {
-      try { const parsed = parseCommand(c.body, slug); return parsed?.action === 'settle' &&
-        parsed.data.participant.toLowerCase() === contract.profile.github_login.toLowerCase(); } catch { return false; }
+      if (c.user.type !== 'User' || c.created_at !== c.updated_at || !closingRules.governance.maintainers.includes(c.user.id)) return false;
+      try {return parseCommand(c.body, slug)?.action === 'settle';} catch {return false;}
     });
-    const comment = candidates.at(-1);
+    let comment;
+    for (const candidate of candidates.reverse()) {
+      if (await isMentor(candidate.user)) {comment = candidate; break;}
+    }
     if (!comment) throw new Error('Post settlement evidence before closing the task.');
     const read = await readComment(client, {kind: 'comment', issue: source.issue, comment: comment.id}, slug);
+    commandSource = read.proof.source;
     selected = contract;
     action = 'settle';
     data = read.command.data;
@@ -200,19 +194,26 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
   const policy = {id: rules.id, sha};
   let mode = 'auto';
   let task = issue && after.contributions.find(c => c.issue === issue.number);
+  if (settings && task && (task.difficulty !== settings.difficulty || Number(task.policy.id.split('.')[0]) !== settings.year)) {
+    throw new Error('Issue labels differ from the recorded task rules; restore the configured difficulty and year.');
+  }
   if (issue?.pull_request) throw new Error('Use an issue for contribution commands.');
   if (['configure', 'stage', 'settle'].includes(action) && !issue.labels.some(l => l.name === 'kind/task')) throw new Error('Expected kind/task issue.');
   if (action === 'configure') {
     requireRole(governance.maintainers, proof.actor, 'Only maintainers can configure tasks.');
     if (task || profiles.some(p => p.profile.contributions.some(c => c.issue === issue.number))) throw new Error('Task already has a contract.');
-    if (!issue.assignees.some(u => u.id === before.github_id)) throw new Error('Assign the task to this contributor first.');
-    const mentor = await client.request(`users/${encodeURIComponent(data.mentor)}`);
+    const mentorRecord = profiles.find(p => /^\d+$/.test(data.mentor)
+      ? p.profile.github_id === Number(data.mentor)
+      : p.profile.github_login.toLowerCase() === data.mentor.replace(/^@/, '').toLowerCase());
+    if (!mentorRecord) throw new Error('The specified mentor must be registered.');
+    const mentor = await client.request(`users/${encodeURIComponent(mentorRecord.profile.github_login)}`);
+    if (mentor.id !== mentorRecord.profile.github_id) throw new Error('Mentor registration no longer matches GitHub.');
     await requireMentor(mentor);
     if (mentor.id === before.github_id || !profiles.some(p => p.profile.github_id === mentor.id)) throw new Error('Choose a registered, independent Mentor Team member.');
-    const contractRules = await currentRules(client, ref, proof.at, data.year);
+    const contractRules = await currentRules(client, ref, proof.at, settings.year);
     after.contributions.push({id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
-      mentor_id: mentor.id, difficulty: data.difficulty,
-      policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[data.difficulty],
+      mentor_id: mentor.id, difficulty: settings.difficulty,
+      policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[settings.difficulty],
       configuration: proof, stages: [], settlements: []});
   } else if (action === 'stage') {
     if (!task || task.mentor_id !== proof.actor || proof.actor === before.github_id) throw new Error('Only the assigned mentor can accept a stage.');
@@ -223,11 +224,12 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     requireRole(governance.maintainers, proof.actor, 'Final settlement requires a maintainer.');
     if (settlementAuthor) requireRole(governance.maintainers, settlementAuthor, 'Settlement evidence must be submitted by a maintainer.');
     if (!task || activeSettlement(after, task)) return null;
-    if (issue.state !== 'closed' || issue.state_reason !== 'completed') throw new Error('Close the task as completed after acceptance.');
+    if (issue.state !== 'closed' || issue.state_reason !== 'completed') return null;
     const latestStage = task.stages.filter(s => s.name === 'validated').at(-1);
     const lastAdjustment = after.adjustments.filter(a => a.contribution_id === task.id).at(-1);
     const reversal = lastAdjustment && await client.request(`${client.root}/pulls/${lastAdjustment.review_pr}`);
     if (!latestStage || reversal && (!reversal.merged_at || Date.parse(latestStage.proof.at) <= Date.parse(reversal.merged_at))) throw new Error('A fresh mentor validation after reversal merge is required.');
+    if (Date.parse(latestStage.proof.at) > Date.parse(proof.at)) throw new Error('Settlement must follow mentor validation.');
     const mentor = governance.mentors.find(m => m.github_id === task.mentor_id);
     if (!mentor || mentor.github_id === before.github_id) throw new Error('Independent mentor DCO signature metadata is required.');
     const verifiedStage = await readComment(client, latestStage.proof.source, slug);
@@ -287,7 +289,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
   after.last_event = source;
   after.updated_at = proof.at;
   validateProfile(after, selected.path);
-  return {path: selected.path, before, after, source, mode, action, policy, governance,
+  return {path: selected.path, before, after, source, commandSource, mode, action, policy, governance,
     approvals: action === 'promote' ? rules.review_approvals : 1,
     branch: `progress/${mode}/${action === 'revoke' ? 'reopened' : action}-${before.github_id}-${key}`};
 }
