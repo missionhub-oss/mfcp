@@ -2,12 +2,23 @@
 // SPDX-License-Identifier: MIT
 import { createClient, validatePullRequest, validatePullRequestJson } from './membership.mjs';
 import { verifyIntegrity } from './lib/integrity.mjs';
+import { execFileSync } from 'node:child_process';
+
+async function verifyRepositoryData(client, number) {
+  const input = JSON.parse(execFileSync(process.execPath, ['scripts/read-pr-input.mjs'], {
+    encoding: 'utf8', env: {...process.env, PR_NUMBER: String(number)}, timeout: 300_000,
+  }));
+  execFileSync(process.execPath, ['scripts/check.mjs', input.directory], {timeout: 120_000});
+  execFileSync(process.execPath, ['scripts/build-pages.mjs', input.directory], {timeout: 120_000});
+  return 'Proposed JSON, annual rules, script syntax and directory build verified with trusted code.';
+}
 
 const client = createClient(process.env.GITHUB_TOKEN, process.env.GITHUB_REPOSITORY);
 const checks = [
   ['JSON format and fields', validatePullRequestJson],
   ['validate', validatePullRequest],
   ['Progression integrity', verifyIntegrity],
+  ['check', verifyRepositoryData],
 ];
 const reports = [];
 for (const pr of await client.list(`${client.root}/pulls?state=open`)) {
