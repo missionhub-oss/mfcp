@@ -2,8 +2,6 @@ name: Progression integrity
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, edited, ready_for_review]
-  pull_request_review:
-    types: [submitted, dismissed]
 permissions:
   contents: read
   issues: read
