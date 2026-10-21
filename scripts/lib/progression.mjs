@@ -7,6 +7,7 @@ import { participantPath, normalizeProfile, validateProfile, rulesSchema, govern
   totals, eligible, activeSettlement, digest, equal } from './profile.mjs';
 import { parseCommand, taskSettings } from './commands.mjs';
 import { planAssignment } from './assignments.mjs';
+import {updateMentorSection, readMentorCommand, assertMentorSection} from './mentor-section.mjs';
 export { parseCommand } from './commands.mjs';
 
 const yearAt = time => Number(new Intl.DateTimeFormat('en', {timeZone: 'Asia/Shanghai', year: 'numeric'}).format(new Date(time)));
@@ -51,6 +52,48 @@ async function readComment(client, source, slug) {
   if (comment.created_at !== comment.updated_at) throw new Error('Commands are immutable; post a new comment instead of editing.');
   return {command, proof: {source, actor: comment.user.id, at: comment.created_at,
     digest: digest(comment.body), details: JSON.stringify(command.data)}, comment};
+}
+
+export async function validateMentorConfiguration(client, issue, profiles, read, ref) {
+  if (issue.pull_request || !issue.labels.some(label => label.name === 'kind/task')) throw new Error('Configure a mentor on a kind/task issue.');
+  const {governance} = await currentRules(client, ref, read.proof.at);
+  requireRole(governance.maintainers, read.proof.actor, 'Only maintainers can configure tasks.');
+  const name = read.command.data.mentor;
+  const record = profiles.find(p => /^\d+$/.test(name)
+    ? p.profile.github_id === Number(name)
+    : p.profile.github_login.toLowerCase() === name.replace(/^@/, '').toLowerCase());
+  if (!record) throw new Error('The specified mentor must be registered.');
+  const mentor = await client.request(`users/${encodeURIComponent(record.profile.github_login)}`);
+  if (mentor.id !== record.profile.github_id) throw new Error('Mentor registration no longer matches GitHub.');
+  await requireMentor(mentor);
+  return {mentor, proof: read.proof};
+}
+
+export function mentorCommandCandidates(comments, at, slug) {
+  return comments.filter(comment => {
+    if (comment.user.type !== 'User' || comment.created_at !== comment.updated_at || Date.parse(comment.created_at) > Date.parse(at)) return false;
+    try {return parseCommand(comment.body, slug)?.action === 'configure';} catch {return false;}
+  }).sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || b.id - a.id);
+}
+
+export async function resolveTaskMentor(client, issue, profiles, ref, at, slug, task) {
+  if (task) {
+    const read = await readComment(client, task.configuration.source, slug);
+    if (read.command.action !== 'configure' || read.proof.digest !== task.configuration.digest) throw new Error('Mentor configuration changed or disappeared.');
+    const configuration = await validateMentorConfiguration(client, issue, profiles, read, ref);
+    if (configuration.mentor.id !== task.mentor_id) throw new Error('Mentor identity differs from the recorded task.');
+    assertMentorSection(issue.body, configuration.mentor, read.comment.html_url);
+    return configuration;
+  }
+  const url = new URL(readMentorCommand(issue.body));
+  const repo = await client.metadata();
+  const match = /^#issuecomment-([1-9][0-9]*)$/.exec(url.hash);
+  if (url.origin !== 'https://github.com' || url.pathname !== `/${repo.full_name}/issues/${issue.number}` || url.search || !match) throw new Error('Mentor configuration must link to a command on this issue.');
+  const read = await readComment(client, {kind: 'comment', issue: issue.number, comment: Number(match[1])}, slug);
+  if (read.command.action !== 'configure' || Date.parse(read.proof.at) > Date.parse(at)) throw new Error('Configure the mentor before acceptance.');
+  const configuration = await validateMentorConfiguration(client, issue, profiles, read, ref);
+  assertMentorSection(issue.body, configuration.mentor, read.comment.html_url);
+  return configuration;
 }
 
 async function evidenceComment(client, url, action, candidate, level, governance, ref, slug) {
@@ -124,7 +167,19 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     }
     issue = await client.request(`${client.root}/issues/${source.issue}`);
     if (action === 'assign') return planAssignment(client, issue, profiles, data.assignee, proof);
-    if (['configure', 'stage', 'settle'].includes(action)) {
+    if (action === 'configure') {
+      const configuration = await validateMentorConfiguration(client, issue, profiles, read, ref);
+      const task = profiles.flatMap(p => p.profile.contributions).find(c => c.issue === issue.number);
+      if (task && !equal(task.configuration.source, source)) throw new Error('The accepted task already has a recorded mentor.');
+      const comments = await client.list(`${client.root}/issues/${issue.number}/comments`);
+      for (const later of mentorCommandCandidates(comments, new Date().toISOString(), slug).filter(c => c.id > source.comment)) {
+        const {governance} = await currentRules(client, ref, later.created_at);
+        if (governance.maintainers.includes(later.user.id) && await isMentor(later.user)) return null;
+      }
+      return {mode: 'native', action, mentor: configuration.mentor.login, issue: issue.number,
+        body: updateMentorSection(issue.body, configuration.mentor, read.comment.html_url), commandDigest: proof.digest, source};
+    }
+    if (['stage', 'settle'].includes(action)) {
       settings = taskSettings(issue);
       selected = profiles.find(p => p.profile.github_id === settings.participant_id);
     } else selected = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
@@ -194,28 +249,27 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
   const policy = {id: rules.id, sha};
   let mode = 'auto';
   let task = issue && after.contributions.find(c => c.issue === issue.number);
+  if (['stage', 'settle'].includes(action)) {
+    const owner = profiles.find(p => p.profile.contributions.some(c => c.issue === issue.number));
+    if (owner && owner.profile.github_id !== before.github_id) throw new Error('Issue Assignee differs from the recorded task owner.');
+    const configuration = await resolveTaskMentor(client, issue, profiles, ref, proof.at, slug, task);
+    if (configuration.mentor.id === before.github_id) throw new Error('Choose a registered, independent Mentor Team member.');
+    if (!task && action === 'stage') {
+      const contractRules = await currentRules(client, ref, proof.at, settings.year);
+      task = {id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
+        mentor_id: configuration.mentor.id, difficulty: settings.difficulty,
+        policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[settings.difficulty],
+        configuration: configuration.proof, stages: [], settlements: []};
+      after.contributions.push(task);
+    }
+    if (!task) throw new Error('Accept reproduction and validation before settlement.');
+  }
   if (settings && task && (task.difficulty !== settings.difficulty || Number(task.policy.id.split('.')[0]) !== settings.year)) {
     throw new Error('Issue labels differ from the recorded task rules; restore the configured difficulty and year.');
   }
   if (issue?.pull_request) throw new Error('Use an issue for contribution commands.');
   if (['configure', 'stage', 'settle'].includes(action) && !issue.labels.some(l => l.name === 'kind/task')) throw new Error('Expected kind/task issue.');
-  if (action === 'configure') {
-    requireRole(governance.maintainers, proof.actor, 'Only maintainers can configure tasks.');
-    if (task || profiles.some(p => p.profile.contributions.some(c => c.issue === issue.number))) throw new Error('Task already has a contract.');
-    const mentorRecord = profiles.find(p => /^\d+$/.test(data.mentor)
-      ? p.profile.github_id === Number(data.mentor)
-      : p.profile.github_login.toLowerCase() === data.mentor.replace(/^@/, '').toLowerCase());
-    if (!mentorRecord) throw new Error('The specified mentor must be registered.');
-    const mentor = await client.request(`users/${encodeURIComponent(mentorRecord.profile.github_login)}`);
-    if (mentor.id !== mentorRecord.profile.github_id) throw new Error('Mentor registration no longer matches GitHub.');
-    await requireMentor(mentor);
-    if (mentor.id === before.github_id || !profiles.some(p => p.profile.github_id === mentor.id)) throw new Error('Choose a registered, independent Mentor Team member.');
-    const contractRules = await currentRules(client, ref, proof.at, settings.year);
-    after.contributions.push({id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
-      mentor_id: mentor.id, difficulty: settings.difficulty,
-      policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[settings.difficulty],
-      configuration: proof, stages: [], settlements: []});
-  } else if (action === 'stage') {
+  if (action === 'stage') {
     if (!task || task.mentor_id !== proof.actor || proof.actor === before.github_id) throw new Error('Only the assigned mentor can accept a stage.');
     if (activeSettlement(after, task)) throw new Error('Task is already settled.');
     if (data.stage === 'validated' && !task.stages.some(s => s.name === 'reproduced')) throw new Error('Accept reproduction before implementation validation.');

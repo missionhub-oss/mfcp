@@ -59,8 +59,8 @@ Bot 直接调用 GitHub 设置 Assignee，GitHub 时间线会记录这次分配�
 
 任务必须处于开放状态并带有 `kind/task` 标签。Bot 不覆盖已有的其他
 负责人，也不转移已经保存的任务贡献。后续人工分配或取消分配会使此前
-的旧命令失效，定时处理不会反复恢复旧的 Assignee。分配完成后，再由
-年度维护者使用下面的命令指定 Mentor。
+的旧命令失效，定时处理不会反复恢复旧的 Assignee。
+负责人分配和 Mentor 配置可以按任意顺序完成。
 
 ## 指定 Mentor：configure
 
@@ -76,9 +76,18 @@ Bot 直接调用 GitHub 设置 Assignee，GitHub 时间线会记录这次分配�
 @mfcp-progress configure mentor 62325246
 ```
 
-Mentor 必须已注册、属于 Mentors Team，并且与任务负责人不同。
-Bot 将双方数字 ID、难度和年度规则版本保存到负责人的任务记录中。
-配置只创建一次。后续验收与结算要求 Assignee、难度和年度与记录一致；
+Mentor 必须已注册并属于 Mentors Team。配置时只要求 Issue 带有
+`kind/task` 标签，可以在尚未分配负责人、设置难度和年度时执行。
+Bot 更新 Issue 正文现有的 `### Mentor / 导师` 区域，显示 Mentor
+账号和配置命令链接，保留职责说明及其他正文，替换 `TBD` 占位内容。
+验证并更新成功后，Bot 给命令添加 👍。原命令作为权限证据保留。
+首次验收前，可以发表新的 Mentor 命令更新该区域。
+需要修改时发表新命令，保留原评论。
+
+验收和结算时，Bot 检查唯一且已注册的 Assignee、独立的 Mentor、
+难度和年度标签。首次复现验收将双方数字 ID、Mentor 命令证据、难度和
+年度规则版本保存到负责人的 JSON。验收后不能通过新配置更换 Mentor。
+后续验收与结算要求 Assignee、难度和年度与记录一致；
 误改时先恢复原设置，新的独立交付范围使用新任务。标签修改不会改变历史积分。
 
 ## 验收复现：accept reproduction

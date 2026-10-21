@@ -24,6 +24,11 @@ export function formatCommandFeedback(comment, outcome, repository) {
   const source = `[your command](${comment.html_url})`;
   let success = false, title, detail;
   switch (outcome.status) {
+    case 'mentor-configured':
+      success = true;
+      title = '✅ Mentor configured';
+      detail = `Mentor: \`${inline(outcome.mentor)}\`. The Mentor / 导师 field in the issue body records this configuration. Assign a contributor before stage acceptance or settlement.`;
+      break;
     case 'assigned':
       success = true;
       title = '✅ Assignment confirmed';

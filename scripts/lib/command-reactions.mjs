@@ -3,7 +3,7 @@
 import { isBotCommand } from './commands.mjs';
 
 export function reactionForOutcome(status) {
-  if (['assigned', 'published', 'evidence-recorded', 'already-merged'].includes(status)) return '+1';
+  if (['assigned', 'mentor-configured', 'published', 'evidence-recorded', 'already-merged'].includes(status)) return '+1';
   if (['processing', 'waiting', 'awaiting-review', 'auto-merge-enabled'].includes(status)) return 'eyes';
   return null;
 }
