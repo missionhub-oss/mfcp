@@ -74,7 +74,8 @@ participant. The bot enables auto-merge after these conditions pass.
 
 PR checks run automatically on `pull_request_target`, including for first-time
 contributors. Validation code and npm dependencies come from the default branch.
-The repository check reads the proposed merge as data, validates contributor
+The repository check reads selected regular files from the proposed merge
+through the GitHub API, validates contributor
 JSON and rules, checks JavaScript syntax without running submitted scripts,
 and builds the directory with trusted code. PR checks receive read-only tokens
 and no App private key. Runtime changes execute after reviewed merge to main.
@@ -82,7 +83,7 @@ The public-repository approval setting still applies to any future workflow
 that uses `pull_request` to execute contributor-supplied code.
 
 After main changes, `Refresh open PR checks` verifies every open PR again and
-publishes the three required results on its actual head commit. This trusted
+publishes the three required results and repository check on its actual head commit. This trusted
 workflow has Checks write permission to report results; it executes no PR code
 and receives no App private key. Existing PRs also receive current validation
 without contributors reopening or updating them.
