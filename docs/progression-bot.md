@@ -63,7 +63,15 @@ replaying an old command after a later manual assignment or unassignment.
 Post a new plain-text comment starting with a command on its first line.
 For example, `@mfcp-progress configure mentor @zevorn` assigns the mentor.
 A bare numeric GitHub ID is also accepted: `configure mentor 62325246`.
-Task commands resolve the contributor from the issue's single Assignee.
+Mentor configuration requires a task issue, an authorized maintainer and a
+registered active Mentor Team member. Assignee, difficulty and year may be set
+later. The bot updates the existing `### Mentor / 导师` issue field with the
+mentor account and configuration command link, preserving guidance and the rest
+of the body. It replaces the TBD placeholder. 👍 confirms the update. Keep the
+immutable command as authorization evidence. Before first acceptance, a new
+authorized command can update the mentor field. Acceptance and settlement verify
+the field against its authorized command and resolve the contributor from the
+issue's single Assignee and require a separate mentor.
 
 | Command after `@mfcp-progress` | Authorization |
 | --- | --- |
@@ -113,7 +121,10 @@ attributed to the participant and include the author's and authorized mentor's
 DCO sign-offs. Each upstream PR receives credit once among active settlements.
 The 2026 rules currently accept GitHub PRs in `zephyrproject-rtos/zephyr`.
 
-Configuration records the native Assignee, difficulty and annual rule version.
+First reproduction acceptance records the native Assignee, mentor command
+proof, difficulty and annual rule version in the contributor JSON. Subsequent
+configuration commands cannot replace the recorded mentor. Acceptance and
+settlement revalidate the original mentor command and current Team membership.
 Acceptance and settlement require these issue fields to remain consistent with
 the recorded task. Label or Assignee edits do not rewrite contribution history.
 Correct accidental changes before continuing; use a separate issue for a new

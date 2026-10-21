@@ -76,7 +76,7 @@ body:
     id: mentor
     attributes:
       label: Mentor / 导师
-      description: GitHub username; if unconfirmed, describe the guidance needed / 填写 GitHub 用户名；待协调时说明需要的指导
+      description: Describe guidance needs; configure mentor updates this field with the verified mentor and command link, independently of Assignees / 描述指导需求；configure mentor 命令会在此记录已验证的导师及命令链接，可以先于负责人分配执行
     validations:
       required: true
   - type: textarea

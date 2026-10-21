@@ -9,7 +9,8 @@ import { buildProposal, verifyReview } from './lib/progression.mjs';
 import { isBotCommand } from './lib/commands.mjs';
 import { replyToCommand } from './lib/command-feedback.mjs';
 import { markCommandProcessing } from './lib/command-reactions.mjs';
-import { equal, validateProfile } from './lib/profile.mjs';
+import { digest, equal, validateProfile } from './lib/profile.mjs';
+import {updateMentorSection} from './lib/mentor-section.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 
 const CHECKS = ['JSON format and fields', 'validate', 'Progression integrity'];
@@ -96,6 +97,15 @@ async function executeSource(client, source, {write = false} = {}) {
       if (!write) return {status: 'dry-run', ...proposal};
       proposal = await buildProposal(client, source, await client.head(), {slug});
       if (!proposal) return {status: 'unchanged', source};
+      if (proposal.mode === 'native' && proposal.action === 'configure') {
+        const current = await client.request(`${client.root}/issues/${proposal.issue}`);
+        const command = await client.request(`${client.root}/issues/comments/${source.comment}`);
+        if (command.created_at !== command.updated_at || digest(command.body) !== proposal.commandDigest) throw new Error('Mentor command changed during validation.');
+        const body = updateMentorSection(current.body, {login: proposal.mentor}, command.html_url);
+        const updated = current.body === body ? current : await client.request(`${client.root}/issues/${proposal.issue}`, 'PATCH', {body});
+        if (updated.body !== body) throw new Error('GitHub did not confirm the Mentor section update.');
+        return {status: 'mentor-configured', mentor: proposal.mentor, url: updated.html_url};
+      }
       if (proposal.mode !== 'native' || proposal.action !== 'assign') throw new Error('Assignment command changed during validation.');
       const assigned = await client.request(`${client.root}/issues/${proposal.issue}/assignees`, 'POST', {
         assignees: [proposal.assignee.login],
