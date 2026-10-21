@@ -16,7 +16,7 @@ test('trusted bot identity rejects conflicting application and human identities'
 });
 
 test('command reactions distinguish completed writes from pending review and failures', () => {
-  for (const status of ['assigned', 'published', 'evidence-recorded', 'already-merged']) assert.equal(reactionForOutcome(status), '+1');
+  for (const status of ['assigned', 'mentor-configured', 'published', 'evidence-recorded', 'already-merged']) assert.equal(reactionForOutcome(status), '+1');
   for (const status of ['processing', 'waiting', 'awaiting-review', 'auto-merge-enabled']) assert.equal(reactionForOutcome(status), 'eyes');
   for (const status of ['failed', 'unchanged']) assert.equal(reactionForOutcome(status), null);
 });
