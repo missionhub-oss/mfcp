@@ -89,7 +89,7 @@ participant. The bot enables auto-merge after these conditions pass.
   immutable annual rules using trusted default-branch code.
 - `Automatic progression checks`: validates candidate commits before main
   can advance. All three required check names run under GitHub Actions.
-- `Contributor progression`: serializes writes and reconciles every six hours.
+- `Contributor progression`: serializes writes and reconciles every ten minutes.
 - `Contributor notifications`: serializes congratulations and retries hourly.
 - `Contributor directory`: builds and deploys the public GitHub Pages directory.
 
@@ -105,14 +105,18 @@ files or validation scripts. Runtime changes execute after reviewed merge to mai
 The public-repository approval setting still applies to any future workflow
 that uses `pull_request` to execute contributor-supplied code.
 
-After main changes, `Refresh open PR checks` verifies every open PR again and
+After main changes and on a ten-minute schedule, `Refresh open PR checks` verifies every open PR again and
 publishes the three required results and repository check on its actual head commit. This trusted
 workflow has Checks write permission to report results; it executes no PR code
 and receives no App private key. Existing PRs also receive current validation
-without contributors reopening or updating them.
+without contributors reopening or updating them. Review approvals are read by
+these default-branch scheduled workflows. GitHub may delay scheduled runs.
 
 Main requires `JSON format and fields`, `validate` and `Progression integrity`
-from GitHub Actions with an up-to-date base. A separate PR ruleset lets only
+from GitHub Actions. PR authors do not need to update their branch after every
+main change; trusted repository checks read the current proposed merge.
+Automatic progression candidates still verify their parent against current
+main immediately before publishing. A separate PR ruleset lets only
 the progression App bypass the PR requirement. The App cannot bypass required
 checks, force-push protection or deletion protection. App permissions are at
 repository scope; trusted candidate validation restricts automatic changes to

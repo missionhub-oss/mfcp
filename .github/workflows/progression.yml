@@ -6,10 +6,8 @@ on:
     types: [closed, reopened]
   pull_request_target:
     types: [closed]
-  pull_request_review:
-    types: [submitted, dismissed]
   schedule:
-    - cron: '7 */6 * * *'
+    - cron: '7,17,27,37,47,57 * * * *'
   workflow_dispatch:
 permissions:
   contents: read

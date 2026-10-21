@@ -207,7 +207,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   } else if (values['verify-pr']) {
     const {verifyIntegrity} = await import('./lib/integrity.mjs');
     result = await verifyIntegrity(client, Number(values['verify-pr']));
-  } else if (values.reconcile || ['schedule', 'workflow_dispatch', 'pull_request_review'].includes(process.env.GITHUB_EVENT_NAME)) {
+  } else if (values.reconcile || ['schedule', 'workflow_dispatch'].includes(process.env.GITHUB_EVENT_NAME)) {
     result = await reconcile(client, values.write);
   } else {
     const sources = values.source ? [JSON.parse(values.source)] : await sourcesForEvent(client,
