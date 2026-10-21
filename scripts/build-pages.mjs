@@ -5,6 +5,8 @@ import { execFileSync } from 'node:child_process';
 import { normalizeProfile, totals, rulesSchema } from './lib/profile.mjs';
 import { DEFAULT_REPOSITORY } from './lib/github.mjs';
 
+if (process.argv[2]) process.chdir(process.argv[2]);
+
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const root = `https://github.com/${DEFAULT_REPOSITORY}`;
 const versions = [];

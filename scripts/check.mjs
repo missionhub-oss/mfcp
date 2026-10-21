@@ -4,6 +4,8 @@ import { readFile, readdir } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { normalizeProfile, rulesSchema, governanceSchema, activeSettlement } from './lib/profile.mjs';
 
+if (process.argv[2]) process.chdir(process.argv[2]);
+
 const read = async path => JSON.parse(await readFile(path, 'utf8'));
 const identities = new Set();
 const contributions = new Set();
