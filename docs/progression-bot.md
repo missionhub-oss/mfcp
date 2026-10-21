@@ -48,7 +48,7 @@ actual merged PRs.
 
 Use GitHub Assignees to assign a task to exactly one registered contributor.
 Apply `kind/task`, one `difficulty/level0`–`difficulty/level4` label and one
-`year/YYYY` label, such as `year/2026`. The year must have published rules.
+four-digit year label, such as `2026`. The year must have published rules.
 These native fields determine the participant, difficulty and annual rules.
 
 A Mentor Team member without repository assignment permission can post

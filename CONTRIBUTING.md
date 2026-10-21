@@ -11,7 +11,7 @@
 
 ## 提出任务
 
-通过[新建 Issue](https://github.com/processmission/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
+通过[新建 Issue](https://github.com/processmission-intern/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
 
 - 项目方向：Zephyr、Linux 或 Yocto。
 - 问题背景：实际需求、已有问题链接和相关技术资料。
@@ -26,7 +26,7 @@
 
 1. 在开放的 Issue 中按 `kind/task`、项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选任务，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
 2. 在原任务下发表评论，介绍相关经验、可参与时间、开发条件和对任务的理解。
-3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个 `year/YYYY` 年度标签，例如 `year/2026`。
+3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个四位数字年度标签，例如 `2026`。
 4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配，再使用 `@mfcp-progress configure mentor @导师用户名` 指定 Mentor。Bot 读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
 
 申领通过 Issue 评论与 Assignee 完成。实际代码或文档修改通过对应仓库的 Pull Request 或上游规定的补丁流程提交。
