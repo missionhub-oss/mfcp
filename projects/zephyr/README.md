@@ -11,7 +11,10 @@ Zephyr 方向围绕实时操作系统开展实践，可提出板级支持、设�
 ## 上游入口
 
 - [Zephyr 源码](https://github.com/zephyrproject-rtos/zephyr)
-- [Zephyr 官方文档](https://docs.zephyrproject.org/)
+- [Zephyr 官方文档（英文）](https://docs.zephyrproject.org/)
+- [Zephyr 中文文档（进程使命维护）](https://processmission.github.io/zephyr/)
+
+中文文档提供与英文原文对应的译文，可通过页面右上角的 English 查看原文。学习时请核对文档版本，技术细节以对应版本的英文原文为准。
 
 ## 实践记录
 

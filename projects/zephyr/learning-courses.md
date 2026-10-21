@@ -24,7 +24,14 @@
 - 了解编译、链接和程序运行的基本过程。
 - 准备可使用的开发环境，记录操作系统、Zephyr 版本及工具版本。
 
-环境安装步骤参考 [Zephyr 官方入门指南](https://docs.zephyrproject.org/latest/develop/getting_started/index.html)。视频中的工具版本与当前版本可能不同，实际配置以所使用版本的官方文档为准。
+学习资料提供中英文两个入口：
+
+| 资料 | 中文 | English |
+| --- | --- | --- |
+| Zephyr 文档首页 | [进程使命中文文档](https://processmission.github.io/zephyr/) | [Zephyr 官方文档](https://docs.zephyrproject.org/) |
+| 环境安装与第一个示例 | [中文入门指南](https://processmission.github.io/zephyr/develop/getting_started/index.html) | [Getting Started Guide](https://docs.zephyrproject.org/latest/develop/getting_started/index.html) |
+
+中文译文由进程使命维护，页面右上角的 English 可打开对应原文；尚未翻译的页面和生成参考资料链接到上游英文站。可以先按中文入门指南准备环境，并核对自己使用的 Zephyr 版本。视频、译文和当前上游内容可能存在版本差异，实际配置与技术细节以对应版本的英文原文为准。
 
 基础运行练习可以使用 [Hello World 的 QEMU 示例](https://docs.zephyrproject.org/latest/samples/hello_world/README.html)。QEMU 可用于在电脑上运行基础应用和部分内核测试；课程中的开发板烧录、调试器连接和真实外设操作需要相应硬件。有关仿真平台能力，参考 [QEMU x86 板级说明](https://docs.zephyrproject.org/latest/boards/qemu/x86/doc/index.html)。
 
