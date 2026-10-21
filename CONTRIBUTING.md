@@ -5,13 +5,13 @@
 
 ## 注册参与
 
-先按[参与者注册说明](participants/README.md) Fork 仓库，提交仅包含本人 GitHub 身份文件的 PR。维护者审核合并后，可以创建 Issue 和发表评论。注册属于参与前置条件，贡献者等级按实践成果评估。
+先按[参与者注册说明](participants/README.md) Fork 仓库，提交仅包含本人 GitHub 身份文件的 PR。维护者审核合并后，可以创建 Issue 和发表评论，Bot 根据已合入的注册 PR 自动记录 L0 → L1 晋级。后续等级按年度规则评估。
 
 未注册账号创建或重新打开的 Issue 会自动关闭，其新建或编辑的 Issue 评论会自动删除。PR 讨论用于注册沟通，保持开放。自动处理在提交后执行，内容可能短暂可见。
 
 ## 提出任务
 
-通过[新建 Issue](https://github.com/processmission/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
+通过[新建 Issue](https://github.com/processmission-intern/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
 
 - 项目方向：Zephyr、Linux 或 Yocto。
 - 问题背景：实际需求、已有问题链接和相关技术资料。
@@ -26,10 +26,14 @@
 
 1. 在开放的 Issue 中按 `kind/task`、项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选任务，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
 2. 在原任务下发表评论，介绍相关经验、可参与时间、开发条件和对任务的理解。
-3. 导师在评论中确认参与者、任务范围、难度、验收条件、指导安排和约定目标；维护者设置对应的难度标签。
-4. 维护者将参与者的 GitHub 账号设置为 Assignee，并在任务正文记录申领日期、导师、约定目标和确认评论链接。以这条确认记录作为申领依据。
+3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个四位数字年度标签，例如 `2026`。
+4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配，再使用 `@mfcp-progress configure mentor @导师用户名` 指定 Mentor。Bot 读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
 
 申领通过 Issue 评论与 Assignee 完成。实际代码或文档修改通过对应仓库的 Pull Request 或上游规定的补丁流程提交。
+
+Mentor 没有设置 Assignee 的仓库权限时，可以发表
+`@mfcp-progress configure assignee @参与者用户名`，由 Bot 分配已注册且
+参与过该 Issue 讨论的成员。命令作者需要属于 Mentors Team。
 
 ```markdown
 ### Participation request / 参与申请
@@ -40,22 +44,13 @@
 - Guidance needed / 需要的指导：
 ```
 
-导师与维护者确认时使用以下记录：
+导师与维护者在评论中确认任务范围、验收条件、沟通安排和参与申请链接。
+负责人以 Assignee 为准，难度和年度以标签为准，Mentor 通过 `configure`
+命令指定。GitHub 时间线记录分配及标签操作。
 
-```markdown
-### Task assignment / 任务申领确认
-- Participant / 参与者 GitHub 用户名：
-- Mentor / 导师 GitHub 用户名：
-- Claim date / 申领日期：
-- Scope and goals / 任务范围与约定目标：
-- Acceptance criteria / 验收条件：
-- Communication / 沟通安排：
-- Application / 参与申请评论链接：
-```
+多人协作时，导师明确各自负责的内容。每项自动计分任务设置唯一 Assignee；不同人员的独立交付使用关联 Issue 分别记录。
 
-多人协作时，导师明确各自负责的内容，维护者添加相应 Assignees。已有人承担的任务，由导师确认协作安排后再增加参与者。
-
-参与者暂停或退出时，在原任务中记录成果、阻碍与交接资料。维护者根据实际责任更新 Assignees 和任务正文，并注明是否开放申领。
+参与者暂停或退出时，在原任务中记录成果、阻碍与交接资料。已经配置计分的任务保留原负责人及成果历史，重新划分的独立任务另建 Issue 并设置 Assignee。
 
 ## 提交成果
 
