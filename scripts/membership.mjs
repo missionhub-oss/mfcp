@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import { createClient as githubClient, REPOSITORY_ID, DEFAULT_REPOSITORY } from './lib/github.mjs';
+import { normalizeProfile, initialProfile, assertIdentityOnly, equal, validateProfile } from './lib/profile.mjs';
 
 export function participantPath(login) {
   if (typeof login !== 'string' || !/^[a-z0-9-]{1,39}$/i.test(login)) {
@@ -11,6 +13,9 @@ export function participantPath(login) {
 }
 
 export function validateRegistrationFormat(record, filename) {
+  if (record && typeof record === 'object' && 'schema_version' in record) {
+    return validateProfile(record, filename);
+  }
   if (!record || Array.isArray(record) || typeof record !== 'object' ||
       Object.keys(record).sort().join(',') !== 'github_id,github_login') {
     throw new Error(`${filename}: registration must contain only github_id and github_login.`);
@@ -48,33 +53,9 @@ export function validateRegistration(record, author, filename) {
   return record;
 }
 
-export function createClient(token, repository = 'processmission/mission-forge') {
-  if (repository !== 'processmission/mission-forge') throw new Error('Unexpected repository.');
-  if (!token) throw new Error('GITHUB_TOKEN is required.');
-  async function request(path, method = 'GET', body) {
-    const response = await fetch(`https://api.github.com/${path}`, {
-      method,
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' },
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal: AbortSignal.timeout(30_000),
-    });
-    if (!response.ok) {
-      const error = new Error(`GitHub ${method} ${path}: ${response.status}`);
-      error.status = response.status;
-      throw error;
-    }
-    return response.status === 204 ? null : response.json();
-  }
-  const root = `repos/${repository}`;
-  async function list(path) {
-    const result = [];
-    for (let page = 1; ; page++) {
-      const items = await request(`${path}?per_page=100&page=${page}`);
-      result.push(...items);
-      if (items.length < 100) return result;
-    }
-  }
+export function createClient(token, repository = DEFAULT_REPOSITORY) {
+  const client = githubClient(token, repository);
+  const {request, root} = client;
   async function registered(user) {
     if (!Number.isSafeInteger(user.id) || user.id <= 0) throw new Error('Invalid user ID.');
     if (user.type !== 'User') return false;
@@ -87,20 +68,16 @@ export function createClient(token, repository = 'processmission/mission-forge')
     }
     if (file.type !== 'file' || file.encoding !== 'base64') throw new Error('Invalid registration file.');
     const record = JSON.parse(Buffer.from(file.content, 'base64').toString('utf8'));
-    if (!record || Array.isArray(record) || typeof record !== 'object' ||
-        Object.keys(record).sort().join(',') !== 'github_id,github_login' ||
-        !Number.isSafeInteger(record.github_id) || typeof record.github_login !== 'string') {
-      throw new Error('Malformed registration; moderation stopped.');
-    }
+    validateRegistrationFormat(record, participantPath(user.login));
     return record.github_id === user.id && record.github_login.toLowerCase() === user.login.toLowerCase();
   }
-  return {request, list, registered, root};
+  return {...client, registered};
 }
 
 async function registrationBlob(client, file) {
   const blob = await client.request(`${client.root}/git/blobs/${file.sha}`);
-  if (blob.encoding !== 'base64' || blob.size > 4096) {
-    throw new Error(`${file.filename}: registration must be a JSON file no larger than 4096 bytes.`);
+  if (blob.encoding !== 'base64' || blob.size > 2_000_000) {
+    throw new Error(`${file.filename}: participant JSON exceeds the supported size.`);
   }
   return parseRegistration(Buffer.from(blob.content, 'base64').toString('utf8'), file.filename);
 }
@@ -126,6 +103,11 @@ export async function validatePullRequest(client, number) {
     (file.filename.startsWith('participants/') && file.filename !== 'participants/README.md') ||
     (file.previous_filename?.startsWith('participants/') && file.previous_filename !== 'participants/README.md'));
   if (!registrations.length) return 'No registration changes.';
+  if (process.env.MFCP_APP_SLUG && pr.user.login === `${process.env.MFCP_APP_SLUG}[bot]`) {
+    const {verifyReview} = await import('./lib/progression.mjs');
+    await verifyReview(client, pr);
+    return 'Progression proposal verified.';
+  }
   if (files.length === registrations.length && registrations.every(file =>
     file.status === 'removed' && /^participants\/[a-z0-9-]{1,39}\.json$/.test(file.filename))) {
     const access = await client.request(`${client.root}/collaborators/${encodeURIComponent(pr.user.login)}/permission`);
@@ -157,11 +139,20 @@ export async function validatePullRequest(client, number) {
   validateRegistration(record, pr.user, target.filename);
   const user = await client.request(`users/${encodeURIComponent(record.github_login)}`);
   validateRegistration(record, user, target.filename);
+  const after = normalizeProfile(record, target.filename);
+  if (target.status === 'added' && !previous) {
+    if (!equal(after, initialProfile({github_id: user.id, github_login: user.login}))) {
+      throw new Error('New registrations must start at level 0 with empty history.');
+    }
+  } else {
+    const old = await client.file(previous || target.filename, pr.base.sha);
+    assertIdentityOnly(normalizeProfile(old.value, previous || target.filename), after);
+  }
   return 'Registration identity verified. Maintainer review and merge are required.';
 }
 
 export async function moderate(client, event, eventName) {
-  if (event.repository?.full_name !== 'processmission/mission-forge') throw new Error('Unexpected event repository.');
+  if (event.repository?.id !== REPOSITORY_ID) throw new Error('Unexpected event repository.');
   if (event.issue?.pull_request) return 'PR discussions remain open.';
   if (eventName === 'issues' && ['opened', 'reopened'].includes(event.action)) {
     const issue = await client.request(`${client.root}/issues/${event.issue.number}`);
@@ -181,6 +172,7 @@ export async function moderate(client, event, eventName) {
     }
     const issue = await client.request(`${client.root}/issues/${event.issue.number}`);
     if (issue.pull_request) return 'PR discussions remain open.';
+    if (process.env.MFCP_APP_ID && comment.performed_via_github_app?.id === Number(process.env.MFCP_APP_ID)) return 'Trusted application feedback.';
     if (await client.registered(comment.user)) return 'Registered comment author.';
     try {
       await client.request(`${client.root}/issues/comments/${comment.id}`, 'DELETE');
@@ -195,7 +187,7 @@ export async function moderate(client, event, eventName) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const client = createClient(process.env.GITHUB_TOKEN, process.env.GITHUB_REPOSITORY);
   const event = JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8'));
-  if (event.repository?.full_name !== 'processmission/mission-forge') throw new Error('Unexpected event repository.');
+  if (event.repository?.id !== REPOSITORY_ID) throw new Error('Unexpected event repository.');
   let result;
   if (process.argv[2] === 'registration-json') {
     result = await validatePullRequestJson(client, event.pull_request.number);

@@ -1,0 +1,317 @@
+// SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
+// SPDX-License-Identifier: MIT
+import { marked } from 'marked';
+import { z } from 'zod';
+import { execFileSync } from 'node:child_process';
+import { REPOSITORY_ID } from './github.mjs';
+import { participantPath, normalizeProfile, validateProfile, rulesSchema, governanceSchema,
+  totals, eligible, activeSettlement, digest, equal } from './profile.mjs';
+
+const person = z.string().regex(/^[a-z0-9-]{1,39}$/i);
+const commands = {
+  configure: z.strictObject({participant: person, mentor: person, difficulty: z.number().int().min(0).max(4), year: z.number().int().min(2026)}),
+  stage: z.strictObject({participant: person, stage: z.enum(['reproduced', 'validated']), evidence: z.array(z.url()).nonempty()}),
+  settle: z.strictObject({participant: person, pull_requests: z.array(z.url()).nonempty()}),
+  promote: z.strictObject({participant: person, level: z.union([z.literal(3), z.literal(4)]), summary: z.string().min(10),
+    mentor_comment: z.url(), interview_comment: z.url().optional(), recommendations: z.array(z.url()).default([])}),
+  endorse: z.strictObject({participant: person, level: z.number().int().min(3).max(4), passed: z.literal(true), summary: z.string().min(10)}),
+  interview: z.strictObject({participant: person, level: z.literal(3), passed: z.literal(true), summary: z.string().min(10), reference: z.string().min(1)}),
+  recommend: z.strictObject({participant: person, level: z.literal(4), passed: z.literal(true), summary: z.string().min(10), evidence: z.array(z.url()).nonempty()}),
+};
+
+export function parseCommand(body, slug) {
+  const tokens = marked.lexer(body);
+  const first = tokens.find(t => t.type !== 'space');
+  if (first?.type !== 'paragraph') return null;
+  const match = /^@([a-z0-9-]+)(?:\[bot\])?\s+(configure|stage|settle|promote|endorse|interview|recommend)$/i.exec(first.text.trim());
+  if (!match || match[1].toLowerCase() !== slug?.toLowerCase()) return null;
+  const blocks = tokens.filter(t => t.type === 'code');
+  if (blocks.length !== 1 || blocks[0].lang !== 'json') throw new Error('Include exactly one JSON command block.');
+  const action = match[2].toLowerCase();
+  return {action, data: commands[action].parse(JSON.parse(blocks[0].text))};
+}
+
+const yearAt = time => Number(new Intl.DateTimeFormat('en', {timeZone: 'Asia/Shanghai', year: 'numeric'}).format(new Date(time)));
+const eventKey = source => `${source.kind}-${source.comment ?? source.pr ?? source.event}`;
+const requireRole = (ids, actor, message) => {if (!ids.includes(actor)) throw new Error(message);};
+
+export async function currentRules(client, ref, time, year = yearAt(time)) {
+  const entries = await client.request(`${client.root}/contents/programs/${year}/rules?ref=${ref}`);
+  const versions = [];
+  for (const entry of entries.filter(e => e.type === 'file' && /^v\d+\.json$/.test(e.name))) {
+    const file = await client.file(entry.path, ref);
+    const rules = rulesSchema.parse(file.value);
+    if (rules.year !== year || rules.id !== `${year}.${entry.name.slice(0, -5)}`) throw new Error('Rule filename and identity disagree.');
+    if (Date.parse(rules.effective_at) <= Date.parse(time)) versions.push({rules, sha: file.sha});
+  }
+  versions.sort((a, b) => Date.parse(b.rules.effective_at) - Date.parse(a.rules.effective_at));
+  if (!versions.length) throw new Error(`No effective rules for ${year}.`);
+  if (versions[1]?.rules.effective_at === versions[0].rules.effective_at) throw new Error('Ambiguous effective rule versions.');
+  const governance = governanceSchema.parse((await client.file(`programs/${year}/governance.json`, ref)).value);
+  return {...versions[0], governance};
+}
+
+export async function readProfiles(client, ref) {
+  const tree = await client.request(`${client.root}/git/trees/${ref}?recursive=1`);
+  if (tree.truncated) throw new Error('Incomplete repository tree.');
+  const profiles = [];
+  for (const file of tree.tree.filter(e => /^participants\/[a-z0-9-]+\.json$/.test(e.path))) {
+    if (file.mode !== '100644') throw new Error('Participant records must be regular files.');
+    const value = await client.file(file.path, ref);
+    profiles.push({path: file.path, profile: normalizeProfile(value.value, file.path)});
+  }
+  if (new Set(profiles.map(p => p.profile.github_id)).size !== profiles.length) throw new Error('Duplicate participant identities.');
+  return profiles;
+}
+
+async function readComment(client, source, slug) {
+  const comment = await client.request(`${client.root}/issues/comments/${source.comment}`);
+  if (comment.issue_url !== `https://api.github.com/${client.root}/issues/${source.issue}`) throw new Error('Comment does not belong to the source issue.');
+  const command = parseCommand(comment.body, slug);
+  if (!command || comment.user.type !== 'User') throw new Error('Expected a human-authored command.');
+  if (comment.created_at !== comment.updated_at) throw new Error('Commands are immutable; post a new comment instead of editing.');
+  return {command, proof: {source, actor: comment.user.id, at: comment.created_at,
+    digest: digest(comment.body), details: JSON.stringify(command.data)}, comment};
+}
+
+async function evidenceComment(client, url, action, candidate, level, governance, ref, slug) {
+  const parsed = new URL(url);
+  const repo = await client.metadata();
+  const match = /^\/([^/]+)\/([^/]+)\/issues\/([1-9][0-9]*)$/.exec(parsed.pathname);
+  const commentMatch = /^#issuecomment-([1-9][0-9]*)$/.exec(parsed.hash);
+  if (parsed.origin !== 'https://github.com' || !match || `${match[1]}/${match[2]}` !== repo.full_name || !commentMatch) {
+    throw new Error('Approval must link to an issue comment in this repository.');
+  }
+  const data = await readComment(client, {kind: 'comment', issue: Number(match[3]), comment: Number(commentMatch[1])}, slug);
+  if (data.command.action !== action || data.command.data.participant.toLowerCase() !== candidate.github_login.toLowerCase() ||
+      data.command.data.level !== level || data.proof.actor === candidate.github_id) throw new Error('Approval scope or author mismatch.');
+  if (action === 'interview') requireRole(governance.interviewers, data.proof.actor, 'Unauthorized interviewer.');
+  if (action === 'endorse') requireRole(governance.mentors.map(m => m.github_id), data.proof.actor, 'Unauthorized mentor.');
+  if (action === 'recommend') {
+    const profiles = await readProfiles(client, ref);
+    if (!profiles.some(p => p.profile.github_id === data.proof.actor && p.profile.level >= 3)) throw new Error('Recommendations require a registered L3/L4 contributor.');
+  }
+  return data.proof;
+}
+
+export function signoffs(message) {
+  const trailers = execFileSync('git', ['interpret-trailers', '--parse'], {input: message, encoding: 'utf8'});
+  return trailers.split('\n').filter(line => line.toLowerCase().startsWith('signed-off-by:'))
+    .map(line => line.slice(line.indexOf(':') + 1).trim().toLowerCase());
+}
+
+async function verifyUpstream(client, url, participant, mentor, rules) {
+  const parsed = new URL(url);
+  const match = /^\/([^/]+)\/([^/]+)\/pull\/([1-9][0-9]*)\/?$/.exec(parsed.pathname);
+  if (parsed.origin !== 'https://github.com' || !match || parsed.search || parsed.hash) throw new Error('Use the canonical upstream pull request URL.');
+  const repository = `${match[1]}/${match[2]}`;
+  if (!rules.upstream_repositories.includes(repository)) throw new Error('Upstream repository is not allowed by the annual rules.');
+  const number = Number(match[3]);
+  const pr = await client.request(`repos/${repository}/pulls/${number}`);
+  const upstreamRepo = await client.request(`repos/${repository}`);
+  if (!pr.merged || !pr.merge_commit_sha || pr.base.ref !== upstreamRepo.default_branch ||
+      pr.user.id !== participant.github_id) throw new Error('PR must be merged to upstream default branch and authored by the participant.');
+  const commits = await client.list(`repos/${repository}/pulls/${number}/commits`);
+  if (!commits.length || commits.length !== pr.commits) throw new Error('Incomplete upstream commit list.');
+  for (const c of commits) {
+    const trailers = signoffs(c.commit.message);
+    const author = `${c.commit.author.name} <${c.commit.author.email}>`.toLowerCase();
+    if (c.author?.id !== participant.github_id || !trailers.includes(author) ||
+        !mentor.signoffs.some(s => trailers.includes(s.toLowerCase()))) {
+      throw new Error('Every patch commit needs attributable author and authorized mentor DCO sign-offs.');
+    }
+  }
+  return {repository, number, author: pr.user.id, merge_commit: pr.merge_commit_sha,
+    merged_at: pr.merged_at, commits: commits.map(c => c.sha), url: pr.html_url};
+}
+
+export async function hasPendingReversal(client, participantId, slug) {
+  const prs = await client.list(`${client.root}/pulls?state=open`);
+  return prs.some(pr => pr.user.login === `${slug}[bot]` && pr.head.ref.startsWith(`progress/review/reopened-${participantId}-`));
+}
+
+export async function buildProposal(client, source, ref, {slug, reviewPr = null} = {}) {
+  const profiles = await readProfiles(client, ref);
+  let selected, proof, action, data, issue, settlementAuthor;
+  if (source.kind === 'comment') {
+    const read = await readComment(client, source, slug);
+    ({action, data} = read.command);
+    proof = read.proof;
+    if (['endorse', 'interview', 'recommend'].includes(action)) return null;
+    selected = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
+    issue = await client.request(`${client.root}/issues/${source.issue}`);
+  } else if (source.kind === 'registration') {
+    const pr = await client.request(`${client.root}/pulls/${source.pr}`);
+    const repo = await client.metadata();
+    if (!pr.merged || pr.base.ref !== repo.default_branch || !pr.head.repo?.fork || pr.head.repo.id === repo.id) throw new Error('Expected a merged registration from a fork.');
+    const files = await client.list(`${client.root}/pulls/${source.pr}/files`);
+    if (files.length !== 1 || !['added', 'modified'].includes(files[0].status) || files[0].filename !== participantPath(pr.user.login)) throw new Error('Not an initial registration PR.');
+    const original = await client.request(`${client.root}/git/blobs/${files[0].sha}`);
+    const content = normalizeProfile(JSON.parse(Buffer.from(original.content, 'base64').toString('utf8')), files[0].filename);
+    if (content.github_id !== pr.user.id || content.level || content.experience || content.contributions.length || content.promotions.length || content.adjustments.length) throw new Error('Registration PR contains non-initial profile data.');
+    selected = profiles.find(p => p.profile.github_id === pr.user.id);
+    action = 'register';
+    proof = {source, actor: pr.user.id, at: pr.merged_at, digest: digest({pr: pr.number, head: pr.head.sha, merge: pr.merge_commit_sha}),
+      details: JSON.stringify({registration_pr: pr.html_url, merge_commit: pr.merge_commit_sha})};
+  } else if (source.kind === 'completed') {
+    issue = await client.request(`${client.root}/issues/${source.issue}`);
+    if (issue.pull_request || issue.state !== 'closed' || issue.state_reason !== 'completed') return null;
+    const events = await client.list(`${client.root}/issues/${source.issue}/events`);
+    const event = events.find(e => e.id === source.event && e.event === 'closed');
+    if (!event) throw new Error('Unknown completion event.');
+    const comments = await client.list(`${client.root}/issues/${source.issue}/comments`);
+    const contract = profiles.find(p => p.profile.contributions.some(c => c.issue === source.issue));
+    if (!contract) return null;
+    const candidates = comments.filter(c => {
+      try { const parsed = parseCommand(c.body, slug); return parsed?.action === 'settle' &&
+        parsed.data.participant.toLowerCase() === contract.profile.github_login.toLowerCase(); } catch { return false; }
+    });
+    const comment = candidates.at(-1);
+    if (!comment) throw new Error('Post settlement evidence before closing the task.');
+    const read = await readComment(client, {kind: 'comment', issue: source.issue, comment: comment.id}, slug);
+    selected = contract;
+    action = 'settle';
+    data = read.command.data;
+    settlementAuthor = read.proof.actor;
+    proof = {source, actor: event.actor.id, at: event.created_at,
+      digest: digest({event: event.id, evidence: read.proof.digest}),
+      details: JSON.stringify({...data, evidence_comment: comment.id})};
+  } else if (source.kind === 'reopened') {
+    issue = await client.request(`${client.root}/issues/${source.issue}`);
+    if (issue.state !== 'open' || issue.pull_request) return null;
+    const events = await client.list(`${client.root}/issues/${source.issue}/events`);
+    const event = events.find(e => e.id === source.event && e.event === 'reopened');
+    if (!event) throw new Error('Unknown reopen event.');
+    selected = profiles.find(p => p.profile.contributions.some(c => c.issue === source.issue && activeSettlement(p.profile, c)));
+    if (!selected) return null;
+    action = 'revoke';
+    proof = {source, actor: event.actor.id, at: event.created_at, digest: digest(event.id), details: JSON.stringify({reason: 'Task reopened; completion must be reviewed.'})};
+  } else throw new Error('Unsupported source.');
+  if (!selected) throw new Error('Contributor is not registered.');
+  const before = selected.profile;
+  const after = structuredClone(before);
+  const key = eventKey(source);
+  if (equal(before.last_event, source) || before.promotions.some(p => p.id === key) || before.adjustments.some(a => a.id === key) ||
+      before.contributions.some(c => c.configuration.source.comment === source.comment && source.kind === 'comment' ||
+        c.stages.some(s => equal(s.proof.source, source)) || c.settlements.some(s => s.id === key))) return null;
+  const {rules, sha, governance} = await currentRules(client, ref, proof.at);
+  const policy = {id: rules.id, sha};
+  let mode = 'auto';
+  let task = issue && after.contributions.find(c => c.issue === issue.number);
+  if (issue?.pull_request) throw new Error('Use an issue for contribution commands.');
+  if (['configure', 'stage', 'settle'].includes(action) && !issue.labels.some(l => l.name === 'kind/task')) throw new Error('Expected kind/task issue.');
+  if (action === 'configure') {
+    requireRole(governance.maintainers, proof.actor, 'Only maintainers can configure tasks.');
+    if (task || profiles.some(p => p.profile.contributions.some(c => c.issue === issue.number))) throw new Error('Task already has a contract.');
+    if (!issue.assignees.some(u => u.id === before.github_id)) throw new Error('Assign the task to this contributor first.');
+    const mentor = governance.mentors.find(m => m.github_login.toLowerCase() === data.mentor.toLowerCase());
+    if (!mentor || mentor.github_id === before.github_id || !profiles.some(p => p.profile.github_id === mentor.github_id)) throw new Error('Choose a registered, independent mentor from governance.');
+    const contractRules = await currentRules(client, ref, proof.at, data.year);
+    after.contributions.push({id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
+      mentor_id: mentor.github_id, difficulty: data.difficulty,
+      policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[data.difficulty],
+      configuration: proof, stages: [], settlements: []});
+  } else if (action === 'stage') {
+    if (!task || task.mentor_id !== proof.actor || proof.actor === before.github_id) throw new Error('Only the assigned mentor can accept a stage.');
+    requireRole(governance.mentors.map(m => m.github_id), proof.actor, 'Mentor authorization is no longer active.');
+    if (activeSettlement(after, task)) throw new Error('Task is already settled.');
+    if (data.stage === 'validated' && !task.stages.some(s => s.name === 'reproduced')) throw new Error('Accept reproduction before implementation validation.');
+    task.stages.push({name: data.stage, proof});
+  } else if (action === 'settle') {
+    requireRole(governance.maintainers, proof.actor, 'Final settlement requires a maintainer.');
+    if (settlementAuthor) requireRole(governance.maintainers, settlementAuthor, 'Settlement evidence must be submitted by a maintainer.');
+    if (!task || activeSettlement(after, task)) return null;
+    if (issue.state !== 'closed' || issue.state_reason !== 'completed') throw new Error('Close the task as completed after acceptance.');
+    const latestStage = task.stages.filter(s => s.name === 'validated').at(-1);
+    const lastAdjustment = after.adjustments.filter(a => a.contribution_id === task.id).at(-1);
+    const reversal = lastAdjustment && await client.request(`${client.root}/pulls/${lastAdjustment.review_pr}`);
+    if (!latestStage || reversal && (!reversal.merged_at || Date.parse(latestStage.proof.at) <= Date.parse(reversal.merged_at))) throw new Error('A fresh mentor validation after reversal merge is required.');
+    const mentor = governance.mentors.find(m => m.github_id === task.mentor_id);
+    if (!mentor || mentor.github_id === before.github_id) throw new Error('Assigned mentor authorization is missing.');
+    const verifiedStage = await readComment(client, latestStage.proof.source, slug);
+    if (verifiedStage.proof.digest !== latestStage.proof.digest || verifiedStage.proof.actor !== mentor.github_id) throw new Error('Mentor acceptance changed or disappeared.');
+    const [year, version] = task.policy.id.split('.');
+    const contract = await client.file(`programs/${year}/rules/${version}.json`, ref);
+    if (contract.sha !== task.policy.sha) throw new Error('Published task rules were modified.');
+    const originalRules = rulesSchema.parse(contract.value);
+    const prs = [];
+    for (const url of data.pull_requests) prs.push(await verifyUpstream(client, url, before, mentor, originalRules));
+    if (prs.some(pr => Date.parse(pr.merged_at) > Date.parse(proof.at))) throw new Error('Settlement must occur after upstream merge.');
+    const used = new Set(profiles.flatMap(p => p.profile.contributions.flatMap(c => activeSettlement(p.profile, c)?.upstream.map(pr => `${pr.repository}#${pr.number}`) ?? [])));
+    for (const pr of prs) {
+      const id = `${pr.repository}#${pr.number}`;
+      if (used.has(id)) throw new Error('Upstream PR already credited.');
+      used.add(id);
+    }
+    task.settlements.push({id: key, proof, upstream: prs, points: task.points});
+  } else if (action === 'register') {
+    if (after.level >= 1) return null;
+    after.promotions.push({id: key, from: 0, to: 1, policy, proof, reason: 'Identity registration PR merged.', evidence: [], review_pr: null});
+    after.level = 1;
+  } else if (action === 'revoke') {
+    const settled = activeSettlement(after, task);
+    if (!settled) return null;
+    after.adjustments.push({id: key, contribution_id: task.id, settlement_id: settled.id,
+      points: settled.points, proof, review_pr: reviewPr});
+    mode = 'review';
+  } else if (action === 'promote') {
+    requireRole(governance.maintainers, proof.actor, 'Only maintainers can initiate a high-level promotion.');
+    if (proof.actor === before.github_id || data.level !== before.level + 1) throw new Error('Promotion needs an independent initiator and the next level.');
+    if (await hasPendingReversal(client, before.github_id, slug)) throw new Error('Resolve pending reversals first.');
+    if (data.level === 3 && !eligible(before, rules.level3)) throw new Error('L3 quantitative prerequisites are incomplete.');
+    const evidence = [await evidenceComment(client, data.mentor_comment, 'endorse', before, data.level, governance, ref, slug)];
+    if (data.level === 3) {
+      if (!data.interview_comment) throw new Error('Interview evidence is required.');
+      evidence.push(await evidenceComment(client, data.interview_comment, 'interview', before, 3, governance, ref, slug));
+      if (evidence[0].actor === evidence[1].actor) throw new Error('Mentor and interviewer must be different people.');
+    } else {
+      const recommendations = [];
+      for (const url of data.recommendations) recommendations.push(await evidenceComment(client, url, 'recommend', before, 4, governance, ref, slug));
+      if (new Set(recommendations.map(p => p.actor)).size < rules.level4_recommendations) throw new Error('Independent recommendations are incomplete.');
+      evidence.push(...recommendations);
+    }
+    after.promotions.push({id: key, from: before.level, to: data.level, policy, proof,
+      reason: data.summary, evidence, review_pr: reviewPr});
+    after.level = data.level;
+    mode = 'review';
+  }
+  after.experience = totals(after).experience;
+  if (before.level >= 3) mode = 'review';
+  if (mode === 'auto' && after.level === 1 && eligible(after, rules.level2) && !await hasPendingReversal(client, before.github_id, slug)) {
+    after.promotions.push({id: `${key}-level2`, from: 1, to: 2, policy, proof,
+      reason: 'Annual experience, independent tasks and merged PR thresholds met.', evidence: [], review_pr: null});
+    after.level = 2;
+  }
+  after.last_event = source;
+  after.updated_at = proof.at;
+  validateProfile(after, selected.path);
+  return {path: selected.path, before, after, source, mode, action, policy, governance,
+    approvals: action === 'promote' ? rules.review_approvals : 1,
+    branch: `progress/${mode}/${action === 'revoke' ? 'reopened' : action}-${before.github_id}-${key}`};
+}
+
+export async function requireReviews(client, pr, proposal) {
+  const latest = new Map();
+  for (const review of await client.list(`${client.root}/pulls/${pr.number}/reviews`)) {
+    if (['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)) latest.set(review.user.id, review);
+  }
+  const allowed = proposal.action === 'promote' ? proposal.governance.reviewers : proposal.governance.maintainers;
+  if ([...latest.values()].some(r => allowed.includes(r.user.id) && r.state === 'CHANGES_REQUESTED')) throw new Error('Changes have been requested.');
+  const approvals = [...latest.values()].filter(r => allowed.includes(r.user.id) && r.user.id !== proposal.before.github_id &&
+    r.state === 'APPROVED' && r.commit_id === pr.head.sha);
+  if (approvals.length < proposal.approvals) throw new Error('Independent approvals for the current PR revision are incomplete.');
+}
+
+export async function verifyReview(client, pr) {
+  const slug = process.env.MFCP_APP_SLUG;
+  const repo = await client.metadata();
+  if (!slug || pr.user.login !== `${slug}[bot]` || pr.head.repo?.id !== REPOSITORY_ID || pr.base.ref !== repo.default_branch) throw new Error('Unexpected progression PR origin.');
+  const files = await client.list(`${client.root}/pulls/${pr.number}/files`);
+  if (files.length !== 1 || !/^participants\/[a-z0-9-]+\.json$/.test(files[0].filename) || files[0].status !== 'modified') throw new Error('Progression PR must modify one existing participant.');
+  const candidate = await client.file(files[0].filename, pr.head.sha);
+  const proposed = validateProfile(candidate.value, files[0].filename);
+  const proposal = await buildProposal(client, proposed.last_event, await client.head(), {slug, reviewPr: pr.number});
+  if (!proposal || proposal.mode !== 'review' || !equal(proposal.after, proposed)) throw new Error('Proposal is stale or differs from verified evidence.');
+  await requireReviews(client, pr, proposal);
+  return proposal;
+}

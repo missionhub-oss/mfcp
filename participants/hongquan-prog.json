@@ -1,4 +1,38 @@
 {
   "github_id": 81150281,
-  "github_login": "hongquan-prog"
+  "github_login": "hongquan-prog",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-14",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v1",
+        "sha": "335b576257d6aecd3720c0d5bfb209f36be2b01f"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 14
+        },
+        "actor": 81150281,
+        "at": "2026-10-21T12:22:05Z",
+        "digest": "904e6e37b543928f433947e78c6c7122b7629ad7a55b8fe7a717cf8af58faecf",
+        "details": "{\"registration_pr\":\"https://github.com/processmission-intern/mission-forge/pull/14\",\"merge_commit\":\"c9620e00550c1843e1aeeb0c0ede7b2743b8e736\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 14
+  },
+  "updated_at": "2026-10-21T12:22:05Z"
 }

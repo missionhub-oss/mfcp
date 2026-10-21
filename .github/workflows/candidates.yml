@@ -1,0 +1,32 @@
+name: Automatic progression checks
+on:
+  push:
+    branches: ['progress/auto/**']
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+jobs:
+  verify:
+    name: ${{ matrix.check }}
+    if: github.repository_id == '1428030862'
+    strategy:
+      fail-fast: false
+      matrix:
+        check: ['JSON format and fields', 'validate', 'Progression integrity']
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: node scripts/progression.mjs --verify "$CANDIDATE_SHA"
+        env:
+          CANDIDATE_SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ github.token }}
+          MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
