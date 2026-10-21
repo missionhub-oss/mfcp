@@ -56,3 +56,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app.outputs.token }}
           MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
+          MFCP_APP_ID: ${{ vars.MFCP_APP_ID }}
