@@ -4,6 +4,7 @@ import {marked} from 'marked';
 
 const start = '<!-- mfcp-mentor:start -->';
 const end = '<!-- mfcp-mentor:end -->';
+const reference = url => `<!-- mfcp-mentor-command: ${JSON.stringify(url)} -->`;
 
 function section(body) {
   const tokens = marked.lexer(body ?? '');
@@ -29,7 +30,7 @@ function mentorField(body) {
 }
 
 export function mentorSection(mentor, commandUrl) {
-  return `${start}\n\nMentor: [@${mentor.login}](https://github.com/${mentor.login})\n\n[Configuration command](${commandUrl})\n\n${end}\n`;
+  return `${start}\n\nMentor: [@${mentor.login}](https://github.com/${mentor.login})\n\n${reference(commandUrl)}\n\n${end}\n`;
 }
 
 export function updateMentorSection(body, mentor, commandUrl) {
@@ -58,11 +59,20 @@ export function readMentorCommand(body) {
   const links = [];
   marked.walkTokens(current.tokens.slice(current.first + 1, current.last), token => {
     if (token.type === 'link' && token.text === 'Configuration command') links.push(token.href);
+    if (token.type === 'html' && token.raw.trim().startsWith('<!-- mfcp-mentor-command:')) {
+      const value = token.raw.trim();
+      if (!value.endsWith('-->')) throw new Error('Invalid mentor command reference.');
+      const url = JSON.parse(value.slice('<!-- mfcp-mentor-command:'.length, -3).trim());
+      if (typeof url !== 'string') throw new Error('Invalid mentor command reference.');
+      links.push(url);
+    }
   });
   if (links.length !== 1) throw new Error('The MFCP Mentor section needs one configuration command link.');
   return links[0];
 }
 
 export function assertMentorSection(body, mentor, commandUrl) {
-  if (updateMentorSection(body, mentor, commandUrl) !== body) throw new Error('The MFCP Mentor section differs from the authorized command. Configure the mentor again.');
+  const expected = updateMentorSection(body, mentor, commandUrl);
+  const legacy = expected.replace(reference(commandUrl), `[Configuration command](${commandUrl})`);
+  if (expected !== body && legacy !== body) throw new Error('The MFCP Mentor section differs from the authorized command. Configure the mentor again.');
 }
