@@ -6,6 +6,7 @@
   {"name":"project/zephyr","color":"7A51C2","description":"Zephyr tasks and resources / Zephyr 任务与资料"},
   {"name":"project/linux","color":"315879","description":"Linux tasks and resources / Linux 任务与资料"},
   {"name":"project/yocto","color":"168681","description":"Yocto Project tasks and resources / Yocto Project 任务与资料"},
+  {"name":"year/2026","color":"0E8A16","description":"2026 program rules / 2026 年培养规则"},
   {"name":"difficulty/level0","color":"C2E0C6","description":"L0: Guided setup and validation / 按指引准备环境并验证结果"},
   {"name":"difficulty/level1","color":"7BC8A4","description":"L1: Scoped changes with mentor guidance / 导师指导下完成明确范围的修改"},
   {"name":"difficulty/level2","color":"54AEFF","description":"L2: Independent analysis, implementation and validation / 独立分析、实现与验证"},
