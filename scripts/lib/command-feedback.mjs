@@ -3,6 +3,8 @@
 import { isBotCommand, parseCommand } from './commands.mjs';
 import { digest, equal, activeSettlement } from './profile.mjs';
 import { readProfiles } from './progression.mjs';
+import { isTrustedBotComment } from './bot-identity.mjs';
+import { reactionForOutcome, setCommandReaction } from './command-reactions.mjs';
 
 const inline = value => String(value).replaceAll('`', "'").replaceAll('@', '＠')
   .replaceAll('<', '&lt;').replaceAll('>', '&gt;').replace(/\s+/g, ' ').slice(0, 500);
@@ -120,12 +122,18 @@ export async function replyToCommand(client, source, result, error) {
   if (comment.user.type !== 'User' || !isBotCommand(comment.body, process.env.MFCP_APP_SLUG)) return {status: 'not-a-command'};
   if (comment.issue_url !== `https://api.github.com/${client.root}/issues/${source.issue}`) throw new Error('Reply source issue mismatch.');
   const comments = await client.list(`${client.root}/issues/${source.issue}/comments`);
-  const previous = comments.find(item => item.user.type === 'Bot' && item.performed_via_github_app?.id === appId && item.body?.includes(marker(comment.id)));
-  if (previous?.body.includes(`<!-- mfcp-command-result:${digest(comment.body)}:success -->`)) return {status: 'already-replied', url: previous.html_url};
+  const previous = comments.find(item => isTrustedBotComment(item, appId) && item.body?.includes(marker(comment.id)));
+  if (previous?.body.includes(`<!-- mfcp-command-result:${digest(comment.body)}:success -->`)) {
+    await setCommandReaction(client, source, '+1');
+    return {status: 'already-replied', url: previous.html_url};
+  }
   const edited = comment.created_at !== comment.updated_at;
   const outcome = edited ? errorOutcome(new Error('This command comment was edited. Check the current state and post a new command.'))
     : error ? errorOutcome(error) : result.status === 'unchanged'
     ? await explainUnchanged(client, source, comment) : result;
+  const reaction = await setCommandReaction(client, source, reactionForOutcome(outcome.status), {preserveSuccess: !edited});
+  if (reaction === '+1' && !previous) return {status: 'success-reaction', content: '+1'};
+  if (reaction === '+1' && reactionForOutcome(outcome.status) !== '+1') return {status: 'already-succeeded'};
   const body = formatCommandFeedback(comment, outcome, (await client.metadata()).full_name);
   if (previous?.body === body) return {status: 'already-replied', url: previous.html_url};
   const posted = previous

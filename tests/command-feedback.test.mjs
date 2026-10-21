@@ -4,6 +4,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { isBotCommand, parseCommand } from '../scripts/lib/commands.mjs';
 import { formatCommandFeedback, errorOutcome } from '../scripts/lib/command-feedback.mjs';
+import { isTrustedBotComment } from '../scripts/lib/bot-identity.mjs';
+import { reactionForOutcome } from '../scripts/lib/command-reactions.mjs';
+
+test('trusted bot identity rejects conflicting application and human identities', () => {
+  const comment = {user: {type: 'Bot', id: 345823948}};
+  assert.equal(isTrustedBotComment(comment, 5410846, 345823948), true);
+  assert.equal(isTrustedBotComment(comment, 5410846, undefined), false);
+  assert.equal(isTrustedBotComment({...comment, performed_via_github_app: {id: 15368}}, 5410846, 345823948), false);
+  assert.equal(isTrustedBotComment({user: {type: 'User', id: 62325246}}, 5410846, 345823948), false);
+});
+
+test('command reactions distinguish completed writes from pending review and failures', () => {
+  for (const status of ['assigned', 'published', 'evidence-recorded', 'already-merged']) assert.equal(reactionForOutcome(status), '+1');
+  for (const status of ['processing', 'waiting', 'awaiting-review', 'auto-merge-enabled']) assert.equal(reactionForOutcome(status), 'eyes');
+  for (const status of ['failed', 'unchanged']) assert.equal(reactionForOutcome(status), null);
+});
 
 const repository = 'processmission-intern/mission-forge';
 

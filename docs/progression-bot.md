@@ -5,7 +5,8 @@
 
 `mfcp-progress` verifies GitHub evidence and records contributor progress.
 The repository ID is `1428030862`. Repository variables `MFCP_APP_ID` and
-`MFCP_APP_SLUG` identify the App; `MFCP_APP_PRIVATE_KEY` is an Actions secret.
+`MFCP_APP_SLUG` identify the App; `MFCP_BOT_ID` identifies its numeric bot user
+ID. `MFCP_APP_PRIVATE_KEY` is an Actions secret.
 The App needs Contents, Issues and Pull requests write permissions and Checks
 read permission, plus organization Members read permission. Install it on this
 repository and approve the organization's permission update.
@@ -87,14 +88,20 @@ examples do not execute. Links use HTTPS and may include comment anchors.
 See [完整命令示例](bot-command-examples.md) for copyable comment templates,
 native task assignment, acceptance, settlement and L3/L4 review examples.
 
-The bot replies in the same issue, mentions the command author, and links the
-original comment. Replies distinguish confirmed changes, pending conditions,
-review PRs and validation failures, including malformed commands. Assessment
+The bot adds 👀 to the original command while processing or awaiting conditions.
+Completed operations replace it with 👍. Failures remove the processing reaction
+and receive a reply mentioning the command author and linking the original
+comment. Pending conditions and review PRs also receive explanatory replies.
+Only the bot's own reactions are changed. Assessment
 commands validate the candidate, author and annual role before acknowledging
-the evidence. Each command has one App-authored reply; retries update that
+the evidence. Each command has at most one App-authored reply; retries update that
 reply, and recorded success is retained. Reply delivery failures are retried
 during reconciliation without awarding duplicate experience. Task-completion
 and promotion congratulations remain separate notifications to the contributor.
+
+Moderation identifies trusted feedback by App ID, or by the configured numeric
+bot user ID when GitHub omits App metadata. An explicitly different App ID is
+rejected. Other bots remain subject to registration checks.
 
 Accept reproduction before validation. After validation and upstream merge,
 post `settle` with the upstream PR URLs and close the issue as completed.

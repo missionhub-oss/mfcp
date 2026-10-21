@@ -26,3 +26,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           MFCP_APP_ID: ${{ vars.MFCP_APP_ID }}
+          MFCP_BOT_ID: ${{ vars.MFCP_BOT_ID }}
