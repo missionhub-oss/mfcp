@@ -1,0 +1,38 @@
+{
+  "github_id": 188071249,
+  "github_login": "silicalet",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-20",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v1",
+        "sha": "335b576257d6aecd3720c0d5bfb209f36be2b01f"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 20
+        },
+        "actor": 188071249,
+        "at": "2026-10-21T13:32:39Z",
+        "digest": "9e4a0cce07eaf72f651dce1536425d2063c50ea10b2a90c94ec82a3197dcd592",
+        "details": "{\"registration_pr\":\"https://github.com/processmission-intern/mission-forge/pull/20\",\"merge_commit\":\"667cc984a5d46ced4277348794445ece8a133cfc\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 20
+  },
+  "updated_at": "2026-10-21T13:32:39Z"
+}
