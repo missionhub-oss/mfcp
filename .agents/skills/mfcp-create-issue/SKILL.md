@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 # SPDX-License-Identifier: MIT
 name: mfcp-create-issue
-description: 为 processmission/mission-forge 创建或起草 GitHub Issue，严格使用仓库当前的实践任务、问题报告、改进建议或参与求助表单。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
+description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再使用仓库当前表单设置正文和标签。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
 ---
 
 # MFCP Issue 创建
 
-目标仓库固定为 `processmission/mission-forge`。使用远端默认分支的当前表单与规则；所有字段由真实资料支持。
+目标仓库为 `processmission-intern/mission-forge`，仓库数字 ID 为 `1428030862`。使用远端默认分支的当前表单与规则；所有字段由真实资料支持。技能保存在本仓库，不安装全局副本。
 
 ## 选择入口
 
@@ -20,36 +20,62 @@ description: 为 processmission/mission-forge 创建或起草 GitHub Issue，严
 
 任务申领、进展、成果提交、导师评估和组织者复核使用原任务评论。读 `CONTRIBUTING.md` 确认当前要求；用户明确要求发布评论时才发送。上游缺陷按上游流程处理，MFCP 可以记录相关实践任务。请求创建独立评估 Issue 时，说明现行评论流程。
 
+## 创建任务前主动确认
+
+先提取本次对话已经明确的信息。对尚未明确的难度和年度，必须先向用户询问；模板默认值、当前日期和检索结果都不能代替用户选择。已有明确答案时直接沿用，批量任务可以沿用用户给出的统一要求。
+
+按用户时区的当前日期计算今年与明年，并查询标签目录和 `programs/<year>/rules/`。当前年度标签只有纯数字 `2026`。提问时写出具体年份，例如：“这个任务按 L0–L4 中哪个难度准备？面向今年（2026）还是明年（2027）？目前已发布的年度为 2026。”每次使用时根据实际日期和已发布规则更新年份。
+
+将其他缺失的关键参数集中询问，避免逐个打断用户：
+
+| 信息 | 需要确认的内容 |
+| --- | --- |
+| 项目与问题 | Zephyr、Linux 或 Yocto；真实问题、上游链接及任务范围 |
+| 难度 | L0–L4、难度依据，以及是否还需要导师评定 |
+| 年度 | 明确的四位数字年份；是否已有对应规则和标签 |
+| 交付与验收 | 预期成果、验证方法、是否要求上游合入与 DCO 签名 |
+| 实践条件 | QEMU 或真实硬件、所需知识、环境与版本约束 |
+| Mentor | 已确认的 GitHub 用户名，或明确记录待协调及所需指导 |
+| 负责人 | 开放申领，或用户明确指定的已注册成员 |
+| 时间与语言 | 时间安排、依赖事项，以及正文使用中文还是英文 |
+
+可以结合已核实事实给出难度建议和理由，再请用户确认。支持异步提问时，一次提出关键问题，并继续查证上游资料和重复任务；收到必要答案前保留草稿。用户选择尚未发布的年度时，说明缺少的年度规则或标签，不回退到其他年份，也不自行新建年度规则。用户明确选择“待导师评定”时保留草稿，不擅自添加难度标签。
+
+用户确认后，显式更新对应内容：项目和难度写入当前表单字段，项目、难度和年度写入标签；时间、环境、交付及验收条件写入各自字段。Mentor 未确认时如实写明待协调。只有用户明确指定负责人时才设置 Assignee，开放申领的任务保持未分配。
+
 ## 读取与准备
 
-1. 使用 GitHub 连接工具读取目标仓库信息、默认分支的 `CONTRIBUTING.md`、`docs/levels.md`、`.github/labels.json` 和选定表单。优先使用连接工具检索开放与关闭的相关 Issue；缺少所需能力时使用 `gh api`。找到已有同一任务时读取其正文和评论，避免重复创建。
+1. 使用 GitHub 连接工具读取目标仓库信息、默认分支的 `CONTRIBUTING.md`、`docs/levels.md`、`.github/labels.json`、所选年度规则和选定表单。优先使用连接工具检索开放与关闭的相关 Issue；缺少所需能力时使用 `gh api`。找到已有同一任务时读取其正文和评论，避免重复创建。
 2. 本技能的 `scripts/prepare.rb` 使用已认证的 GitHub CLI 获取默认分支提交，并从该提交读取表单和标签目录。运行 `--inspect` 查看真实字段、说明、必填标记和选项。需要 Ruby、Psych YAML 库及 GitHub CLI；缺少依赖时安装对应依赖或说明阻碍。
 3. 在当前工作目录创建本次专用的中间目录；位于 Git 仓库时先加入 `.git/info/exclude`。使用文件编辑工具写入答案 JSON，以表单字段 `id` 为键。单选为选项完整原文字符串，多选为完整原文字符串数组，文本字段为字符串。只使用所选表单的字段。
-4. 根据用户已提供的信息、仓库资料和真实问题记录填写字段。未知的必填事实集中询问用户，保持草稿。待评定难度使用表单的对应选项，并说明需要导师判断的内容；导师未确定时按表单要求填写需要的指导。可选字段可以省略。保留原始语言，用户可以用中文或英文回答。
+4. 根据用户确认的信息、仓库资料和真实问题记录填写字段。年度作为原生标签传给脚本，不在正文额外增加年度字段。导师未确定时按表单要求填写需要的指导。可选字段可以省略，正文使用用户选择的语言。
 
 技能随仓库保存在 `.agents/skills/mfcp-create-issue/`。命令中的技能目录使用本次实际加载的目录：
 
 ```sh
 ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --inspect
-ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>/answers.json --title '具体任务标题' --output <draft-dir>/prepared
+ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>/answers.json --title '具体任务标题' --year 2026 --output <draft-dir>/prepared
 ```
 
-脚本输出 `body.md`、`issue.json` 和 `source.json`。脚本校验必填字段、选项、字段标识符和默认标签，按表单顺序生成 `### 原字段名称` 与回答。未填写的可选字段显示 `_No response_`。正文保留表单实际字段；表单介绍文字作为操作指引阅读。标题采用表单的 `title` 前缀。
+`--year` 使用用户确认的年份。用户明确指定负责人时添加 `--assignee 用户名`，脚本核对注册记录和 GitHub 身份。非任务表单不传 `--year`，也无需询问任务难度和年度。
+
+脚本输出 `body.md`、`issue.json` 和 `source.json`。它根据回答生成项目、难度及年度标签，检查年度规则存在、标签在目录和远端均存在，并按表单顺序生成 `### 原字段名称` 与回答。未填写的可选字段显示 `_No response_`。正文保留表单实际字段；标题采用表单的 `title` 前缀。
 
 ## 标签与权限
 
 - 创建或评论前，读取实际提交身份的 GitHub 用户名和数字 ID，检查默认分支 `participants/<小写用户名>.json` 中的登记，并核对文件内的 `github_login` 和 `github_id`。尚未登记或身份不匹配时保留草稿，指向 `participants/README.md` 的 Fork 与注册 PR 流程。使用连接工具与 CLI 时分别确认实际提交账号，避免混用身份。
 
-- 新建时使用模板声明的默认标签。项目下拉选项进入正文，项目标签由维护者确认后添加。
-- 难度选择表示建议。导师确认任务难度、维护者设置 `difficulty/level0` 至 `difficulty/level4` 的要求以当前文档为准；创建操作只携带模板默认标签。
-- Assignee 在导师确认任务申领后设置。创建时不推断负责人、导师授权、Milestone 或额外标签。
+- 任务使用 `kind/task`、用户确认的项目标签、唯一的 `difficulty/level0` 至 `difficulty/level4` 标签及唯一的四位数字年度标签。当前仅使用 `2026`，不增加年度前缀。问题报告、建议和求助保留对应模板的默认标签。
+- 难度标签必须与正文中的难度选择一致，年度必须对应已发布规则。未确认时继续询问或保留草稿。发布前确认提交身份能够设置所选标签；权限不足时保留准备结果并说明需要维护者设置的内容。
+- 指定 Assignee 时确认用户明确授权、该成员已注册且 GitHub 接受该分配；不推断负责人、Mentor 授权、Milestone 或其他标签。
+- 正文填写 Mentor 用户名仅记录协作安排。用户明确要求正式配置 Mentor 时，再按 `docs/bot-command-examples.md` 检查权限并发送命令，核对 Bot 的结果回复。
 - 用户要求起草时交付草稿。用户明确要求创建该 Issue，且必填事实齐备时可以提交，无需重复确认。泛泛讨论、调用本技能或生成草稿不构成发布授权。
 
 ## 校验与发布
 
 1. 审阅 `body.md`：字段顺序与表单一致，标题具体，事实有依据，公开内容不含凭据、私人联系方式或薪酬协议。脚本的格式校验不能代替事实核对。
-2. 发布前检查当前默认分支的表单和标签目录与 `source.json` 记录的版本是否一致，并核对远端标签仍存在。若内容改变，重新准备草稿并检查新增必填条件；其他无关文件的更新无需重新准备。
+2. 发布前检查当前默认分支的表单和标签目录与 `source.json` 记录的版本是否一致，并核对所选年度规则及远端标签仍存在。若内容改变，重新准备草稿并检查新增必填条件；其他无关文件的更新无需重新准备。
 3. 再次查询近期相关 Issue。存在等价记录时向用户返回该记录，保留当前草稿；用户明确要求独立事项时按其范围处理。
-4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `processmission/mission-forge`，传入 `issue.json` 的标题、正文与标签。使用 CLI 时执行 `gh api repos/processmission/mission-forge/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
+4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `processmission-intern/mission-forge`，传入 `issue.json` 的标题、正文、标签及用户明确指定的 Assignee。使用 CLI 时执行 `gh api repos/processmission-intern/mission-forge/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
 5. 创建请求超时或返回结果不明时，先查询当前用户近期创建的 Issue，核对标题和完整正文。找到匹配项就读取并返回它；结果仍不明时停止自动重试，说明状态与草稿位置，避免重复发布。
-6. 创建成功后读取该 Issue，核对目标仓库、标题、正文与默认标签，返回真实链接。读取不一致时说明具体差异，再按原授权修正。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。
+6. 创建成功后读取该 Issue，核对目标仓库、标题、正文、项目、难度、年度标签和 Assignee，返回真实链接。读取不一致时说明具体差异，再按原授权修正；无法设置的字段如实报告，不重复创建 Issue。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。

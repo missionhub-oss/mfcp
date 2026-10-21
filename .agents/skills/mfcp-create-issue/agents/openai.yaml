@@ -1,4 +1,4 @@
 interface:
   display_name: "MFCP Issue 创建"
-  short_description: "依据 Mission Forge 当前表单创建 Issue，校验字段与默认标签"
-  default_prompt: "使用 $mfcp-create-issue 按仓库当前模板准备并创建这项 MFCP Issue。"
+  short_description: "先确认任务难度、年度与验收条件，再按 MFCP 当前模板准备 Issue"
+  default_prompt: "使用 $mfcp-create-issue，先确认未明确的难度、年度及关键任务参数，再按仓库当前表单准备并创建 Issue。"
