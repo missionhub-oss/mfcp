@@ -88,6 +88,19 @@ export async function processSource(client, source, {write = false} = {}) {
     const base = await client.head();
     let proposal = await buildProposal(client, source, base, {slug});
     if (!proposal) return {status: 'unchanged', source};
+    if (proposal.mode === 'native') {
+      if (!write) return {status: 'dry-run', ...proposal};
+      proposal = await buildProposal(client, source, await client.head(), {slug});
+      if (!proposal) return {status: 'unchanged', source};
+      if (proposal.mode !== 'native' || proposal.action !== 'assign') throw new Error('Assignment command changed during validation.');
+      const assigned = await client.request(`${client.root}/issues/${proposal.issue}/assignees`, 'POST', {
+        assignees: [proposal.assignee.login],
+      });
+      if (assigned.assignees.length !== 1 || assigned.assignees[0].id !== proposal.assignee.id) {
+        throw new Error('GitHub did not confirm a unique assignee; inspect the issue assignment.');
+      }
+      return {status: 'assigned', issue: proposal.issue, assignee: proposal.assignee.login, url: assigned.html_url};
+    }
     if (!write) return {status: 'dry-run', mode: proposal.mode, path: proposal.path,
       level: proposal.after.level, experience: proposal.after.experience, source};
     const prs = await client.list(`${client.root}/pulls?state=all&head=${encodeURIComponent((await client.metadata()).owner.login + ':' + proposal.branch)}`);
