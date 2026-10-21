@@ -43,7 +43,13 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
+      - uses: ./.github/actions/mentor-membership-token
+        id: members
+        with:
+          app-id: ${{ vars.MFCP_APP_ID }}
+          private-key: ${{ secrets.MFCP_APP_PRIVATE_KEY }}
       - name: Verify GitHub ID, username and PR author
         run: node scripts/membership.mjs registration
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          MFCP_MEMBERS_TOKEN: ${{ steps.members.outputs.token }}

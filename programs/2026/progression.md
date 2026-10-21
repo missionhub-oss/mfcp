@@ -50,9 +50,11 @@ L0–L2 的正向经验结算及 L0 → L1、L1 → L2 晋级直接更新默认�
 已结算任务重新打开时，Bot 提交撤销 PR，批准合入后扣除该次结算的原始
 经验值和对应成果数量，同时保留历史。经验撤销不自动降低已获等级。
 
-年度授权人员记录在 [governance.json](governance.json)。导师名单可以为空，
-L0 → L1 晋级始终按注册条件执行。涉及导师或内部审核的操作必须有对应
-授权人员及真实审核证据。
+Mentor 资格由 [Mentors Team](https://github.com/orgs/processmission-intern/teams/mentors)
+的有效成员身份确定，Bot 在执行命令和核对审核时查询。其他账号的 Bot
+命令不生效，查询失败时停止操作。
+[governance.json](governance.json) 保存年度维护者、审核人员、面试人员及
+导师 DCO 签名资料。L0 → L1 晋级始终按注册条件执行。
 
 ## 成果与晋级通知
 
