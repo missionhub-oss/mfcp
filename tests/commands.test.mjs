@@ -14,7 +14,7 @@ const notification = `${registration}#issuecomment-6316896791`;
 const description = 'Documented command syntax; evidence must be verified before any approval.';
 const participant = JSON.parse(await readFile(new URL('../participants/hongquan-prog.json', import.meta.url), 'utf8'));
 const catalog = JSON.parse(await readFile(new URL('../.github/labels.json', import.meta.url), 'utf8'));
-const labels = ['kind/task', 'difficulty/level1', 'year/2026'].map(name => {
+const labels = ['kind/task', 'difficulty/level1', '2026'].map(name => {
   const label = catalog.find(item => item.name === name);
   assert.ok(label, `${name} must be in the repository label catalog`);
   return label;
@@ -83,8 +83,8 @@ test('native task fields are mandatory and unambiguous', () => {
   assert.deepEqual(taskSettings(issue), {participant_id: participant.github_id, difficulty: 1, year: 2026});
   assert.throws(() => taskSettings({...issue, assignees: []}));
   assert.throws(() => taskSettings({...issue, assignees: [...issue.assignees, ...issue.assignees]}));
-  assert.throws(() => taskSettings({...issue, labels: labels.filter(label => !label.name.startsWith('year/'))}));
+  assert.throws(() => taskSettings({...issue, labels: labels.filter(label => label.name !== '2026')}));
   assert.throws(() => taskSettings({...issue, labels: [...labels, catalog.find(label => label.name === 'difficulty/level2')]}));
-  assert.throws(() => taskSettings({...issue, labels: [...labels, labels.find(label => label.name === 'year/2026')]}));
+  assert.throws(() => taskSettings({...issue, labels: [...labels, labels.find(label => label.name === '2026')]}));
   assert.throws(() => taskSettings({...issue, pull_request: {}}));
 });
