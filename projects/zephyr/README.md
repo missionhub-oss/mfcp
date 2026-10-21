@@ -2,6 +2,12 @@
 
 Zephyr 方向围绕实时操作系统开展实践，可提出板级支持、设备驱动、示例、测试与文档相关任务。
 
+## 入门学习
+
+首次接触 Zephyr，可以从 [Zephyr RTOS 学习课程](learning-courses.md)开始。目录整理了 B 站《Zephyr RTOS 开发实践》当前已发布的 22 节课程，提供分 P 和单集学习链接、课程介绍，以及基础准备和分阶段学习顺序。
+
+先学习开发环境与构建流程，尝试在 QEMU 中运行基础示例，再根据任务补充配置、设备树、线程和驱动相关知识。带着实际学习记录按[任务申领流程](../../CONTRIBUTING.md#申领任务)参与实践。
+
 ## 上游入口
 
 - [Zephyr 源码](https://github.com/zephyrproject-rtos/zephyr)
