@@ -5,7 +5,9 @@ import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createClient, REPOSITORY_ID } from './lib/github.mjs';
-import { buildProposal, parseCommand, verifyReview } from './lib/progression.mjs';
+import { buildProposal, verifyReview } from './lib/progression.mjs';
+import { isBotCommand } from './lib/commands.mjs';
+import { replyToCommand } from './lib/command-feedback.mjs';
 import { equal, validateProfile } from './lib/profile.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 
@@ -81,13 +83,14 @@ async function enableAutoMerge(client, pr) {
   if (result.errors) throw new Error('Unable to enable auto-merge; check repository settings and approvals.');
 }
 
-export async function processSource(client, source, {write = false} = {}) {
+async function executeSource(client, source, {write = false} = {}) {
   const slug = process.env.MFCP_APP_SLUG;
   if (!slug) throw new Error('MFCP_APP_SLUG is required.');
   for (let attempt = 0; attempt < 3; attempt++) {
     const base = await client.head();
     let proposal = await buildProposal(client, source, base, {slug});
     if (!proposal) return {status: 'unchanged', source};
+    if (proposal.mode === 'evidence') return {status: write ? 'evidence-recorded' : 'dry-run', ...proposal};
     if (proposal.mode === 'native') {
       if (!write) return {status: 'dry-run', ...proposal};
       proposal = await buildProposal(client, source, await client.head(), {slug});
@@ -144,9 +147,27 @@ export async function processSource(client, source, {write = false} = {}) {
     if (!equal(confirmed.value.last_event, source) && !equal(confirmed.value, proposal.after)) {
       throw new Error('A concurrent update followed publication; inspect history before retrying.');
     }
-    return {status: 'published', commit: head, path: proposal.path};
+    return {status: 'published', action: proposal.action, participant: proposal.after.github_login,
+      commit: head, path: proposal.path, commandSource: proposal.commandSource};
   }
   throw new Error('Main changed repeatedly; reconciliation will retry from fresh state.');
+}
+
+export async function processSource(client, source, {write = false} = {}) {
+  let result, failure;
+  try {result = await executeSource(client, source, {write});}
+  catch (error) {failure = error;}
+  const commandSource = source.kind === 'comment' ? source : result?.commandSource;
+  if (write && commandSource) {
+    try {
+      const reply = await replyToCommand(client, commandSource, result, failure);
+      if (result) result.reply = reply;
+    } catch (error) {
+      throw new Error(`Command reply could not be delivered; reconciliation will retry. ${error.message}`, {cause: failure || error});
+    }
+  }
+  if (failure) throw failure;
+  return result;
 }
 
 async function latestIssueEvent(client, number, kind) {
@@ -158,7 +179,7 @@ async function latestIssueEvent(client, number, kind) {
 async function sourcesForEvent(client, event, name) {
   if (event.repository?.id !== REPOSITORY_ID) throw new Error('Unexpected repository.');
   if (name === 'issue_comment') {
-    if (event.issue.pull_request || !parseCommand(event.comment.body, process.env.MFCP_APP_SLUG)) return [];
+    if (event.issue.pull_request || event.comment.user.type !== 'User' || !isBotCommand(event.comment.body, process.env.MFCP_APP_SLUG)) return [];
     return [{kind: 'comment', issue: event.issue.number, comment: event.comment.id}];
   }
   if (name === 'issues') {
@@ -196,7 +217,7 @@ async function reconcile(client, write) {
     const comments = await client.list(`${client.root}/issues/${issue.number}/comments`);
     for (const comment of comments) {
       try {
-        if (parseCommand(comment.body, process.env.MFCP_APP_SLUG)) reports.push(await processSource(client,
+        if (comment.user.type === 'User' && isBotCommand(comment.body, process.env.MFCP_APP_SLUG)) reports.push(await processSource(client,
           {kind: 'comment', issue: issue.number, comment: comment.id}, {write}));
       } catch (error) {reports.push({status: 'pending', comment: comment.id, reason: error.message});}
     }

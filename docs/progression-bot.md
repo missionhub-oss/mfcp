@@ -87,6 +87,15 @@ examples do not execute. Links use HTTPS and may include comment anchors.
 See [完整命令示例](bot-command-examples.md) for copyable comment templates,
 native task assignment, acceptance, settlement and L3/L4 review examples.
 
+The bot replies in the same issue, mentions the command author, and links the
+original comment. Replies distinguish confirmed changes, pending conditions,
+review PRs and validation failures, including malformed commands. Assessment
+commands validate the candidate, author and annual role before acknowledging
+the evidence. Each command has one App-authored reply; retries update that
+reply, and recorded success is retained. Reply delivery failures are retried
+during reconciliation without awarding duplicate experience. Task-completion
+and promotion congratulations remain separate notifications to the contributor.
+
 Accept reproduction before validation. After validation and upstream merge,
 post `settle` with the upstream PR URLs and close the issue as completed.
 An open issue keeps the settlement command as evidence without awarding XP.

@@ -20,7 +20,8 @@ const schemas = {
     interview_comment: url.optional(), recommendations: z.array(url)}),
 };
 
-export function parseCommand(body, slug) {
+function commandHeader(body, slug) {
+  if (typeof body !== 'string') return null;
   const tokens = marked.lexer(body);
   const firstIndex = tokens.findIndex(token => token.type !== 'space');
   const first = tokens[firstIndex];
@@ -28,6 +29,15 @@ export function parseCommand(body, slug) {
   const [line, ...following] = first.text.split('\n');
   const match = /^@([a-z0-9-]+)(?:\[bot\])?(?:\s+(.*))?$/i.exec(line.trim());
   if (!match || match[1].toLowerCase() !== slug?.toLowerCase()) return null;
+  return {tokens, firstIndex, following, match};
+}
+
+export const isBotCommand = (body, slug) => Boolean(commandHeader(body, slug));
+
+export function parseCommand(body, slug) {
+  const header = commandHeader(body, slug);
+  if (!header) return null;
+  const {tokens, firstIndex, following, match} = header;
   if (tokens.some(token => token.type === 'code')) throw new Error('Use one short command line; evidence summaries go below it.');
   const words = parseArgsStringToArgv(match[2] ?? '');
   const [command, ...args] = words;

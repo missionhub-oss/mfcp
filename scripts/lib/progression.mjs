@@ -110,12 +110,18 @@ export async function hasPendingReversal(client, participantId, slug) {
 
 export async function buildProposal(client, source, ref, {slug, reviewPr = null} = {}) {
   const profiles = await readProfiles(client, ref);
-  let selected, proof, action, data, issue, settlementAuthor, settings;
+  let selected, proof, action, data, issue, settlementAuthor, settings, commandSource;
   if (source.kind === 'comment') {
     const read = await readComment(client, source, slug);
     ({action, data} = read.command);
     proof = read.proof;
-    if (['endorse', 'interview', 'recommend'].includes(action)) return null;
+    if (['endorse', 'interview', 'recommend'].includes(action)) {
+      const candidate = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
+      if (!candidate) throw new Error('The candidate must be registered.');
+      const {governance} = await currentRules(client, ref, proof.at);
+      await evidenceComment(client, read.comment.html_url, action, candidate.profile, data.level, governance, ref, slug);
+      return {mode: 'evidence', action, participant: candidate.profile.github_login, source};
+    }
     issue = await client.request(`${client.root}/issues/${source.issue}`);
     if (action === 'assign') return planAssignment(client, issue, profiles, data.assignee, proof);
     if (['configure', 'stage', 'settle'].includes(action)) {
@@ -158,6 +164,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     }
     if (!comment) throw new Error('Post settlement evidence before closing the task.');
     const read = await readComment(client, {kind: 'comment', issue: source.issue, comment: comment.id}, slug);
+    commandSource = read.proof.source;
     selected = contract;
     action = 'settle';
     data = read.command.data;
@@ -282,7 +289,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
   after.last_event = source;
   after.updated_at = proof.at;
   validateProfile(after, selected.path);
-  return {path: selected.path, before, after, source, mode, action, policy, governance,
+  return {path: selected.path, before, after, source, commandSource, mode, action, policy, governance,
     approvals: action === 'promote' ? rules.review_approvals : 1,
     branch: `progress/${mode}/${action === 'revoke' ? 'reopened' : action}-${before.github_id}-${key}`};
 }
