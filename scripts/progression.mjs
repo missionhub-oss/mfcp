@@ -8,6 +8,7 @@ import { createClient, REPOSITORY_ID } from './lib/github.mjs';
 import { buildProposal, verifyReview } from './lib/progression.mjs';
 import { isBotCommand } from './lib/commands.mjs';
 import { replyToCommand } from './lib/command-feedback.mjs';
+import { markCommandProcessing } from './lib/command-reactions.mjs';
 import { equal, validateProfile } from './lib/profile.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 
@@ -155,7 +156,10 @@ async function executeSource(client, source, {write = false} = {}) {
 
 export async function processSource(client, source, {write = false} = {}) {
   let result, failure;
-  try {result = await executeSource(client, source, {write});}
+  try {
+    if (write && source.kind === 'comment') await markCommandProcessing(client, source);
+    result = await executeSource(client, source, {write});
+  }
   catch (error) {failure = error;}
   const commandSource = source.kind === 'comment' ? source : result?.commandSource;
   if (write && commandSource) {

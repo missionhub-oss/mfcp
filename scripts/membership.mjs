@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { createClient as githubClient, REPOSITORY_ID, DEFAULT_REPOSITORY } from './lib/github.mjs';
 import { normalizeProfile, initialProfile, assertIdentityOnly, equal, validateProfile } from './lib/profile.mjs';
+import { isTrustedBotComment } from './lib/bot-identity.mjs';
 
 export function participantPath(login) {
   if (typeof login !== 'string' || !/^[a-z0-9-]{1,39}$/i.test(login)) {
@@ -172,7 +173,7 @@ export async function moderate(client, event, eventName) {
     }
     const issue = await client.request(`${client.root}/issues/${event.issue.number}`);
     if (issue.pull_request) return 'PR discussions remain open.';
-    if (process.env.MFCP_APP_ID && comment.performed_via_github_app?.id === Number(process.env.MFCP_APP_ID)) return 'Trusted application feedback.';
+    if (isTrustedBotComment(comment)) return 'Trusted application feedback.';
     if (await client.registered(comment.user)) return 'Registered comment author.';
     try {
       await client.request(`${client.root}/issues/comments/${comment.id}`, 'DELETE');
