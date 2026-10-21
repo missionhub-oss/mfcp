@@ -66,8 +66,9 @@ A bare numeric GitHub ID is also accepted: `configure mentor 62325246`.
 Mentor configuration requires a task issue, an authorized maintainer and a
 registered active Mentor Team member. Assignee, difficulty and year may be set
 later. The bot updates the existing `### Mentor / 导师` issue field with the
-mentor account and configuration command link, preserving guidance and the rest
-of the body. It replaces the TBD placeholder. 👍 confirms the update. Keep the
+mentor account, preserving guidance and the rest
+of the body. The configuration command link is stored in a hidden HTML comment
+for authorization checks. It replaces the TBD placeholder. 👍 confirms the update. Keep the
 immutable command as authorization evidence. Before first acceptance, a new
 authorized command can update the mentor field. Acceptance and settlement verify
 the field against its authorized command and resolve the contributor from the

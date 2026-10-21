@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {marked} from 'marked';
 import {updateMentorSection, readMentorCommand, assertMentorSection} from '../scripts/lib/mentor-section.mjs';
 
 const mentor = {login: 'hongquan-prog'};
@@ -31,7 +32,19 @@ test('missing, duplicate and misplaced configuration sections cannot authorize a
   const updated = updateMentorSection(body, mentor, command);
   assert.throws(() => updateMentorSection(updated + updated, mentor, command), /duplicate/);
   assert.throws(() => assertMentorSection(updated.replace('### Mentor / 导师', '### References / 参考资料'), mentor, command), /must stay inside/);
-  assert.throws(() => readMentorCommand(updated.replace('[Configuration command]', '[Other link]')), /one configuration/);
+  assert.throws(() => readMentorCommand(updated.replace('mfcp-mentor-command:', 'other-reference:')), /one configuration/);
+});
+
+test('command evidence stays in an HTML comment and visible references migrate safely', () => {
+  const updated = updateMentorSection(body, mentor, command);
+  const visible = marked.lexer(updated).filter(token => token.type !== 'html').map(token => token.raw).join('');
+  assert.ok(!visible.includes(command));
+  assert.ok(!visible.includes('Configuration command'));
+  assert.equal(readMentorCommand(updated), command);
+  const legacy = updated.replace(`<!-- mfcp-mentor-command: ${JSON.stringify(command)} -->`, `[Configuration command](${command})`);
+  assert.equal(readMentorCommand(legacy), command);
+  assert.doesNotThrow(() => assertMentorSection(legacy, mentor, command));
+  assert.equal(updateMentorSection(legacy, mentor, command), updated);
 });
 
 test('a missing form field is added once and code examples are preserved', () => {
