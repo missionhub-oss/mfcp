@@ -7,7 +7,28 @@
 The repository ID is `1428030862`. Repository variables `MFCP_APP_ID` and
 `MFCP_APP_SLUG` identify the App; `MFCP_APP_PRIVATE_KEY` is an Actions secret.
 The App needs Contents, Issues and Pull requests write permissions and Checks
-read permission. Install it on this repository.
+read permission, plus organization Members read permission. Install it on this
+repository and approve the organization's permission update.
+
+## Mentor authorization
+
+Mentor eligibility comes from the active membership of
+[processmission-intern/mentors](https://github.com/orgs/processmission-intern/teams/mentors).
+The bot verifies organization ID `345787850`, Team ID `20231868`, the comment
+author's numeric GitHub ID, and active membership for every command. GitHub
+includes child-team members in this membership lookup. Pending invitations and
+non-members have no command authority. Lookup failures stop the operation.
+Removing a member revokes authorization for future commands and approvals.
+
+Team membership grants Mentor eligibility. Task assignment and independent
+review rules still apply; annual maintainer, interviewer and reviewer roles
+remain additional requirements for their respective operations. L0 → L1
+uses merged registration evidence and does not require Team membership.
+
+The `mentors` entries in annual `governance.json` record GitHub identities and
+authorized DCO signature strings for patch verification. They do not grant
+Mentor eligibility. A Team member can validate their assigned task and endorse
+another contributor; settlement also needs that mentor's DCO metadata.
 
 ## Registration
 
@@ -77,8 +98,10 @@ contributors. Validation code and npm dependencies come from the default branch.
 The repository check reads selected regular files from the proposed merge
 through the GitHub API, validates contributor
 JSON and rules, checks JavaScript syntax without running submitted scripts,
-and builds the directory with trusted code. PR checks receive read-only tokens
-and no App private key. Runtime changes execute after reviewed merge to main.
+and builds the directory with trusted code. Mentor-dependent validators receive
+a separate read-only membership token minted by a trusted composite action.
+The App private key is passed only to that action; it is never passed to PR
+files or validation scripts. Runtime changes execute after reviewed merge to main.
 The public-repository approval setting still applies to any future workflow
 that uses `pull_request` to execute contributor-supplied code.
 

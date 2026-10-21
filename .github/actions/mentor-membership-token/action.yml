@@ -1,0 +1,23 @@
+name: Mentor membership read token
+description: Issue a read-only organization membership token for trusted validators.
+inputs:
+  app-id:
+    required: true
+    description: GitHub App ID
+  private-key:
+    required: true
+    description: GitHub App private key
+outputs:
+  token:
+    description: Read-only membership token
+    value: ${{ steps.members.outputs.token }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+      id: members
+      with:
+        app-id: ${{ inputs.app-id }}
+        private-key: ${{ inputs.private-key }}
+        owner: ${{ github.repository_owner }}
+        permission-members: read

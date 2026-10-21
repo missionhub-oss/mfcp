@@ -4,6 +4,7 @@ import { marked } from 'marked';
 import { z } from 'zod';
 import { execFileSync } from 'node:child_process';
 import { REPOSITORY_ID } from './github.mjs';
+import { isMentor, requireMentor } from './mentors.mjs';
 import { participantPath, normalizeProfile, validateProfile, rulesSchema, governanceSchema,
   totals, eligible, activeSettlement, digest, equal } from './profile.mjs';
 
@@ -69,6 +70,7 @@ async function readComment(client, source, slug) {
   if (comment.issue_url !== `https://api.github.com/${client.root}/issues/${source.issue}`) throw new Error('Comment does not belong to the source issue.');
   const command = parseCommand(comment.body, slug);
   if (!command || comment.user.type !== 'User') throw new Error('Expected a human-authored command.');
+  await requireMentor(comment.user);
   if (comment.created_at !== comment.updated_at) throw new Error('Commands are immutable; post a new comment instead of editing.');
   return {command, proof: {source, actor: comment.user.id, at: comment.created_at,
     digest: digest(comment.body), details: JSON.stringify(command.data)}, comment};
@@ -86,7 +88,6 @@ async function evidenceComment(client, url, action, candidate, level, governance
   if (data.command.action !== action || data.command.data.participant.toLowerCase() !== candidate.github_login.toLowerCase() ||
       data.command.data.level !== level || data.proof.actor === candidate.github_id) throw new Error('Approval scope or author mismatch.');
   if (action === 'interview') requireRole(governance.interviewers, data.proof.actor, 'Unauthorized interviewer.');
-  if (action === 'endorse') requireRole(governance.mentors.map(m => m.github_id), data.proof.actor, 'Unauthorized mentor.');
   if (action === 'recommend') {
     const profiles = await readProfiles(client, ref);
     if (!profiles.some(p => p.profile.github_id === data.proof.actor && p.profile.level >= 3)) throw new Error('Recommendations require a registered L3/L4 contributor.');
@@ -162,6 +163,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     const comments = await client.list(`${client.root}/issues/${source.issue}/comments`);
     const contract = profiles.find(p => p.profile.contributions.some(c => c.issue === source.issue));
     if (!contract) return null;
+    await requireMentor(event.actor);
     const candidates = comments.filter(c => {
       try { const parsed = parseCommand(c.body, slug); return parsed?.action === 'settle' &&
         parsed.data.participant.toLowerCase() === contract.profile.github_login.toLowerCase(); } catch { return false; }
@@ -204,16 +206,16 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     requireRole(governance.maintainers, proof.actor, 'Only maintainers can configure tasks.');
     if (task || profiles.some(p => p.profile.contributions.some(c => c.issue === issue.number))) throw new Error('Task already has a contract.');
     if (!issue.assignees.some(u => u.id === before.github_id)) throw new Error('Assign the task to this contributor first.');
-    const mentor = governance.mentors.find(m => m.github_login.toLowerCase() === data.mentor.toLowerCase());
-    if (!mentor || mentor.github_id === before.github_id || !profiles.some(p => p.profile.github_id === mentor.github_id)) throw new Error('Choose a registered, independent mentor from governance.');
+    const mentor = await client.request(`users/${encodeURIComponent(data.mentor)}`);
+    await requireMentor(mentor);
+    if (mentor.id === before.github_id || !profiles.some(p => p.profile.github_id === mentor.id)) throw new Error('Choose a registered, independent Mentor Team member.');
     const contractRules = await currentRules(client, ref, proof.at, data.year);
     after.contributions.push({id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
-      mentor_id: mentor.github_id, difficulty: data.difficulty,
+      mentor_id: mentor.id, difficulty: data.difficulty,
       policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[data.difficulty],
       configuration: proof, stages: [], settlements: []});
   } else if (action === 'stage') {
     if (!task || task.mentor_id !== proof.actor || proof.actor === before.github_id) throw new Error('Only the assigned mentor can accept a stage.');
-    requireRole(governance.mentors.map(m => m.github_id), proof.actor, 'Mentor authorization is no longer active.');
     if (activeSettlement(after, task)) throw new Error('Task is already settled.');
     if (data.stage === 'validated' && !task.stages.some(s => s.name === 'reproduced')) throw new Error('Accept reproduction before implementation validation.');
     task.stages.push({name: data.stage, proof});
@@ -227,7 +229,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     const reversal = lastAdjustment && await client.request(`${client.root}/pulls/${lastAdjustment.review_pr}`);
     if (!latestStage || reversal && (!reversal.merged_at || Date.parse(latestStage.proof.at) <= Date.parse(reversal.merged_at))) throw new Error('A fresh mentor validation after reversal merge is required.');
     const mentor = governance.mentors.find(m => m.github_id === task.mentor_id);
-    if (!mentor || mentor.github_id === before.github_id) throw new Error('Assigned mentor authorization is missing.');
+    if (!mentor || mentor.github_id === before.github_id) throw new Error('Independent mentor DCO signature metadata is required.');
     const verifiedStage = await readComment(client, latestStage.proof.source, slug);
     if (verifiedStage.proof.digest !== latestStage.proof.digest || verifiedStage.proof.actor !== mentor.github_id) throw new Error('Mentor acceptance changed or disappeared.');
     const [year, version] = task.policy.id.split('.');
@@ -299,7 +301,9 @@ export async function requireReviews(client, pr, proposal) {
   if ([...latest.values()].some(r => allowed.includes(r.user.id) && r.state === 'CHANGES_REQUESTED')) throw new Error('Changes have been requested.');
   const approvals = [...latest.values()].filter(r => allowed.includes(r.user.id) && r.user.id !== proposal.before.github_id &&
     r.state === 'APPROVED' && r.commit_id === pr.head.sha);
-  if (approvals.length < proposal.approvals) throw new Error('Independent approvals for the current PR revision are incomplete.');
+  let authorized = 0;
+  for (const approval of approvals) if (await isMentor(approval.user)) authorized++;
+  if (authorized < proposal.approvals) throw new Error('Independent Mentor Team approvals for the current PR revision are incomplete.');
 }
 
 export async function verifyReview(client, pr) {

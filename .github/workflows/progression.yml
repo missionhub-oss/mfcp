@@ -44,6 +44,7 @@ jobs:
           permission-issues: write
           permission-pull-requests: write
           permission-checks: read
+          permission-members: read
       - name: Set application commit identity
         run: |
           BOT_LOGIN="${MFCP_APP_SLUG}[bot]"
