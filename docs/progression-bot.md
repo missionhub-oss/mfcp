@@ -133,3 +133,15 @@ with `GITHUB_TOKEN` and `MFCP_APP_SLUG`. To process queued events, manually run
 `Contributor progression` in Actions. To retry notifications, run
 `Contributor notifications`. Published JSON is the source of truth; failed
 notifications never roll back earned experience or create another promotion.
+
+## Temporary branches
+
+After a successful progression run, the bot deletes its completed temporary
+branches. Automatic branches must have their head commit contained in main.
+Reviewed branches may also be deleted after the matching PR has merged with
+the same head commit, including squash merges. Cleanup requires bot authorship
+and committer identity, a recognized `progress/auto/` or `progress/review/`
+name, no open PR using the branch, and an unchanged head before deletion.
+Protected branches and unfinished work are retained. Scheduled reconciliation
+retries cleanup after interruptions. `node scripts/progression.mjs --cleanup`
+previews eligible branches without deleting them.

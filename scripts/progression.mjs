@@ -7,6 +7,7 @@ import { execFileSync } from 'node:child_process';
 import { createClient, REPOSITORY_ID } from './lib/github.mjs';
 import { buildProposal, parseCommand, verifyReview } from './lib/progression.mjs';
 import { equal, validateProfile } from './lib/profile.mjs';
+import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 
 const CHECKS = ['JSON format and fields', 'validate', 'Progression integrity'];
 const botLogin = () => `${process.env.MFCP_APP_SLUG}[bot]`;
@@ -198,10 +199,13 @@ async function reconcile(client, write) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const {values} = parseArgs({options: {source: {type: 'string'}, write: {type: 'boolean', default: false},
-    reconcile: {type: 'boolean', default: false}, verify: {type: 'string'}, 'verify-pr': {type: 'string'}}});
+    reconcile: {type: 'boolean', default: false}, cleanup: {type: 'boolean', default: false},
+    verify: {type: 'string'}, 'verify-pr': {type: 'string'}}});
   const client = createClient(process.env.GITHUB_TOKEN, process.env.GITHUB_REPOSITORY);
   let result;
-  if (values.verify) {
+  if (values.cleanup) {
+    result = await cleanupProgressionBranches(client, {write: values.write});
+  } else if (values.verify) {
     await verifyCandidate(client, values.verify);
     result = {status: 'verified', commit: values.verify};
   } else if (values['verify-pr']) {
@@ -214,6 +218,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8')), process.env.GITHUB_EVENT_NAME);
     result = [];
     for (const source of sources) result.push(await processSource(client, source, {write: values.write}));
+  }
+  if (values.write && !values.cleanup) {
+    result = {events: result, cleanup: await cleanupProgressionBranches(client, {write: true})};
   }
   console.log(JSON.stringify(result, null, 2));
   if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY,
