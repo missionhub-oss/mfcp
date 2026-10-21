@@ -1,4 +1,38 @@
 {
   "github_id": 230519547,
-  "github_login": "Aphlita"
+  "github_login": "Aphlita",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-12",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v1",
+        "sha": "335b576257d6aecd3720c0d5bfb209f36be2b01f"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 12
+        },
+        "actor": 230519547,
+        "at": "2026-10-21T13:37:41Z",
+        "digest": "01942d4674d5b9ed1525adbf343b62bc76d6116f2728ca1255cbb526b2f6c4bc",
+        "details": "{\"registration_pr\":\"https://github.com/processmission-intern/mission-forge/pull/12\",\"merge_commit\":\"370dded74eccd3f41ba2f82e9b44e6fc96a0cf2e\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 12
+  },
+  "updated_at": "2026-10-21T13:37:41Z"
 }
