@@ -34,5 +34,6 @@ jobs:
         run: node scripts/notify.mjs --write
         env:
           MFCP_APP_ID: ${{ vars.MFCP_APP_ID }}
+          MFCP_BOT_ID: ${{ vars.MFCP_BOT_ID }}
           MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
           MFCP_APP_PRIVATE_KEY: ${{ secrets.MFCP_APP_PRIVATE_KEY }}

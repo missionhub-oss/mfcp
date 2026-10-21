@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
 import { activeSettlement, digest, participantPath, validateProfile } from './profile.mjs';
+import { isTrustedBotComment } from './bot-identity.mjs';
 
 export function notificationsFor(profile) {
   const p = validateProfile(profile, participantPath(profile.github_login));
@@ -59,8 +60,7 @@ export async function deliverNotifications(client, profiles, {appId, slug, write
           commentsByIssue.set(message.issue, comments);
         }
         const exists = comments.some(comment =>
-          comment.user?.login === `${slug}[bot]` && comment.user?.type === 'Bot' &&
-          comment.performed_via_github_app?.id === appId && comment.body?.includes(marker(message)));
+          isTrustedBotComment(comment, appId) && comment.body?.includes(marker(message)));
         if (exists) {
           results.push({kind: message.kind, issue: message.issue, status: 'already-notified'});
           continue;
