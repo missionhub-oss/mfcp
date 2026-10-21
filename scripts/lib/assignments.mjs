@@ -25,12 +25,6 @@ export async function planAssignment(client, issue, profiles, login, proof) {
   if (assignmentSuperseded(events, proof.at)) return null;
   validateAssignment(issue, participant, profiles, comments);
   if (issue.assignees.length === 1 && issue.assignees[0].id === participant.id) return null;
-  try {
-    await client.request(`${client.root}/assignees/${encodeURIComponent(participant.login)}`);
-  } catch (error) {
-    if (error.status !== 404) throw error;
-    await client.request(`${client.root}/issues/${issue.number}/assignees/${encodeURIComponent(participant.login)}`);
-  }
   return {mode: 'native', action: 'assign', issue: issue.number,
     assignee: {id: participant.id, login: participant.login}, source: proof.source};
 }

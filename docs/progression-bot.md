@@ -52,9 +52,9 @@ Apply `kind/task`, one `difficulty/level0`–`difficulty/level4` label and one
 These native fields determine the participant, difficulty and annual rules.
 
 A Mentor Team member without repository assignment permission can post
-`@mfcp-progress configure assignee @username`. The bot verifies registration,
-participation as the issue author or a commenter, and GitHub assignability,
-then adds that user as the native Assignee. This operation does not require
+`@mfcp-progress configure assignee @username`. The bot verifies registration
+and participation as the issue author or a commenter, adds the native Assignee,
+then confirms the identity returned by GitHub. This operation does not require
 the annual maintainer role. It applies to open task issues, preserves existing
 owners and recorded contributions, and uses assignment events to avoid
 replaying an old command after a later manual assignment or unassignment.
