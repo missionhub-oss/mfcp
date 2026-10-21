@@ -6,6 +6,7 @@ on:
     branches: [main]
 permissions:
   contents: read
+  pull-requests: read
 jobs:
   check:
     if: github.repository_id == '1428030862'
@@ -22,16 +23,16 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Read proposed merge as data
         if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/merge
-          path: pr-input
-          persist-credentials: false
+        id: input
+        run: node scripts/read-pr-input.mjs
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Validate proposed files with trusted code
         run: node scripts/check.mjs "$SOURCE_DIRECTORY"
         env:
-          SOURCE_DIRECTORY: ${{ github.event_name == 'pull_request_target' && 'pr-input' || '.' }}
+          SOURCE_DIRECTORY: ${{ steps.input.outputs.directory || '.' }}
       - name: Build directory with trusted code
         run: node scripts/build-pages.mjs "$SOURCE_DIRECTORY"
         env:
-          SOURCE_DIRECTORY: ${{ github.event_name == 'pull_request_target' && 'pr-input' || '.' }}
+          SOURCE_DIRECTORY: ${{ steps.input.outputs.directory || '.' }}
