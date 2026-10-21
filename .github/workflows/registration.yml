@@ -2,13 +2,18 @@ name: Registration
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, edited, ready_for_review]
+  pull_request_review:
+    types: [submitted, dismissed]
 permissions:
   contents: read
   pull-requests: read
+  issues: read
+env:
+  MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
 jobs:
   json:
     name: JSON format and fields
-    if: github.repository == 'processmission/mission-forge'
+    if: github.repository_id == '1428030862'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -16,13 +21,17 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
       - name: Validate participant JSON files
         run: node scripts/membership.mjs registration-json
         env:
           GITHUB_TOKEN: ${{ github.token }}
   validate:
     needs: json
-    if: github.repository == 'processmission/mission-forge'
+    if: github.repository_id == '1428030862'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -30,6 +39,10 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
       - name: Verify GitHub ID, username and PR author
         run: node scripts/membership.mjs registration
         env:
