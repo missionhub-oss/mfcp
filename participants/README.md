@@ -11,7 +11,7 @@ reviews and merges the registration. PR discussions remain open during registrat
 1. Fork `processmission-intern/mission-forge`，在自己的 Fork 中创建分支。
 2. 使用 `gh api user --jq '{github_id: .id, github_login: .login}'` 获取本人身份信息，也可以访问 `https://api.github.com/users/你的用户名` 查看数字 `id` 和 `login`。
 3. 将返回的真实数字 ID 和用户名写入 `participants/<GitHub用户名>.json`，文件名中的用户名统一使用小写，例如 `participants/zevorn.json`。文件只包含 `github_id`（数字）与 `github_login`（字符串）两个字段。
-4. 提交该文件，将分支推送到自己的 Fork，再向本仓库 `main` 创建 PR。注册 PR 只新增本人身份文件。
+4. 按[提交规范](../CONTRIBUTING.md#提交格式与-dco)使用 `participants: register 用户名` 标题，填写说明正文，通过 `git commit -s` 签署本人 DCO；每行最多 72 个字符。将分支推送到自己的 Fork，再向本仓库 `main` 创建 PR。注册 PR 只新增本人身份文件。
 5. 在 PR 中处理检查结果和维护者意见。维护者审核合并后，登记生效。
 
 用户名用于查找登记文件，数字 ID 用于核对账号身份。账号更名后，通过 PR 将本人文件改为新用户名，并更新 `github_login`，保持 `github_id` 不变；PR 合并后恢复 Issue 参与资格。检查会核对原文件属于同一数字 ID，防止修改他人的登记。本人身份文件中的信息均公开可见。
@@ -35,7 +35,7 @@ write access is managed separately.
 - `JSON format and fields`：检查 JSON 语法、字段集合、数字 ID 类型、用户名格式和小写用户名文件名。首次注册可以只提供 `github_id` 与 `github_login`；Bot 将其扩展为包含等级、经验值及历史的完整记录。完整记录大小不超过 2 MB，并校验历史与统计一致。
 - `validate`：查询 GitHub API，核对数字 ID 与用户名对应关系，并确认登记属于 PR 作者。账号更名时同时核对原文件的数字 ID。
 
-`Progression integrity` 同时检查参与者修改权限、已发布年度规则的不可变性及 Bot 晋级依据。三项检查均为合并条件。检查读取 PR 文件作为数据，执行的代码来自默认分支。
+`Progression integrity` 同时检查每个 commit 的标题、正文行宽、作者 DCO、PR 标题、参与者修改权限、已发布年度规则的不可变性及 Bot 晋级依据。三项检查均为合并条件。检查读取 PR 文件作为数据，执行的代码来自默认分支。
 
 完整记录包含 `schema_version`、`level`、`experience`、`contributions`、`promotions`、`adjustments`、`last_event` 和 `updated_at`。本人更名 PR 保留已有成果和晋级历史。注册 PR 可以使用 L0、零经验及空历史的完整记录；等级与经验由 Bot 根据已核实的证据更新。
 

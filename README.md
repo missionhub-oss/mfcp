@@ -34,6 +34,30 @@ This repository hosts participation guidelines, project resources, program
 records, and contribution tracking. Code contributions go to the corresponding
 upstream projects. Supporting guides are currently available in Chinese.
 
+## Getting started: your first PR
+
+Fork this repository, create a branch, and add your own identity file using the
+[registration guide](participants/README.md). Configure your Git author name
+and email before committing. Every commit and PR title uses `module: subject`.
+Every commit line must be **72 characters or fewer**, including the subject,
+body and DCO trailer. Explain the change in the body after a blank line.
+
+```text
+participants: register your-username
+
+Add my GitHub identity to join the contributor program.
+
+Signed-off-by: Your Name <your-email@example.com>
+```
+
+Replace the example identity with your own. Run `git add` for your identity file,
+then `git commit -s` to add your DCO sign-off. Push the branch to your fork and
+open a PR against this repository's `main`. Use a matching `module: subject`
+PR title. The required `Progression integrity` check validates every PR commit,
+its author sign-off and the PR title. See [commit requirements](CONTRIBUTING.md#提交格式与-dco)
+for corrections and long DCO identities. Maintainers use rebase merging to
+preserve validated commit messages.
+
 ## Explore the projects
 
 Choose a project and build experience through practical contributions.

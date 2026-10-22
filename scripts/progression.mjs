@@ -11,6 +11,7 @@ import { replyToCommand } from './lib/command-feedback.mjs';
 import { markCommandProcessing } from './lib/command-reactions.mjs';
 import { digest, equal, validateProfile } from './lib/profile.mjs';
 import {updateMentorSection} from './lib/mentor-section.mjs';
+import {formatSignoff, validateCommitMessage} from './lib/commit-policy.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 
 const CHECKS = ['JSON format and fields', 'validate', 'Progression integrity'];
@@ -19,6 +20,7 @@ const botLogin = () => `${process.env.MFCP_APP_SLUG}[bot]`;
 export async function verifyCandidate(client, head) {
   const base = await client.head();
   const commit = await client.request(`${client.root}/git/commits/${head}`);
+  validateCommitMessage(commit.message, commit.author.email);
   if (!commit.parents.some(p => p.sha === base)) throw new Error('Candidate must be based on current main.');
   const diff = await client.request(`${client.root}/compare/${base}...${head}`);
   if (diff.files?.length !== 1 || diff.files[0].status !== 'modified' || !/^participants\/[a-z0-9-]+\.json$/.test(diff.files[0].filename)) {
@@ -48,7 +50,7 @@ async function checkedCommit(client, proposal, base, parent) {
   if (name !== bot.login || email !== `${bot.id}+${bot.login}@users.noreply.github.com`) throw new Error('Configure the application commit identity before writing.');
   const commit = await client.request(`${client.root}/git/commits`, 'POST', {
     message: `progression: ${proposal.action} for ${proposal.after.github_login}\n\n` +
-      `Record verified source and annual policy ${proposal.policy.id}.\n\nSigned-off-by: ${name} <${email}>`,
+      `Record verified source and annual policy ${proposal.policy.id}.\n\n${formatSignoff(name, email)}`,
     tree: tree.sha, parents: [...new Set([base, parent].filter(Boolean))], author: {name, email}, committer: {name, email},
   });
   if (parent) await client.request(`${client.root}/git/refs/heads/${proposal.branch}`, 'PATCH', {sha: commit.sha, force: false});
@@ -79,7 +81,7 @@ async function waitChecks(client, head) {
 
 async function enableAutoMerge(client, pr) {
   const result = await client.request('graphql', 'POST', {
-    query: 'mutation($id:ID!){enablePullRequestAutoMerge(input:{pullRequestId:$id,mergeMethod:SQUASH}){pullRequest{number}}}',
+    query: 'mutation($id:ID!){enablePullRequestAutoMerge(input:{pullRequestId:$id,mergeMethod:REBASE}){pullRequest{number}}}',
     variables: {id: pr.node_id},
   });
   if (result.errors) throw new Error('Unable to enable auto-merge; check repository settings and approvals.');

@@ -9,6 +9,46 @@
 
 未注册账号创建或重新打开的 Issue 会自动关闭，其新建或编辑的 Issue 评论会自动删除。PR 讨论用于注册沟通，保持开放。自动处理在提交后执行，内容可能短暂可见。
 
+## 提交格式与 DCO
+
+所有 commit 及 PR 标题使用 `module: subject`。module 使用小写字母开头，
+可以包含小写字母、数字、`/` 和 `-`，例如 `participants`、`docs`、`ci`。
+subject 简洁说明修改。标题与正文之间空一行，正文说明具体修改和目的，
+正文与末尾签署之间空一行。所有行最多 72 个 Unicode 字符，禁止制表符和行尾空白。
+
+```text
+participants: register your-username
+
+Add my GitHub identity to join the contributor program.
+
+Signed-off-by: Your Name <your-email@example.com>
+```
+
+配置本人 `git config user.name` 和 `git config user.email`，使用
+`git commit -s` 添加自己的 DCO。签署邮箱必须与该 commit 的作者邮箱一致。
+签署者须本人确认 [Developer Certificate of Origin](https://developercertificate.org/)
+声明，不能由维护者代签其他作者。DCO 表明贡献者确认有权提交这些内容。
+
+姓名和邮箱较长时，Git 支持将邮箱放在以一个空格开头的续行：
+
+```text
+Signed-off-by: Your Name
+ <your-email@example.com>
+```
+
+CI 使用 Git 解析签署，逐行检查 72 字符限制；每个 commit 都需要解释正文
+和作者本人的签署。检查覆盖 PR 全部提交，包括合并提交和 Bot 提交。
+PR 修改代码作为数据读取，校验程序来自默认分支。
+
+修正自己最新的提交时使用 `git commit --amend -s`，编辑标题和正文，
+然后用 `git push --force-with-lease` 更新自己的 PR 分支。
+多个提交需要修正时，使用交互式 rebase 逐个修改自己的提交。
+需要同步上游时，执行 `git fetch upstream` 和 `git rebase upstream/main`。
+维护者采用 rebase 合并以保留已验证的提交说明，禁止修改其他人的 DCO。
+
+必过检查 `Progression integrity` 同时验证 commit 格式、DCO、PR 标题和
+贡献记录权限；任一项失败都阻止合并。
+
 ## 提出任务
 
 通过[新建 Issue](https://github.com/processmission-intern/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
@@ -27,7 +67,7 @@
 1. 在开放的 Issue 中按 `kind/task`、项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选任务，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
 2. 在原任务下发表评论，介绍相关经验、可参与时间、开发条件和对任务的理解。
 3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个四位数字年度标签，例如 `2026`。
-4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配，再使用 `@mfcp-progress configure mentor @导师用户名` 指定 Mentor。Bot 读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
+4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配。使用 `@mfcp-progress configure mentor @导师用户名` 独立指定 Mentor，Bot 更新 Issue 的导师区域；首次验收时读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
 
 申领通过 Issue 评论与 Assignee 完成。实际代码或文档修改通过对应仓库的 Pull Request 或上游规定的补丁流程提交。
 

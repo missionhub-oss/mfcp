@@ -2,12 +2,20 @@
   "name": "mission-forge",
   "private": true,
   "type": "module",
-  "engines": {"node": ">=22"},
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "check": "node scripts/check.mjs",
     "test": "node --test tests/*.test.mjs",
     "build:pages": "node scripts/build-pages.mjs",
     "progress": "node scripts/progression.mjs"
   },
-  "dependencies": {"@octokit/auth-app": "^8.0.0", "marked": "^17.0.0", "string-argv": "^0.4.0", "zod": "^4.0.0"}
+  "dependencies": {
+    "@octokit/auth-app": "^8.0.0",
+    "email-addresses": "^5.0.0",
+    "marked": "^17.0.0",
+    "string-argv": "^0.4.0",
+    "zod": "^4.0.0"
+  }
 }

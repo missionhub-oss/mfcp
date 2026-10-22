@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: MIT
 import { validatePullRequest, validatePullRequestJson } from '../membership.mjs';
 import { verifyReview } from './progression.mjs';
+import {validatePullRequestCommits} from './commit-policy.mjs';
 
 export async function verifyIntegrity(client, number) {
+  await validatePullRequestCommits(client, number);
   const pr = await client.request(`${client.root}/pulls/${number}`);
   if (pr.user.login === `${process.env.MFCP_APP_SLUG}[bot]`) {
     await verifyReview(client, pr);

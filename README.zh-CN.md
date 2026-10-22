@@ -30,6 +30,28 @@ MFCP 由<strong>进程使命（Process Mission）</strong>发起，通过开源�
 
 本仓库管理参与规则、项目资料、培养记录和贡献追踪。代码贡献提交到对应项目的上游仓库。配套指南目前使用中文。
 
+## 开始参与：提交第一个 PR
+
+Fork 本仓库并创建分支，按[注册说明](participants/README.md)添加本人身份文件。
+提交前配置本人的 Git 姓名和邮箱。每个 commit 和 PR 标题使用
+`module: subject` 格式；commit 标题、正文和 DCO 的每行均不得超过 **72 个字符**。
+标题与正文之间空一行，正文说明修改内容和目的。
+
+```text
+participants: register your-username
+
+Add my GitHub identity to join the contributor program.
+
+Signed-off-by: Your Name <your-email@example.com>
+```
+
+将示例身份替换为本人信息。使用 `git add` 暂存身份文件，运行
+`git commit -s` 添加本人 DCO 签署，再推送到个人 Fork，向本仓库 `main`
+提交 PR。PR 标题也使用 `module: subject`。
+必过的 `Progression integrity` 检查会逐个验证 PR 中的 commit、作者 DCO
+和 PR 标题。修正方法及较长 DCO 的换行方式见[提交规范](CONTRIBUTING.md#提交格式与-dco)。
+维护者使用 rebase 合并，保留经过检查的提交说明。
+
 ## 探索实践项目
 
 选择感兴趣的项目，通过实际贡献积累工程经验。
