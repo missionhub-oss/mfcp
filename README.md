@@ -58,32 +58,6 @@ its author sign-off and the PR title. See [commit requirements](CONTRIBUTING.md#
 for corrections and long DCO identities. Maintainers use rebase merging to
 preserve validated commit messages.
 
-## Join the contributor group
-
-<div align="center">
-
-<p>
-  Scan with Feishu to join<br>
-  the MFCP contributor group.<br>
-  Ask questions and share your progress.
-</p>
-
-<p>
-  <a href="images/mfcp-feishu-group.png"><img src="images/mfcp-feishu-group.png" width="360" alt="QR code for joining the MFCP open-source contributor group on Feishu"></a><br>
-  <sub>Click the image to view it at full size.</sub>
-</p>
-
-<details>
-  <summary>Explore resources in the group</summary>
-  <p>
-    Past community discussions<br>
-    Meeting and event recordings<br>
-    Presentation slides and learning materials
-  </p>
-</details>
-
-</div>
-
 ## Explore the projects
 
 Choose a project and build experience through practical contributions.
@@ -166,3 +140,29 @@ tasks, and incentives will be published in the [annual program](programs/2026/RE
 
 The repository organization draws on [CNCF Mentoring](https://github.com/cncf/mentoring),
 keeping program guidance and historical records together in one repository.
+
+## Join the contributor group
+
+<div align="center">
+
+<p>
+  Scan with Feishu to join<br>
+  the MFCP contributor group.<br>
+  Ask questions and share your progress.
+</p>
+
+<p>
+  <a href="images/mfcp-feishu-group.png"><img src="images/mfcp-feishu-group.png" width="360" alt="QR code for joining the MFCP open-source contributor group on Feishu"></a><br>
+  <sub>Click the image to view it at full size.</sub>
+</p>
+
+<details>
+  <summary>Explore resources in the group</summary>
+  <p>
+    Past community discussions<br>
+    Meeting and event recordings<br>
+    Presentation slides and learning materials
+  </p>
+</details>
+
+</div>
