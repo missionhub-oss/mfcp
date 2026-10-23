@@ -49,6 +49,12 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 必过检查 `Progression integrity` 同时验证 commit 格式、DCO、PR 标题和
 贡献记录权限；任一项失败都阻止合并。
 
+检查失败时，打开对应检查的详情，查看错误注释和 Actions 页面摘要。
+提交规范检查会一次列出所有提交的问题，标明提交编号、行号、列号、
+实际内容及修复方法。`\r` 表示 CR 字符，`\t` 表示制表符；行宽超限会
+显示实际 Unicode 字符数。作者 DCO 缺失或不匹配会单独列出。
+修正原提交并推送后，CI 自动重新检查。PR 自动刷新检查使用同样的说明。
+
 ## 提出任务
 
 通过[新建 Issue](https://github.com/processmission-intern/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：

@@ -12,8 +12,10 @@
     "progress": "node scripts/progression.mjs"
   },
   "dependencies": {
+    "@actions/core": "^3.0.1",
     "@octokit/auth-app": "^8.0.0",
     "email-addresses": "^5.0.0",
+    "escape-html": "^1.0.3",
     "marked": "^17.0.0",
     "string-argv": "^0.4.0",
     "zod": "^4.0.0"

@@ -24,7 +24,7 @@ jobs:
           node-version: '22'
       - run: npm ci --ignore-scripts
       - name: Validate participant JSON files
-        run: node scripts/membership.mjs registration-json
+        run: node scripts/run-check.mjs membership.mjs registration-json
         env:
           GITHUB_TOKEN: ${{ github.token }}
   validate:
@@ -47,7 +47,7 @@ jobs:
           app-id: ${{ vars.MFCP_APP_ID }}
           private-key: ${{ secrets.MFCP_APP_PRIVATE_KEY }}
       - name: Verify GitHub ID, username and PR author
-        run: node scripts/membership.mjs registration
+        run: node scripts/run-check.mjs membership.mjs registration
         env:
           GITHUB_TOKEN: ${{ github.token }}
           MFCP_MEMBERS_TOKEN: ${{ steps.members.outputs.token }}

@@ -30,7 +30,7 @@ jobs:
         with:
           app-id: ${{ vars.MFCP_APP_ID }}
           private-key: ${{ secrets.MFCP_APP_PRIVATE_KEY }}
-      - run: node scripts/progression.mjs --verify "$CANDIDATE_SHA"
+      - run: node scripts/run-check.mjs progression.mjs --verify "$CANDIDATE_SHA"
         env:
           CANDIDATE_SHA: ${{ github.sha }}
           GITHUB_TOKEN: ${{ github.token }}

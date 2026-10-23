@@ -26,15 +26,15 @@ jobs:
       - name: Read proposed merge as data
         if: github.event_name == 'pull_request_target'
         id: input
-        run: node scripts/read-pr-input.mjs
+        run: node scripts/run-check.mjs read-pr-input.mjs
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_TOKEN: ${{ github.token }}
       - name: Validate proposed files with trusted code
-        run: node scripts/check.mjs "$SOURCE_DIRECTORY"
+        run: node scripts/run-check.mjs check.mjs "$SOURCE_DIRECTORY"
         env:
           SOURCE_DIRECTORY: ${{ steps.input.outputs.directory || '.' }}
       - name: Build directory with trusted code
-        run: node scripts/build-pages.mjs "$SOURCE_DIRECTORY"
+        run: node scripts/run-check.mjs build-pages.mjs "$SOURCE_DIRECTORY"
         env:
           SOURCE_DIRECTORY: ${{ steps.input.outputs.directory || '.' }}

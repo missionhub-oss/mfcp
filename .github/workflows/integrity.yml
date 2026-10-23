@@ -26,7 +26,7 @@ jobs:
         with:
           app-id: ${{ vars.MFCP_APP_ID }}
           private-key: ${{ secrets.MFCP_APP_PRIVATE_KEY }}
-      - run: node scripts/progression.mjs --verify-pr "$PR_NUMBER"
+      - run: node scripts/run-check.mjs progression.mjs --verify-pr "$PR_NUMBER"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           GITHUB_TOKEN: ${{ github.token }}

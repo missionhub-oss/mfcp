@@ -20,7 +20,7 @@ const botLogin = () => `${process.env.MFCP_APP_SLUG}[bot]`;
 export async function verifyCandidate(client, head) {
   const base = await client.head();
   const commit = await client.request(`${client.root}/git/commits/${head}`);
-  validateCommitMessage(commit.message, commit.author.email);
+  validateCommitMessage(commit.message, commit.author.email, {commit: head});
   if (!commit.parents.some(p => p.sha === base)) throw new Error('Candidate must be based on current main.');
   const diff = await client.request(`${client.root}/compare/${base}...${head}`);
   if (diff.files?.length !== 1 || diff.files[0].status !== 'modified' || !/^participants\/[a-z0-9-]+\.json$/.test(diff.files[0].filename)) {

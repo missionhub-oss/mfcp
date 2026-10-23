@@ -3,6 +3,7 @@
 import { createClient, validatePullRequest, validatePullRequestJson } from './membership.mjs';
 import { verifyIntegrity } from './lib/integrity.mjs';
 import { execFileSync } from 'node:child_process';
+import {formatCheckFailure} from './lib/check-report.mjs';
 
 async function verifyRepositoryData(client, number) {
   const input = JSON.parse(execFileSync(process.execPath, ['scripts/read-pr-input.mjs'], {
@@ -42,7 +43,7 @@ for (const pr of await client.list(`${client.root}/pulls?state=open`)) {
       }
     } catch (error) {
       conclusion = 'failure';
-      summary = error.message;
+      summary = formatCheckFailure(error, client.repository);
     }
     await client.request(`${client.root}/check-runs/${check.id}`, 'PATCH', {
       status: 'completed', conclusion, completed_at: new Date().toISOString(),
