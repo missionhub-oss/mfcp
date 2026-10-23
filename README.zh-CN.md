@@ -52,6 +52,32 @@ Signed-off-by: Your Name <your-email@example.com>
 和 PR 标题。修正方法及较长 DCO 的换行方式见[提交规范](CONTRIBUTING.md#提交格式与-dco)。
 维护者使用 rebase 合并，保留经过检查的提交说明。
 
+## 加入贡献者交流群
+
+<div align="center">
+
+<p>
+  使用飞书扫描二维码<br>
+  加入 MFCP 开源贡献者交流群<br>
+  交流入门问题、讨论任务、分享实践进展
+</p>
+
+<p>
+  <a href="images/mfcp-feishu-group.png"><img src="images/mfcp-feishu-group.png" width="360" alt="MFCP 开源贡献者交流群飞书入群二维码"></a><br>
+  <sub>点击图片可以查看原图</sub>
+</p>
+
+<details>
+  <summary>加入交流群，查看往届活动与资料</summary>
+  <p>
+    往届社区交流内容<br>
+    会议与活动回放<br>
+    PPT 和相关学习资料
+  </p>
+</details>
+
+</div>
+
 ## 探索实践项目
 
 选择感兴趣的项目，通过实际贡献积累工程经验。
