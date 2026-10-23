@@ -9,18 +9,18 @@ const excerpt = value => {
 };
 
 export function problemLocation(problem) {
-  const target = problem.commit ? `提交 ${problem.commit.slice(0, 12)}` : problem.pr ? `PR #${problem.pr} 标题` : '提交说明';
-  return target + (problem.line ? `，第 ${problem.line} 行` + (problem.column ? `，第 ${problem.column} 列` : '') : '，末尾签署');
+  const target = problem.commit ? `Commit ${problem.commit.slice(0, 12)}` : problem.pr ? `PR #${problem.pr} title` : 'Commit message';
+  return target + (problem.line ? `, line ${problem.line}` + (problem.column ? `, column ${problem.column}` : '') : ', final trailers');
 }
 
 export function problemText(problem) {
-  return `${problemLocation(problem)}：${problem.message}` +
-    (problem.excerpt ? `\n实际内容：${problem.excerpt}` : '') + `\n修复方法：${problem.fix}`;
+  return `${problemLocation(problem)}: ${problem.message}` +
+    (problem.excerpt ? `\nActual content: ${problem.excerpt}` : '') + `\nHow to fix: ${problem.fix}`;
 }
 
 export class CommitPolicyError extends Error {
   constructor(problems) {
-    super(`提交检查发现 ${problems.length} 项问题：\n\n${problems.map(problemText).join('\n\n')}`);
+    super(`Commit validation found ${problems.length} issue${problems.length === 1 ? '' : 's'}:\n\n${problems.map(problemText).join('\n\n')}`);
     this.name = 'CommitPolicyError';
     this.problems = problems;
   }
@@ -30,19 +30,19 @@ function lineProblems(value, line) {
   const characters = [...value];
   const problems = [];
   const add = (code, message, fix, column) => problems.push({code, line, column, message, fix, excerpt: excerpt(value)});
-  if (characters.length > 72) add('line-length', `本行有 ${characters.length} 个 Unicode 字符，超过 72 个字符的限制。`, '将正文拆成多行，每行最多 72 个字符；标题请缩短。');
-  if (value.includes('\r')) add('carriage-return', '包含回车字符 CR（U+000D）；CRLF 换行也会触发此项。', '将提交说明保存为 LF 换行，并移除行内的 CR 字符。', characters.indexOf('\r') + 1);
-  if (value.includes('\t')) add('tab', '包含制表符 TAB（U+0009）。', '使用空格替换制表符，并删除行尾空白。', characters.indexOf('\t') + 1);
+  if (characters.length > 72) add('line-length', `This line contains ${characters.length} Unicode characters; the limit is 72.`, 'Wrap the body at 72 characters per line, or shorten the subject.');
+  if (value.includes('\r')) add('carriage-return', 'Contains a carriage return (CR, U+000D), including CRLF line endings.', 'Save the commit message with LF line endings and remove any embedded CR characters.', characters.indexOf('\r') + 1);
+  if (value.includes('\t')) add('tab', 'Contains a tab (TAB, U+0009).', 'Replace tabs with spaces and remove trailing whitespace.', characters.indexOf('\t') + 1);
   const withoutControls = value.replace(/[\r\t]+$/, '');
-  if (/\s$/.test(withoutControls)) add('trailing-whitespace', '行尾包含空白字符。', '删除该行末尾的空格和其他空白字符。', [...withoutControls.trimEnd()].length + 1);
+  if (/\s$/.test(withoutControls)) add('trailing-whitespace', 'This line ends with whitespace.', 'Remove spaces and other whitespace from the end of this line.', [...withoutControls.trimEnd()].length + 1);
   return problems;
 }
 
 function subjectProblems(subject) {
   const problems = lineProblems(subject, 1);
   if (!/^[a-z][a-z0-9/-]*: \S[^\r\n]*$/.test(subject.replace(/\r/g, ''))) {
-    problems.push({code: 'subject-format', line: 1, message: '标题需要使用 module: subject 格式，并保持为一行。',
-      fix: '使用小写模块名、冒号和空格，例如 participants: register your-username。', excerpt: excerpt(subject)});
+    problems.push({code: 'subject-format', line: 1, message: 'The subject must use module: subject and fit on one line.',
+      fix: 'Use a lowercase module name followed by a colon and a space, for example participants: register your-username.', excerpt: excerpt(subject)});
   }
   return problems;
 }
@@ -64,10 +64,10 @@ export function validateCommitMessage(message, authorEmail, {commit} = {}) {
   const problems = subjectProblems(lines[0]);
   for (let index = 1; index < lines.length; index++) problems.push(...lineProblems(lines[index], index + 1));
   const content = lines.map(line => line.replace(/\r$/, ''));
-  if (content[1] !== '') problems.push({code: 'body-separator', line: 2, message: '标题与说明正文之间缺少空行。',
-    fix: '在标题后插入一个空行，再填写修改内容和目的。', excerpt: excerpt(lines[1] ?? '')});
-  if (!content[2]?.trim() || /^Signed-off-by:/i.test(content[2])) problems.push({code: 'body-missing', line: 3, message: '缺少说明修改内容和目的的正文。',
-    fix: '在标题后的空行下面填写说明正文，再用空行分隔末尾 DCO 签署。'});
+  if (content[1] !== '') problems.push({code: 'body-separator', line: 2, message: 'A blank line is required between the subject and explanatory body.',
+    fix: 'Insert a blank line after the subject, then describe the change and its purpose.', excerpt: excerpt(lines[1] ?? '')});
+  if (!content[2]?.trim() || /^Signed-off-by:/i.test(content[2])) problems.push({code: 'body-missing', line: 3, message: 'The explanatory body is missing.',
+    fix: 'Describe the change below the blank line after the subject, then leave another blank line before the DCO sign-off.'});
   // Inspect trailers independently of line-ending violations.
   const trailers = execFileSync('git', ['interpret-trailers', '--parse'], {input: message.replace(/\r\n/g, '\n'), encoding: 'utf8'});
   const signatures = trailers.split('\n').filter(line => line.startsWith('Signed-off-by: '));
@@ -82,9 +82,9 @@ export function validateCommitMessage(message, authorEmail, {commit} = {}) {
     return parsed?.type === 'mailbox' && parsed.name?.trim() && parsed.address.toLowerCase() === authorEmail?.toLowerCase();
   });
   if (!matches) problems.push({code: 'author-signoff', message: signatures.length
-    ? '末尾 Signed-off-by 格式无效，或签署邮箱与提交作者邮箱不一致。'
-    : '提交末尾缺少作者本人的 Signed-off-by。',
-    fix: `提交作者邮箱为 ${authorEmail}。作者本人确认 DCO 后，在本人姓名和邮箱已正确配置的环境执行 git commit --amend -s。维护者不能代签其他作者。`});
+    ? "The final Signed-off-by is invalid or does not match the commit author's email."
+    : "The final trailers are missing the commit author's Signed-off-by.",
+    fix: `Commit author email: ${authorEmail}. After confirming the DCO, the author must run git commit --amend -s with their own name and email configured. Maintainers must not sign for other authors.`});
   if (problems.length) throw new CommitPolicyError(problems.map(problem => ({...problem, commit})));
 }
 

@@ -24,15 +24,15 @@ test('a rejected real commit produces actionable annotations and a job summary w
   const result = await runReport(['tests/fixtures/report-commit.mjs']);
   assert.equal(result.status, 1);
   assert.equal(result.stdout.split('::error ').length - 1, 2);
-  assert.ok(result.stdout.includes('第 3 行'));
-  assert.ok(result.stdout.includes('CR（U+000D）'));
-  assert.ok(result.stdout.includes('缺少作者本人的 Signed-off-by'));
+  assert.ok(result.stdout.includes('line 3, column 66'));
+  assert.ok(result.stdout.includes('CR, U+000D'));
+  assert.ok(result.stdout.includes("missing the commit author's Signed-off-by"));
   assert.ok(!result.stderr.includes('at validateCommitMessage'));
   assert.ok(result.summary.includes('/commit/d5b2d56c8f6e6287f1af369a4060106f62753c38'));
   assert.ok(result.summary.includes('git commit --amend -s'));
   assert.ok(result.summary.includes('git push --force-with-lease'));
   assert.ok(result.summary.includes('\\r'));
-  assert.ok(!result.summary.includes('超过 72'));
+  assert.ok(!result.summary.includes('the limit is 72'));
 });
 
 test('the trusted CLI wrapper reports input failures without an uncaught exception', async () => {

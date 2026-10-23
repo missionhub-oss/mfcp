@@ -5,7 +5,7 @@ import {reportCheckFailure} from './lib/check-report.mjs';
 
 const [script, ...args] = process.argv.slice(2);
 try {
-  if (!/^[a-z][a-z0-9-]*\.mjs$/.test(script ?? '') || script === 'run-check.mjs') throw new Error('请指定 scripts/ 中的检查程序文件名。');
+  if (!/^[a-z][a-z0-9-]*\.mjs$/.test(script ?? '') || script === 'run-check.mjs') throw new Error('Specify a check script filename from scripts/.');
   const entry = new URL(script, import.meta.url);
   process.argv = [process.execPath, fileURLToPath(entry), ...args];
   await import(entry.href);

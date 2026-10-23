@@ -9,9 +9,9 @@ export function formatCheckFailure(error, repository = DEFAULT_REPOSITORY) {
   const root = `https://github.com/${repository}`;
   const guide = `${root}/blob/main/CONTRIBUTING.md#提交格式与-dco`;
   if (!(error instanceof CommitPolicyError)) {
-    return `## 检查未通过\n\n<pre>${escapeHtml(error.message || String(error))}</pre>\n\n[贡献指南](${guide})\n`;
+    return `## Check failed\n\n<pre>${escapeHtml(error.message || String(error))}</pre>\n\n[Contribution guide](${guide})\n`;
   }
-  let report = `## 提交检查未通过\n\n发现 ${error.problems.length} 项问题，请修正以下提交信息。\n\n`;
+  let report = `## Commit validation failed\n\nFound ${error.problems.length} issue${error.problems.length === 1 ? '' : 's'}. Update the commit metadata below.\n\n`;
   let shown = 0;
   for (const problem of error.problems) {
     const location = problemLocation(problem);
@@ -20,30 +20,30 @@ export function formatCheckFailure(error, repository = DEFAULT_REPOSITORY) {
     const heading = link ? `[${escapeHtml(location)}](${link})` : escapeHtml(location);
     const section = `### ${heading}\n\n${escapeHtml(problem.message)}\n\n` +
       (problem.excerpt ? `<pre>${escapeHtml(problem.excerpt)}</pre>\n\n` : '') +
-      `修复方法：${escapeHtml(problem.fix)}\n\n`;
+      `How to fix: ${escapeHtml(problem.fix)}\n\n`;
     if (Buffer.byteLength(report + section, 'utf8') > 55_000) break;
     report += section;
     shown++;
   }
-  if (shown < error.problems.length) report += `其余 ${error.problems.length - shown} 项问题请查看完整检查日志。\n\n`;
-  report += '### 更新 PR\n\nPR 标题可在网页编辑。提交说明需要由原作者修改：最新提交使用 `git commit --amend`，' +
-    '较早提交使用 `git rebase -i` 逐项修改；确认本人 DCO 时使用 `git commit --amend -s`。' +
-    '修改后执行 `git push --force-with-lease`，CI 会检查更新后的提交。\n\n' +
-    `[提交格式与 DCO 要求](${guide})\n`;
+  if (shown < error.problems.length) report += `See the full check log for ${error.problems.length - shown} additional issue${error.problems.length - shown === 1 ? '' : 's'}.\n\n`;
+  report += '### Update the PR\n\nEdit the PR title on GitHub. The original author should edit the latest commit with `git commit --amend`, ' +
+    'or use `git rebase -i` to edit earlier commits. After confirming their DCO, sign with `git commit --amend -s`. ' +
+    'Push the update with `git push --force-with-lease`; CI will validate the updated commits.\n\n' +
+    `[Commit format and DCO requirements](${guide})\n`;
   return report;
 }
 
 export async function reportCheckFailure(name, error) {
   process.exitCode = 1;
   if (error instanceof CommitPolicyError) {
-    for (const problem of error.problems) core.error(problemText(problem), {title: `${name}：${problemLocation(problem)}`});
+    for (const problem of error.problems) core.error(problemText(problem), {title: `${name}: ${problemLocation(problem)}`});
   } else core.error(error.message || String(error), {title: name});
   core.debug(error.stack || String(error));
   if (process.env.GITHUB_STEP_SUMMARY) {
     try {
       await core.summary.addRaw(formatCheckFailure(error, process.env.GITHUB_REPOSITORY || DEFAULT_REPOSITORY)).write();
     } catch (failure) {
-      core.warning(`无法写入检查摘要，请查看上方错误注释：${failure.message}`);
+      core.warning(`Could not write the check summary; see the error annotations above: ${failure.message}`);
     }
   }
 }
