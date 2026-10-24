@@ -66,8 +66,8 @@ const strings = {
   'join.body': ['Register, choose a project, and join the community.', '完成注册，选择实践方向，参与社区讨论。'],
   'join.register': ['Register with a PR', '提交注册 PR'],
   'join.github': ['View on GitHub', '查看 GitHub 仓库'],
-  'join.community': ['Join the community', '加入社区'],
-  'join.communityBody': ['Scan with Feishu to join the discussion.', '使用飞书扫码，加入交流群。'],
+  'join.community': ['Join the community', '加入社群'],
+  'join.communityBody': ['Open the link or scan with Feishu to join.', '点击链接或使用飞书扫码加入。'],
   'join.qrAlt': ['MFCP Feishu community QR code', 'MFCP 飞书交流群二维码'],
   'a11y.language': ['Switch to Chinese', '切换为英文'],
 };

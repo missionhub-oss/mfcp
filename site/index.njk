@@ -1,5 +1,6 @@
 {# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
 {# SPDX-License-Identifier: MIT #}
+{% set communityUrl = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=527me045-a711-4288-adf2-c3d677f04e4f' %}
 {% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
 {% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
 {% macro avatar(person, size=48) %}<span class="avatar" aria-hidden="true"><span>{{ person.initials }}</span><img src="{{ person.avatarUrl }}" alt="" width="{{ size }}" height="{{ size }}" loading="lazy"></span>{% endmacro %}
@@ -46,7 +47,7 @@
         <h1 id="hero-title">{{ t('hero.title1') }} <span class="accent">{{ t('hero.title2') }}</span></h1>
         <p class="hero-description">{{ t('hero.description') }}</p>
         <div class="button-row"><a class="button primary" href="#join">{{ t('hero.start') }}<span aria-hidden="true">↗</span></a><a class="button secondary" href="{{ repositoryUrl }}/issues?q=is%3Aissue+is%3Aopen+label%3Akind%2Ftask" target="_blank" rel="noopener noreferrer">{{ t('hero.tasks') }}<span aria-hidden="true">↗</span></a></div>
-        <a class="text-link hero-community-link" href="https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=527me045-a711-4288-adf2-c3d677f04e4f" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 4H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3v3l4-3h9a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Z"/><path d="M7 9h10M7 13h7"/></svg>{{ t('hero.community') }}<span aria-hidden="true">↗</span></a>
+        <a class="text-link hero-community-link" href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 4H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3v3l4-3h9a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Z"/><path d="M7 9h10M7 13h7"/></svg>{{ t('hero.community') }}<span aria-hidden="true">↗</span></a>
       </div>
       <div class="forge-art" aria-hidden="true">
         <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-axis axis-x"></div><div class="art-axis axis-y"></div>
@@ -116,7 +117,7 @@
       </div>
     </section>
 
-    <section class="join-section" id="join" aria-labelledby="join-title"><div class="container join-grid"><div><h2 id="join-title">{{ t('join.title') }}</h2><p>{{ t('join.body') }}</p><div class="button-row"><a class="button primary" href="{{ repositoryUrl }}/blob/main/participants/README.md" target="_blank" rel="noopener noreferrer">{{ t('join.register') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">{{ t('join.github') }} <span aria-hidden="true">↗</span></a></div><div class="initiator"><img src="./assets/process-mission.png" alt="Process Mission / 进程使命" width="310" height="100" loading="lazy"></div></div><aside class="community-card"><img src="./assets/mfcp-feishu-group.png" alt="{{ copy['join.qrAlt'].zh }}" data-i18n-alt="join.qrAlt" width="180" height="180" loading="lazy"><div><h3>{{ t('join.community') }}</h3><p>{{ t('join.communityBody') }}</p></div></aside></div></section>
+    <section class="join-section" id="join" aria-labelledby="join-title"><div class="container join-grid"><div><h2 id="join-title">{{ t('join.title') }}</h2><p>{{ t('join.body') }}</p><div class="button-row"><a class="button primary" href="{{ repositoryUrl }}/blob/main/participants/README.md" target="_blank" rel="noopener noreferrer">{{ t('join.register') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">{{ t('join.github') }} <span aria-hidden="true">↗</span></a></div><div class="initiator"><img src="./assets/process-mission.png" alt="Process Mission / 进程使命" width="310" height="100" loading="lazy"></div></div><aside class="community-card"><img src="./assets/mfcp-feishu-group.png" alt="{{ copy['join.qrAlt'].zh }}" data-i18n-alt="join.qrAlt" width="180" height="180" loading="lazy"><div><h3><a class="community-link" href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer">{{ t('join.community') }} <span aria-hidden="true">↗</span></a></h3><p>{{ t('join.communityBody') }}</p></div></aside></div></section>
   </main>
 
   <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
