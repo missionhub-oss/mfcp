@@ -5,6 +5,10 @@ const cards = [...document.querySelectorAll('.contributor-card')];
 const search = document.getElementById('search');
 const languageButton = document.getElementById('language');
 const menuButton = document.getElementById('menu-toggle');
+const previousPage = document.getElementById('previous-page');
+const nextPage = document.getElementById('next-page');
+const pageSize = 10;
+let currentPage = 1;
 let language = 'zh';
 
 function setLanguage(next) {
@@ -27,24 +31,43 @@ function setLanguage(next) {
   document.querySelector('meta[name="description"]').content = copy['meta.description'][language];
   languageButton.textContent = language === 'en' ? '中文' : 'English';
   try {localStorage.setItem('mfcp.language', language);} catch {}
+  renderContributors();
 }
 
-function filterContributors() {
+function renderContributors() {
   const query = search.value.trim().toLowerCase();
-  let visible = 0;
-  for (const card of cards) {
-    card.hidden = !card.dataset.login.includes(query);
-    if (!card.hidden) visible++;
-  }
-  document.getElementById('visible-count').textContent = visible;
-  document.getElementById('people-empty').hidden = visible !== 0;
+  const matches = cards.filter(card => card.dataset.login.includes(query));
+  const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
+  currentPage = Math.min(currentPage, pageCount);
+  const visible = new Set(matches.slice((currentPage - 1) * pageSize, currentPage * pageSize));
+  for (const card of cards) card.hidden = !visible.has(card);
+  document.getElementById('visible-count').textContent = matches.length;
+  document.getElementById('people-empty').hidden = matches.length !== 0;
+  document.getElementById('pagination').hidden = pageCount <= 1;
+  document.getElementById('pagination-status').textContent = language === 'zh'
+    ? `第 ${currentPage} / ${pageCount} 页` : `Page ${currentPage} of ${pageCount}`;
+  previousPage.disabled = currentPage === 1;
+  nextPage.disabled = currentPage === pageCount;
+}
+
+function changePage(delta) {
+  currentPage = Math.max(1, currentPage + delta);
+  renderContributors();
+  document.getElementById('ranking-title').focus({preventScroll: true});
+  document.getElementById('leaderboard').scrollIntoView({block: 'start'});
 }
 
 languageButton.addEventListener('click', () => setLanguage(language === 'en' ? 'zh' : 'en'));
-search.addEventListener('input', filterContributors);
+search.addEventListener('input', () => {
+  currentPage = 1;
+  renderContributors();
+});
+previousPage.addEventListener('click', () => changePage(-1));
+nextPage.addEventListener('click', () => changePage(1));
 document.getElementById('clear-filters').addEventListener('click', () => {
   search.value = '';
-  filterContributors();
+  currentPage = 1;
+  renderContributors();
   search.focus();
 });
 menuButton.addEventListener('click', () => {

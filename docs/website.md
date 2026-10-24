@@ -52,6 +52,9 @@ All registered contributors enter the single-column leaderboard immediately,
 ordered by total recorded XP, including zero-XP records. Equal XP shares a
 competition rank; usernames give ties a stable display order. The board uses
 all recorded history. Searching keeps the published ranks unchanged.
+The interactive list shows ten contributors per page. Search covers every
+record and returns to the first page; language changes preserve the current
+page. Without JavaScript, every record remains available in one list.
 
 Profiles link to their source record at the built commit. Missing event
 dates remain absent. Each milestone links to its original public evidence.

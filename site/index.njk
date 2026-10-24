@@ -68,7 +68,7 @@
     </section>
 
     <section class="section container" id="leaderboard" aria-labelledby="ranking-title">
-      <div class="ranking-heading"><div><h2 id="ranking-title">{{ t('ranking.title') }}</h2><p class="section-description">{{ t('ranking.description') }}</p></div>
+      <div class="ranking-heading"><div><h2 id="ranking-title" tabindex="-1">{{ t('ranking.title') }}</h2><p class="section-description">{{ t('ranking.description') }}</p></div>
         <label class="search-field js-only"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span class="sr-only">{{ t('people.search') }}</span><input id="search" type="search" autocomplete="off" placeholder="{{ copy['people.search'].zh }}" data-i18n-placeholder="people.search"></label>
       </div>
       <p class="sr-only" role="status" aria-live="polite"><span id="visible-count">{{ program.stats.participants }}</span> {{ t('people.count') }}</p>
@@ -92,6 +92,11 @@
           </details>
         </li>
       {% endfor %}</ol>
+      <nav class="pagination js-only" id="pagination" aria-label="{{ copy['pagination.label'].zh }}" data-i18n-aria-label="pagination.label">
+        <button type="button" id="previous-page" aria-controls="contributor-grid" disabled>{{ t('pagination.previous') }}</button>
+        <span id="pagination-status" role="status" aria-live="polite"></span>
+        <button type="button" id="next-page" aria-controls="contributor-grid">{{ t('pagination.next') }}</button>
+      </nav>
       <div class="empty-state" id="people-empty" hidden><p>{{ t('people.empty') }}</p><button type="button" class="button secondary" id="clear-filters">{{ t('people.clear') }}</button></div>
       <p class="small muted ranking-note">{{ t('ranking.note') }}</p>
     </section>
