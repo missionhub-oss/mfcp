@@ -139,7 +139,7 @@ if (!reducedMotion.matches) {
       revealObserver.unobserve(entry.target);
     }
   }, {threshold: 0.08});
-  document.querySelectorAll('.hero-copy, #program .section-intro, .project-card, .ranking-heading, .contributor-card, .join-grid').forEach(element => {
+  document.querySelectorAll('.hero-copy, #program .section-intro, .project-card, .ranking-heading, .contributor-card, .partner-link, .join-grid').forEach(element => {
     element.classList.add('reveal');
     revealObserver.observe(element);
   });

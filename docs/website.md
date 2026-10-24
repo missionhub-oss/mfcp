@@ -19,7 +19,8 @@ publish only from `main`. Deployment jobs are serialized.
 `site/index.njk` defines the page structure, `site/content.mjs` contains the
 English and Chinese interface copy, and `site/site.css` defines responsive
 layouts. `site/app.mjs` handles language, search and navigation.
-The main sections cover the program, one contributor leaderboard and joining.
+The main sections cover the program, one contributor leaderboard, partners
+and joining. Partners appear immediately after the leaderboard.
 Detailed metrics, milestones and progression requirements expand within each
 ranked entry. The footer contains one line of copyright and a GitHub link.
 
@@ -39,6 +40,20 @@ project arrows and rows use small hover transitions with the same motion
 preference. All content stays visible without JavaScript.
 CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
+
+Partner logos are stored locally under `site/assets/partners/`, preserving
+their original PNG files and transparency. The independent partner section
+shares the leaderboard's dark background, heading size, spacing and divider.
+Each logo keeps its original colors and transparent background directly
+within the dark section.
+The Gevico logo comes from the [QEMU Camp organization profile](https://github.com/qemu-camp)
+([original image](https://raw.githubusercontent.com/qemu-camp/.github/main/profile/assets/gtoc-logo-horizontal.png));
+the HUST logo comes from the [QEMU Camp website](https://qemu.gevico.online/)
+([original image](https://qemu.gevico.online/image/partners/hust.png)).
+Each logo links to its community and has a visible bilingual name.
+Program, leaderboard and partner headings have a red background that expands
+from left to right when their section is hovered or contains keyboard focus.
+Touch layouts show the background directly; reduced motion disables the transition.
 
 ## Published records and rankings
 
