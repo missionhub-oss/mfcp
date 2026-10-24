@@ -31,6 +31,15 @@ Typography uses system sans-serif fonts with PingFang SC and Microsoft
 YaHei fallbacks. The large headings, generous spacing and geometric
 composition are informed by the supplied Humanfia website reference.
 
+The hero mark floats while its rings rotate and the glow pulses. Mouse input
+adds a small perspective tilt. Motion pauses outside the viewport and while
+the tab is hidden; the system's reduced-motion preference keeps it static.
+Sections and ranked entries reveal once on entering the viewport. Buttons,
+project arrows and rows use small hover transitions with the same motion
+preference. All content stays visible without JavaScript.
+CSS and JavaScript URLs include the source commit to refresh cached assets
+after each deployment.
+
 ## Published records and rankings
 
 The build reads `participants/*.json` and the currently effective annual

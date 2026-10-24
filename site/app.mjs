@@ -66,3 +66,58 @@ document.addEventListener('keydown', event => {
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
 setLanguage(language);
 document.documentElement.dataset.enhanced = 'true';
+
+const art = document.querySelector('.forge-art');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let artVisible = true;
+let pointerFrame = null;
+let pointerX = 0;
+let pointerY = 0;
+function resetTilt() {
+  if (pointerFrame !== null) cancelAnimationFrame(pointerFrame);
+  pointerFrame = null;
+  art.style.removeProperty('--tilt-x');
+  art.style.removeProperty('--tilt-y');
+}
+function updateMotion() {
+  const paused = document.hidden || !artVisible || reducedMotion.matches;
+  art.classList.toggle('motion-paused', paused);
+  if (paused) resetTilt();
+}
+new IntersectionObserver(([entry]) => {
+  artVisible = entry.isIntersecting;
+  updateMotion();
+}).observe(art);
+document.addEventListener('visibilitychange', updateMotion);
+reducedMotion.addEventListener('change', updateMotion);
+art.addEventListener('pointermove', event => {
+  if (event.pointerType !== 'mouse' || reducedMotion.matches || !artVisible) return;
+  pointerX = event.clientX;
+  pointerY = event.clientY;
+  if (pointerFrame !== null) return;
+  pointerFrame = requestAnimationFrame(() => {
+    pointerFrame = null;
+    const bounds = art.getBoundingClientRect();
+    const x = Math.max(-1, Math.min(1, (pointerX - bounds.left) / bounds.width * 2 - 1));
+    const y = Math.max(-1, Math.min(1, (pointerY - bounds.top) / bounds.height * 2 - 1));
+    art.style.setProperty('--tilt-x', `${(-y * 4).toFixed(2)}deg`);
+    art.style.setProperty('--tilt-y', `${(x * 4).toFixed(2)}deg`);
+  });
+});
+art.addEventListener('pointerleave', resetTilt);
+art.addEventListener('pointercancel', resetTilt);
+updateMotion();
+
+if (!reducedMotion.matches) {
+  const revealObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    }
+  }, {threshold: 0.08});
+  document.querySelectorAll('.hero-copy, #program .section-intro, .project-card, .ranking-heading, .contributor-card, .join-grid').forEach(element => {
+    element.classList.add('reveal');
+    revealObserver.observe(element);
+  });
+}
