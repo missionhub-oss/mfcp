@@ -16,6 +16,7 @@ const strings = {
   'hero.description': ['Learn with mentors. Solve real problems in Zephyr, Linux and Yocto, and contribute your work upstream.', '在导师指导下解决 Zephyr、Linux 和 Yocto 中的实际问题，向上游贡献成果。'],
   'hero.start': ['Get involved', '开始参与'],
   'hero.tasks': ['Explore tasks', '查看任务'],
+  'hero.community': ['Join the community', '加入社群'],
   'stats.people': ['Contributors', '贡献者'],
   'stats.tasks': ['Accepted tasks', '验收任务'],
   'stats.xp': ['Recorded XP', '累计经验值'],
