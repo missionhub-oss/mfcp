@@ -38,7 +38,7 @@ for (const year of (await readdir('programs')).filter(name => /^\d{4}$/.test(nam
   }
   governanceSchema.parse(await read(`programs/${year}/governance.json`));
 }
-for (const dir of ['scripts', 'scripts/lib']) {
+for (const dir of ['scripts', 'scripts/lib', 'site']) {
   for (const name of await readdir(dir)) if (name.endsWith('.mjs')) execFileSync(process.execPath, ['--check', `${dir}/${name}`]);
 }
 console.log(`Validated ${identities.size} contributor records, annual rules and script syntax.`);

@@ -1,4 +1,4 @@
-name: Contributor directory
+name: MFCP website
 on:
   push:
     branches: [main]
@@ -10,8 +10,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: github.repository_id == '1428030862'
+    if: github.repository_id == '1428030862' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -20,14 +21,19 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run check
-      - run: npm run build:pages
+      - name: Validate published records
+        run: node scripts/run-check.mjs check.mjs
+      - name: Test site and contributor behavior
+        run: npm test
+      - name: Build the bilingual MFCP website
+        run: node scripts/run-check.mjs build-pages.mjs
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
         with:
           path: site-dist
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write

@@ -16,6 +16,7 @@
 
 <p><a href="README.md">English</a> · <strong>简体中文</strong></p>
 <p>
+  <a href="https://processmission-intern.github.io/mission-forge/">计划网站</a> ·
   <a href="docs/program.md">开始参与</a> ·
   <a href="projects/README.md">探索项目</a> ·
   <a href="programs/2026/README.md">2026 年培养安排</a> ·

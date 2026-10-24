@@ -147,7 +147,9 @@ participant. The bot enables auto-merge after these conditions pass.
   can advance. All three required check names run under GitHub Actions.
 - `Contributor progression`: serializes writes and reconciles every ten minutes.
 - `Contributor notifications`: serializes congratulations and retries hourly.
-- `Contributor directory`: builds and deploys the public GitHub Pages directory.
+- `MFCP website`: validates records, tests, builds and deploys the bilingual
+  GitHub Pages website after every push to `main`, including published level
+  and contribution updates. See [website behavior](website.md).
 
 PR checks run automatically on `pull_request_target`, including for first-time
 contributors. Validation code and npm dependencies come from the default branch.

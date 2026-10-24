@@ -1,0 +1,106 @@
+{# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
+{# SPDX-License-Identifier: MIT #}
+{% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
+{% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
+{% macro avatar(person, size=48) %}<span class="avatar" aria-hidden="true"><span>{{ person.initials }}</span><img src="{{ person.avatarUrl }}" alt="" width="{{ size }}" height="{{ size }}" loading="lazy"></span>{% endmacro %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="mfcp-source-commit" content="{{ program.sha }}">
+  <meta name="mfcp-built-at" content="{{ program.builtAt }}">
+  <meta name="description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:title" content="{{ copy['meta.title'].zh }}">
+  <meta property="og:description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ siteUrl }}">
+  <link rel="canonical" href="{{ siteUrl }}">
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./site.css">
+  <title>{{ copy['meta.title'].zh }}</title>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">{{ t('nav.skip') }}</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="{{ copy['nav.home'].zh }}" data-i18n-aria-label="nav.home"><span class="brand-icon">M<span>F</span></span><span>Mission<span class="brand-second">Forge</span></span><span class="brand-tag">MFCP</span></a>
+      <button class="menu-toggle js-only" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="{{ copy['nav.menu'].zh }}" data-i18n-aria-label="nav.menu"><span></span><span></span></button>
+      <nav id="main-nav" aria-label="{{ copy['nav.label'].zh }}" data-i18n-aria-label="nav.label">
+        <a href="#program">{{ t('nav.program') }}</a>
+        <a href="#leaderboard">{{ t('nav.ranking') }}</a>
+        <a href="#join">{{ t('nav.join') }}</a>
+      </nav>
+      <div class="header-actions">
+        <button class="language-button js-only" id="language" type="button" aria-label="{{ copy['a11y.language'].zh }}" data-i18n-aria-label="a11y.language">English</button>
+        <a class="github-link" href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.5 21.63c.55.1.76-.24.76-.53v-2.07c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.24-1.62-1.24-1.62-1.02-.7.08-.69.08-.69 1.12.08 1.71 1.15 1.71 1.15.99 1.7 2.6 1.2 3.23.92.1-.72.39-1.2.7-1.48-2.47-.28-5.07-1.24-5.07-5.5 0-1.22.44-2.21 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.54.23 2.68.11 2.96.72.79 1.15 1.78 1.15 3 0 4.27-2.6 5.22-5.09 5.5.4.35.75 1.02.75 2.06V22c0 .3.2.64.77.53A11.1 11.1 0 0 0 12 .9Z"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="red-rule"></span>{{ t('hero.eyebrow') }}</p>
+        <h1 id="hero-title">{{ t('hero.title1') }} <span class="accent">{{ t('hero.title2') }}</span></h1>
+        <p class="hero-description">{{ t('hero.description') }}</p>
+        <div class="button-row"><a class="button primary" href="#join">{{ t('hero.start') }}<span aria-hidden="true">↗</span></a><a class="button secondary" href="{{ repositoryUrl }}/issues?q=is%3Aissue+is%3Aopen+label%3Akind%2Ftask" target="_blank" rel="noopener noreferrer">{{ t('hero.tasks') }}<span aria-hidden="true">↗</span></a></div>
+      </div>
+      <div class="forge-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-axis axis-x"></div><div class="art-axis axis-y"></div>
+        <div class="forge-type"><span>M</span><span>F<span class="forge-dot"></span></span></div>
+        <span class="art-bottom-line"></span>
+      </div>
+    </section>
+
+    <div class="stats-strip">
+      <div class="container stats-grid">
+        <div><strong>{{ program.stats.participants }}</strong><span>{{ t('stats.people') }}</span></div>
+        <div><strong>{{ program.stats.tasks }}</strong><span>{{ t('stats.tasks') }}</span></div>
+        <div><strong>{{ program.stats.experience }}<small>XP</small></strong><span>{{ t('stats.xp') }}</span></div>
+      </div>
+    </div>
+
+    <section class="section container" id="program" aria-labelledby="program-title">
+      <div class="section-intro"><h2 id="program-title">{{ t('program.title') }}</h2><div><p class="section-description">{{ t('program.description') }}</p><div class="guide-links"><a class="text-link" href="{{ repositoryUrl }}/blob/main/docs/program.md" target="_blank" rel="noopener noreferrer">{{ t('program.guide') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ program.rulesUrl }}" target="_blank" rel="noopener noreferrer">{{ t('levels.rules') }} <span aria-hidden="true">↗</span></a></div></div></div>
+      <div class="project-grid">{% for project in projects %}<a class="project-card project-{{ project.id }}" href="{{ repositoryUrl }}/blob/main/projects/{{ project.id }}/README.md" target="_blank" rel="noopener noreferrer"><h3 class="project-wordmark">{{ project.name }}<span aria-hidden="true">↗</span></h3><p>{{ t('tracks.' ~ project.id) }}</p></a>{% endfor %}</div>
+    </section>
+
+    <section class="section container" id="leaderboard" aria-labelledby="ranking-title">
+      <div class="ranking-heading"><div><h2 id="ranking-title">{{ t('ranking.title') }}</h2><p class="section-description">{{ t('ranking.description') }}</p></div>
+        <label class="search-field js-only"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span class="sr-only">{{ t('people.search') }}</span><input id="search" type="search" autocomplete="off" placeholder="{{ copy['people.search'].zh }}" data-i18n-placeholder="people.search"></label>
+      </div>
+      <p class="sr-only" role="status" aria-live="polite"><span id="visible-count">{{ program.stats.participants }}</span> {{ t('people.count') }}</p>
+      <ol class="ranking-list" id="contributor-grid">{% for person in program.leaderboard %}
+        <li class="contributor-card" id="contributor-{{ person.login | lower }}" data-login="{{ person.login | lower }}" data-level="{{ person.level }}" data-xp="{{ person.stats.experience }}" value="{{ person.rank }}">
+          <details class="person-details"><summary>
+            <span class="rank-position"><span class="sr-only">{{ t('ranking.rank') }} </span><span class="rank-number">{{ person.rank }}</span></span>
+            {{ avatar(person) }}
+            <span class="person-identity"><strong>{{ person.login }}</strong><span>L{{ person.level }} · {{ t('level.' ~ person.level) }}</span></span>
+            <span class="rank-xp"><strong>{{ person.stats.experience }}</strong> XP</span>
+            <span class="expand-mark" aria-hidden="true">+</span><span class="sr-only">{{ t('profile.history') }}</span>
+          </summary>
+            <div class="person-detail-body"><div>
+              <dl class="person-stats"><div><dt>XP</dt><dd>{{ person.stats.experience }}</dd></div><div><dt>{{ t('profile.tasks') }}</dt><dd>{{ person.stats.tasks }}</dd></div><div><dt>{{ t('profile.prs') }}</dt><dd>{{ person.stats.pull_requests }}</dd></div></dl>
+              {% if person.history.length %}<ul class="history-list">{% for event in person.history %}<li><a href="{{ event.href }}" target="_blank" rel="noopener noreferrer">{{ localized(event.title) }} <span aria-hidden="true">↗</span></a><time datetime="{{ event.at }}" data-date="{{ event.at }}">{{ event.at | date }}</time></li>{% endfor %}</ul>{% else %}<p class="small muted">{{ t('profile.noHistory') }}</p>{% endif %}
+              <div class="guide-links"><a class="text-link small" href="{{ person.githubUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <a class="text-link small" href="{{ person.recordUrl }}" target="_blank" rel="noopener noreferrer">{{ t('profile.record') }} <span aria-hidden="true">↗</span></a>
+              </div></div>
+              {% if person.criteria.length %}<div class="criteria"><p class="criteria-title">{{ t('profile.next') }} <strong>L{{ person.nextLevel }}</strong></p>{% for criterion in person.criteria %}<label><span>{{ t('criterion.' ~ criterion.key) }}<strong>{{ criterion.current }} / {{ criterion.required }}</strong></span><progress max="{{ criterion.required }}" value="{{ criterion.value }}">{{ criterion.current }} / {{ criterion.required }}</progress></label>{% endfor %}<p class="small muted">{{ t('profile.progressNote') }}{% if person.level == 2 %} {{ t('profile.review') }}{% endif %}</p></div>{% else %}<p class="small muted">{{ t('profile.l' ~ person.level) }}</p>{% endif %}
+            </div>
+          </details>
+        </li>
+      {% endfor %}</ol>
+      <div class="empty-state" id="people-empty" hidden><p>{{ t('people.empty') }}</p><button type="button" class="button secondary" id="clear-filters">{{ t('people.clear') }}</button></div>
+      <p class="small muted ranking-note">{{ t('ranking.note') }}</p>
+    </section>
+
+    <section class="join-section" id="join" aria-labelledby="join-title"><div class="container join-grid"><div><h2 id="join-title">{{ t('join.title') }}</h2><p>{{ t('join.body') }}</p><div class="button-row"><a class="button primary" href="{{ repositoryUrl }}/blob/main/participants/README.md" target="_blank" rel="noopener noreferrer">{{ t('join.register') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">{{ t('join.github') }} <span aria-hidden="true">↗</span></a></div><div class="initiator"><img src="./assets/process-mission.png" alt="Process Mission / 进程使命" width="310" height="100" loading="lazy"></div></div><aside class="community-card"><img src="./assets/mfcp-feishu-group.png" alt="{{ copy['join.qrAlt'].zh }}" data-i18n-alt="join.qrAlt" width="180" height="180" loading="lazy"><div><h3>{{ t('join.community') }}</h3><p>{{ t('join.communityBody') }}</p></div></aside></div></section>
+  </main>
+
+  <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
+  <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

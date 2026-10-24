@@ -16,7 +16,7 @@ for (let attempt = 0; attempt < 4; attempt++) {
 if (pr.state !== 'open' || !pr.mergeable || !pr.merge_commit_sha) throw new Error('PR needs an available, conflict-free proposed merge.');
 const tree = await client.request(`${client.root}/git/trees/${pr.merge_commit_sha}?recursive=1`);
 if (tree.truncated) throw new Error('Incomplete proposed merge tree.');
-const allowed = /^(?:participants\/[a-z0-9-]+\.json|programs\/\d{4}\/(?:governance\.json|rules\/v\d+\.json)|scripts\/(?:lib\/)?[a-z0-9-]+\.mjs|package\.json)$/;
+const allowed = /^(?:participants\/[a-z0-9-]+\.json|programs\/\d{4}\/(?:governance\.json|rules\/v\d+\.json)|scripts\/(?:lib\/)?[a-z0-9-]+\.mjs|site\/[a-z0-9-]+\.mjs|package\.json)$/;
 const files = tree.tree.filter(file => allowed.test(file.path));
 if (files.length > 2000) throw new Error('Proposed input exceeds the file limit.');
 await mkdir('.mfcp-runtime', {recursive: true});

@@ -18,7 +18,7 @@ export async function verifyIntegrity(client, number) {
         throw new Error('Published rule versions are immutable; add a new version.');
       }
     }
-    const protectedPaths = /^(?:\.github\/(?:workflows|actions)\/|scripts\/|programs\/\d{4}\/(?:rules\/|governance\.json)|package(?:-lock)?\.json$)/;
+    const protectedPaths = /^(?:\.github\/(?:workflows|actions)\/|scripts\/|site\/|programs\/\d{4}\/(?:rules\/|governance\.json)|package(?:-lock)?\.json$)/;
     if (files.some(file => protectedPaths.test(file.filename) || protectedPaths.test(file.previous_filename ?? ''))) {
       const access = await client.request(`${client.root}/collaborators/${encodeURIComponent(pr.user.login)}/permission`);
       if (!['admin', 'maintain'].includes(access.permission)) {
