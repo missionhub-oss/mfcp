@@ -8,7 +8,7 @@ const strings = {
   'nav.home': ['Mission Forge home', 'Mission Forge 首页'],
   'nav.program': ['The program', '计划介绍'],
   'nav.ranking': ['Leaderboard', '贡献者排行榜'],
-  'nav.join': ['Get involved', '参与计划'],
+  'nav.join': ['Join the community', '加入社群'],
   'nav.menu': ['Toggle navigation', '展开或收起导航'],
   'hero.eyebrow': ['Mission Forge Contributor Program', 'Mission Forge 开源贡献者培养计划'],
   'hero.title1': ['Learn through', '参与真实贡献，'],
