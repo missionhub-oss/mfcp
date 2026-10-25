@@ -2,5 +2,11 @@
   "maintainers": [62325246],
   "reviewers": [62325246],
   "interviewers": [],
-  "mentors": []
+  "mentors": [
+    {
+      "github_id": 62325246,
+      "github_login": "zevorn",
+      "signoffs": ["Chao Liu <chao.liu@processmission.com>"]
+    }
+  ]
 }
