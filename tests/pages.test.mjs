@@ -8,6 +8,7 @@ import {execFileSync} from 'node:child_process';
 import {load} from 'cheerio';
 import {buildPages} from '../scripts/build-pages.mjs';
 import {normalizeProfile, totals} from '../scripts/lib/profile.mjs';
+import {loadTaskIssues} from '../scripts/lib/task-stats.mjs';
 
 test('trusted site rendering publishes real records from a separate data directory', async () => {
   await mkdir('.mfcp-runtime', {recursive: true});
@@ -16,14 +17,28 @@ test('trusted site rendering publishes real records from a separate data directo
     for (const name of ['participants', 'programs']) await cp(name, join(directory, name), {recursive: true});
     await assert.rejects(access(join(directory, 'site')), {code: 'ENOENT'});
     const sha = execFileSync('git', ['rev-parse', 'HEAD'], {encoding: 'utf8'}).trim();
-    const {html, program, output} = await buildPages(directory, {sha});
+    const issues = await loadTaskIssues();
+    const {html, program, output} = await buildPages(directory, {sha, issues});
     const $ = load(html);
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
     assert.equal($('.contributor-card').length, profiles.length);
     assert.deepEqual($('.ranking-list>.contributor-card').map((_, element) => $(element).attr('data-login')).get(),
       program.leaderboard.map(person => person.login.toLowerCase()));
-    assert.equal(program.stats.tasks, profiles.reduce((sum, profile) => sum + totals(profile).tasks, 0));
+    const tasks = issues.filter(issue => !issue.pull_request && issue.labels.some(label => label.name === 'kind/task'));
+    const inProgress = tasks.filter(issue => issue.state === 'open' && issue.assignees.length > 0);
+    const completed = tasks.filter(issue => issue.state === 'closed' && issue.state_reason === 'completed');
+    assert.equal(program.stats.tasks, tasks.length);
+    assert.equal(program.stats.inProgressTasks, inProgress.length);
+    assert.equal(program.stats.completedTasks, completed.length);
+    assert.deepEqual($('.stats-grid>div').map((_, element) => ({
+      label: $(element).find('[data-i18n]').text(), value: Number($(element).find('strong').text()),
+    })).get(), [
+      {label: '贡献者', value: profiles.length},
+      {label: '任务总数', value: tasks.length},
+      {label: '进行中', value: inProgress.length},
+      {label: '已完成', value: completed.length},
+    ]);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
     for (const profile of profiles) {
       const person = program.participants.find(item => item.id === profile.github_id);

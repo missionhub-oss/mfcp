@@ -2,9 +2,14 @@ name: MFCP website
 on:
   push:
     branches: [main]
+  issues:
+    types: [opened, edited, deleted, transferred, assigned, unassigned, closed, reopened, labeled, unlabeled]
+  schedule:
+    - cron: '23 * * * *'
   workflow_dispatch:
 permissions:
   contents: read
+  issues: read
 concurrency:
   group: mfcp-pages
   cancel-in-progress: false
@@ -13,6 +18,8 @@ jobs:
     if: github.repository_id == '1428030862' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:

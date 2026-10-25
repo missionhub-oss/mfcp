@@ -13,9 +13,9 @@ const template = new nunjucks.Environment(new nunjucks.FileSystemLoader(siteDire
 template.addFilter('date', value => new Intl.DateTimeFormat('zh-CN', {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}).format(new Date(value)));
 template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.stringify(value).replaceAll('<', '\\u003c')));
 
-export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha} = {}) {
+export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
-  const program = await loadProgram(directory, {sha});
+  const program = await loadProgram(directory, {sha, issues});
   const html = template.render('index.njk', {copy, projects, program, repositoryUrl,
     payload: {copy}, siteUrl: 'https://processmission-intern.github.io/mission-forge/'});
   await mkdir(output, {recursive: true});

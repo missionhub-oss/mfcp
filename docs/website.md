@@ -5,8 +5,10 @@
 
 The public website is built with `npm run build:pages` and deployed from
 `site-dist/` by `.github/workflows/pages.yml`. Pushes to `main` and manual
-workflow runs publish a new snapshot. The first visit uses Chinese; the
-language control remembers the visitor's English or Chinese preference.
+workflow runs publish a new snapshot. Task issue changes also publish a new
+snapshot, with an hourly refresh covering changes made by automation.
+The first visit uses Chinese; the language control remembers the visitor's
+English or Chinese preference.
 
 Every push to `main` triggers validation, tests, a fresh build and deployment.
 This includes merged registration, level, contribution, rule and website PRs.
@@ -56,6 +58,20 @@ from left to right when their section is hovered or contains keyboard focus.
 Touch layouts show the background directly; reduced motion disables the transition.
 
 ## Published records and rankings
+
+The homepage shows Contributors, Total tasks, In progress and Completed.
+Task statistics come from all pages of the repository's GitHub Issues API
+at build time. Total tasks counts every `kind/task` issue. In progress counts
+open task issues with at least one Assignee. Completed counts task issues
+closed with the `completed` reason. Each issue counts once, including when
+it has multiple Assignees. Pull requests and other issue kinds are excluded.
+The desktop layout has four columns; screens up to 700 pixels use two columns.
+
+Issue creation, deletion, transfer, edits, assignment changes, closure,
+reopening and label changes trigger a rebuild. The build uses the workflow's
+GitHub token with read access to issues. Local builds can use `GITHUB_TOKEN`
+or the public API without authentication. GitHub request or response validation
+failures stop the build and preserve the previously published snapshot.
 
 The build reads `participants/*.json` and the currently effective annual
 rules. `normalizeProfile()`, `totals()` and `activeSettlement()` determine

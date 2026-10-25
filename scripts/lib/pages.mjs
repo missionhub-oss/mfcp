@@ -4,6 +4,7 @@ import {readFile, readdir} from 'node:fs/promises';
 import {join} from 'node:path';
 import {normalizeProfile, totals, activeSettlement, rulesSchema} from './profile.mjs';
 import {DEFAULT_REPOSITORY} from './github.mjs';
+import {loadTaskIssues, taskStats} from './task-stats.mjs';
 
 export const repositoryUrl = `https://github.com/${DEFAULT_REPOSITORY}`;
 const usernameOrder = (a, b) => a.login.toLowerCase().localeCompare(b.login.toLowerCase(), 'en');
@@ -22,7 +23,7 @@ export function rankParticipants(participants) {
   return ranked.map(person => ({...person, rank: positions.get(person.id)}));
 }
 
-export async function loadProgram(directory, {now = new Date(), sha} = {}) {
+export async function loadProgram(directory, {now = new Date(), sha, issues} = {}) {
   if (!/^[a-f0-9]{40}$/.test(sha ?? '')) throw new Error('A source commit SHA is required to build the public website.');
   const versions = [];
   for (const year of (await readdir(join(directory, 'programs'))).filter(name => /^\d{4}$/.test(name))) {
@@ -76,8 +77,9 @@ export async function loadProgram(directory, {now = new Date(), sha} = {}) {
   const leaderboard = rankParticipants(participants);
   const rankById = new Map(leaderboard.map(person => [person.id, person.rank]));
   for (const person of participants) person.rank = rankById.get(person.id);
+  const tasks = taskStats(issues ?? await loadTaskIssues());
   return {sha, builtAt: now.toISOString(), rules, participants, leaderboard,
     rulesUrl: `${repositoryUrl}/blob/main/programs/${rules.year}/progression.md`,
-    stats: {participants: participants.length, tasks: participants.reduce((sum, person) => sum + person.stats.tasks, 0),
+    stats: {participants: participants.length, ...tasks,
       experience: participants.reduce((sum, person) => sum + person.stats.experience, 0), pullRequests: upstream.size}};
 }
