@@ -10,4 +10,4 @@
 
 参与流程见[参与规则](../../docs/program.md)，任务提议按[贡献指南](../../CONTRIBUTING.md)提交。
 
-贡献者晋级采用 [2026 年晋级规则](progression.md)，自动化使用 [v1 规则](rules/v1.json)。维护操作见 [Bot 操作说明](../../docs/progression-bot.md)。
+贡献者晋级采用 [2026 年晋级规则](progression.md)，自动化使用 [v2 规则](rules/v2.json)。维护操作见 [Bot 操作说明](../../docs/progression-bot.md)。

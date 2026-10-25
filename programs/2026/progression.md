@@ -3,12 +3,28 @@
 
 # 2026 年贡献者晋级规则
 
-规则版本为 `2026.v1`，机器读取的数量与积分条件保存在
-[rules/v1.json](rules/v1.json)。每条晋级记录保存规则版本及文件 SHA。
+当前规则版本为 `2026.v2`，机器读取的数量与积分条件保存在
+[rules/v2.json](rules/v2.json)。`2026.v1` 保留用于已记录的任务合同和晋级记录。
+每条晋级记录保存规则版本及文件 SHA。
 
 任务通过 `2026` 标签选择本年度规则，通过 `difficulty/level0` 至
 `difficulty/level4` 标签选择难度，并通过唯一 Assignee 分配负责人。
 Mentor 指定、阶段验收和经验结算使用 [Bot 简短命令](../../docs/bot-command-examples.md)。
+
+## 实践项目与上游仓库
+
+2026.v2 支持 Zephyr、Linux 和 Yocto 三个实践方向。任务成果需要合入
+下列 GitHub 仓库之一；结算时按任务接受时生效的规则版本核对仓库。
+
+| 项目 | 上游仓库 |
+| --- | --- |
+| Zephyr | `zephyrproject-rtos/zephyr` |
+| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs` |
+| Yocto | `yoctoproject/poky`、`openembedded/openembedded-core`、`openembedded/meta-openembedded` |
+
+ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用邮件补丁
+流程；`upstream_acceptance` 仍为 `github_pr`，这些流程的结算方式在后续
+规则版本中补充。
 
 ## L0 → L1
 

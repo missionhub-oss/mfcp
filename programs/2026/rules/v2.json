@@ -1,0 +1,20 @@
+{
+  "id": "2026.v2",
+  "year": 2026,
+  "effective_at": "2026-10-25T00:00:00+08:00",
+  "points": [0, 10, 30, 60, 100],
+  "level2": {"experience": 100, "tasks": 6, "pull_requests": 6, "level2_tasks": 2, "level3_tasks": 0},
+  "level3": {"experience": 300, "tasks": 12, "pull_requests": 12, "level2_tasks": 6, "level3_tasks": 2},
+  "level4_recommendations": 2,
+  "review_approvals": 2,
+  "upstream_repositories": [
+    "zephyrproject-rtos/zephyr",
+    "torvalds/linux",
+    "elisa-tech/wg-aerospace",
+    "elisa-tech/wg-lfscs",
+    "yoctoproject/poky",
+    "openembedded/openembedded-core",
+    "openembedded/meta-openembedded"
+  ],
+  "upstream_acceptance": "github_pr"
+}
