@@ -3,17 +3,32 @@
 
 # Zephyr RTOS 学习课程
 
-初次接触 Zephyr 的贡献者可以从这份课程目录开始，先建立开发环境、构建流程和系统基本概念，再结合任务学习设备模型、线程与驱动。
+## Agent 使用与披露
+
+> [!IMPORTANT]
+> **建议准备参与上游贡献的同学优先学习第 8 章，依次观看 8.1、8.2、8.3。** 使用 Agent 编写代码、文档或分析材料前，先了解人工审查责任、使用披露和提交要求，再按任务需要学习其他章节。
+
+| 优先学习 | 时长 | 学习重点 |
+| --- | --- | --- |
+| [8.1 Zephyr 社区的 AI 贡献准则](https://www.bilibili.com/video/BV16vHN6gECR/) | 16:07 | 理解人类提交者对生成内容的审查、许可证核查与 DCO 签署责任。 |
+| [8.2 Zephyr Assisted-by 标签与溯源规范](https://www.bilibili.com/video/BV1XiHM6KERT/) | 11:19 | 学习如何记录使用的 Agent、模型版本和辅助工具，向评审者披露 AI 参与情况。 |
+| [8.3 Zephyr Agent 开发的设计与审查策略](https://www.bilibili.com/video/BV1uMnS6CEsR/) | 31:15 | 学习在编写代码前明确设计与修改范围，形成架构决策记录（ADR），由人工审查后开始实现。 |
+
+向 Zephyr 提交贡献时，同时阅读官方 [AI Coding Assistants 准则](https://docs.zephyrproject.org/latest/contribute/guidelines.html#ai-coding-assistants)和[使用披露说明](https://docs.zephyrproject.org/latest/contribute/guidelines.html#usage-disclosure-and-attribution)。人类提交者需要理解并审查修改、检查许可证、完成验证和 DCO 签署；官方建议通过 `Assisted-by` 记录 AI 辅助情况。具体格式与要求以提交时的上游指南为准。
+
+第 8.3 节介绍设计与审查的实践方法。其他上游项目的任务，请同时核对目标仓库自己的贡献指南，按该项目规定准备使用披露和提交材料。
 
 ## 课程介绍
 
-- **课程**：[Zephyr RTOS 开发实践](https://www.bilibili.com/video/BV1khpe6bErD/)
+初次接触 Zephyr 的贡献者可以从这份课程目录开始，先建立开发环境、构建流程和系统基本概念，再结合任务学习设备模型、线程与驱动。
+
+- **课程**：[Zephyr RTOS：AI Agent 原生开发教程](https://www.bilibili.com/video/BV1khpe6bErD/)
 - **作者**：[绝对是泽文啦](https://space.bilibili.com/483048140)
 - **语言**：中文。
-- **目录核对日期**：2026 年 10 月 21 日。
-- **当前内容**：22 个分 P，按课程编号分为 7 个章节，总时长 **6 小时 21 分 30 秒**。
+- **目录核对日期**：2026 年 10 月 25 日。
+- **当前内容**：26 个分 P，按课程编号分为 8 个章节，总时长 **7 小时 33 分 54 秒**。社区活动视频单独列在后文。
 
-课程从 Zephyr 的开发工具与环境入手，逐步讲解 Kconfig、CMake、Devicetree、设备模型、线程调度、同步机制和驱动接口。作者将系统性学习与实际开发经验结合，并在导学中介绍使用 Agent 辅助开发的思路。学习时可以围绕“配置怎样生效、硬件怎样描述、设备怎样初始化、线程怎样运行”逐步建立理解。
+课程从 Zephyr 的开发工具与环境入手，逐步讲解 Kconfig、CMake、Devicetree、设备模型、线程调度、同步机制和驱动接口，第 8 章介绍 Agent 辅助开发中的贡献准则、使用披露和人工审查。学习时可以围绕“配置怎样生效、硬件怎样描述、设备怎样初始化、线程怎样运行”逐步建立理解。
 
 作者将课程定位为面向有嵌入式经验开发者的深入学习资料。Zephyr 零基础的同学可以按下面的顺序学习；尚未接触 C 语言和开发工具的同学，先准备好基础知识，再进入具体章节。课程持续更新，本页仅收录核对时已经发布的内容，章节简介依据作者公开的单集介绍整理。
 
@@ -39,16 +54,17 @@
 
 | 阶段 | 章节 | 学习目标与实践 |
 | --- | --- | --- |
+| 准备上游贡献与 Agent 辅助开发 | 第 8 章 | 优先了解人工审查、DCO 与使用披露，阅读目标仓库的贡献指南，明确设计范围和验证安排。 |
 | 认识 Zephyr 并运行程序 | 第 1 章 | 理解工具分工，准备环境，获取源码并运行 Hello World；记录实际构建与运行结果。 |
 | 理解配置与硬件描述 | 第 2、3 章 | 阅读应用配置、构建文件和设备树，能够查找配置来源及构建生成文件。 |
 | 理解设备与线程 | 第 4、5 章 | 跟踪设备初始化过程，理解线程状态、优先级及线程内存安排。 |
 | 理解同步与驱动接口 | 第 6、7 章 | 分析互斥量和信号量的使用场景，理解通用 API 与具体驱动的连接方式。 |
 
-完成第 1 阶段后，可以结合想参与的 Issue 选择后续章节。例如，构建与配置问题先学习第 2 章，设备描述和驱动问题学习第 3、4、7 章，线程与同步问题学习第 5、6 章。
+完成第 1 章的环境准备与运行练习后，可以结合想参与的 Issue 选择后续技术章节。例如，构建与配置问题先学习第 2 章，设备描述和驱动问题学习第 3、4、7 章，线程与同步问题学习第 5、6 章。
 
 ## 全部章节与学习链接
 
-点击课程标题即可进入合集对应的分 P。本目录按 22 节课程分别列出，时长统一采用分 P 版本，编号保留课程现有顺序。
+点击课程标题即可进入合集对应的分 P。本目录按课程编号列出 26 节课程，链接与时长采用核对时的分 P 信息。
 
 ### 第 1 章：课程导学与开发环境
 
@@ -77,35 +93,50 @@
 | --- | --- | --- |
 | [3.1 Devicetree 的层级逻辑与节点构造](https://www.bilibili.com/video/BV1khpe6bErD/?p=12) | 17:15 | 阅读 DTS 中的根节点、子节点和标签，理解硬件的树状组织方式。 |
 | [3.2 Devicetree 标准属性与数据类型解析](https://www.bilibili.com/video/BV1khpe6bErD/?p=13) | 12:15 | 认识 compatible、reg、interrupts 等属性及其描述的设备信息。 |
+| [3.3 Zephyr DTS Binding 约束文件的结构与语法](https://www.bilibili.com/video/BV1khpe6bErD/?p=14) | 13:43 | 阅读和编写 YAML Binding 文件，理解必填属性及硬件配置约束，为自定义驱动提供设备树支持。 |
 
 ### 第 4 章：设备模型与初始化
 
 | 编号与课程 | 时长 | 学习内容 |
 | --- | --- | --- |
-| [4.1 Zephyr 驱动程序的骨架：device 结构体的内存布局](https://www.bilibili.com/video/BV1khpe6bErD/?p=14) | 16:28 | 理解设备对象中的配置、API 接口和运行时数据如何组织。 |
+| [4.1 Zephyr 驱动程序的骨架：device 结构体的内存布局](https://www.bilibili.com/video/BV1khpe6bErD/?p=16) | 16:28 | 理解设备对象中的配置、API 接口和运行时数据如何组织。 |
 | [4.2 Zephyr DEVICE_DEFINE 宏背后的链接器魔法](https://www.bilibili.com/video/BV1khpe6bErD/?p=15) | 11:47 | 了解设备定义如何进入链接器指定区域，以及系统怎样收集设备实例。 |
-| [4.3 Zephyr 驱动初始化等级：从 EARLIEST 到 APPLICATION](https://www.bilibili.com/video/BV1khpe6bErD/?p=16) | 21:36 | 学习初始化等级、驱动依赖与内核服务可用时机之间的关系。 |
+| [4.3 Zephyr 驱动初始化等级：从 EARLIEST 到 APPLICATION](https://www.bilibili.com/video/BV1khpe6bErD/?p=17) | 21:36 | 学习初始化等级、驱动依赖与内核服务可用时机之间的关系。 |
 
 ### 第 5 章：线程与调度
 
 | 编号与课程 | 时长 | 学习内容 |
 | --- | --- | --- |
-| [5.1 Zephyr 线程生命周期与状态转换机](https://www.bilibili.com/video/BV1khpe6bErD/?p=17) | 12:49 | 理解线程创建、就绪、运行和终止，以及挂起、延时等操作引起的状态变化。 |
-| [5.2 Zephyr 线程优先级体系：协作式 vs 抢占式线程](https://www.bilibili.com/video/BV1khpe6bErD/?p=18) | 13:01 | 学习两类线程的调度规则，理解优先级选择对多任务运行的影响。 |
-| [5.3 Zephyr 线程 Stack 定义与溢出检测机制](https://www.bilibili.com/video/BV1khpe6bErD/?p=19) | 33:41 | 了解 K_THREAD_STACK_DEFINE、线程内存分配和溢出保护，建立定位相关 HardFault 的思路。 |
+| [5.1 Zephyr 线程生命周期与状态转换机](https://www.bilibili.com/video/BV1khpe6bErD/?p=18) | 12:49 | 理解线程创建、就绪、运行和终止，以及挂起、延时等操作引起的状态变化。 |
+| [5.2 Zephyr 线程优先级体系：协作式 vs 抢占式线程](https://www.bilibili.com/video/BV1khpe6bErD/?p=19) | 13:01 | 学习两类线程的调度规则，理解优先级选择对多任务运行的影响。 |
+| [5.3 Zephyr 线程 Stack 定义与溢出检测机制](https://www.bilibili.com/video/BV1khpe6bErD/?p=20) | 33:41 | 了解 K_THREAD_STACK_DEFINE、线程内存分配和溢出保护，建立定位相关 HardFault 的思路。 |
 
 ### 第 6 章：线程同步
 
 | 编号与课程 | 时长 | 学习内容 |
 | --- | --- | --- |
-| [6.1 Zephyr 互斥量 (Mutex) 的工作原理与优先级继承](https://www.bilibili.com/video/BV1khpe6bErD/?p=20) | 25:40 | 理解共享资源保护、竞态条件与优先级继承。 |
-| [6.2 Zephyr 信号量 (Semaphore) 的同步逻辑](https://www.bilibili.com/video/BV1khpe6bErD/?p=21) | 32:10 | 认识计数与二进制信号量，理解任务间同步及生产者与消费者的协作方式。 |
+| [6.1 Zephyr 互斥量 (Mutex) 的工作原理与优先级继承](https://www.bilibili.com/video/BV1khpe6bErD/?p=21) | 25:40 | 理解共享资源保护、竞态条件与优先级继承。 |
+| [6.2 Zephyr 信号量 (Semaphore) 的同步逻辑](https://www.bilibili.com/video/BV1khpe6bErD/?p=22) | 32:10 | 认识计数与二进制信号量，理解任务间同步及生产者与消费者的协作方式。 |
 
 ### 第 7 章：驱动接口
 
 | 编号与课程 | 时长 | 学习内容 |
 | --- | --- | --- |
-| [7.1 Zephyr 驱动 API 结构体：硬件无关的契约抽象](https://www.bilibili.com/video/BV1khpe6bErD/?p=22) | 19:56 | 理解驱动 API 结构体怎样连接通用子系统与具体硬件实现。 |
+| [7.1 Zephyr 驱动 API 结构体：硬件无关的契约抽象](https://www.bilibili.com/video/BV1khpe6bErD/?p=23) | 19:56 | 理解驱动 API 结构体怎样连接通用子系统与具体硬件实现。 |
+
+### 第 8 章：Agent 辅助开发与上游贡献
+
+| 编号与课程 | 时长 | 学习内容 |
+| --- | --- | --- |
+| [8.1 Zephyr 社区的 AI 贡献准则](https://www.bilibili.com/video/BV1khpe6bErD/?p=24) | 16:07 | 结合 Contribution Guidelines，理解人工审查、许可证核查和 DCO 签署责任。 |
+| [8.2 Zephyr Assisted-by 标签与溯源规范](https://www.bilibili.com/video/BV1khpe6bErD/?p=25) | 11:19 | 学习使用 Assisted-by 记录 Agent、模型版本与辅助工具，提供评审所需的使用披露。 |
+| [8.3 Zephyr Agent 开发的设计与审查策略](https://www.bilibili.com/video/BV1khpe6bErD/?p=26) | 31:15 | 学习在实现前形成架构决策记录，由人工审查设计与修改范围，避免增加未经确认的功能。 |
+
+## 社区活动资料
+
+| 视频 | 发布日期 | 时长 | 内容 |
+| --- | --- | --- | --- |
+| [MFCP 开源实践计划之 Zephyr 介绍](https://www.bilibili.com/video/BV1kmn865EBQ/) | 2026-10-23 | 39:18 | 介绍通过开源学习、导师指导、真实项目实践和贡献评估参与 MFCP 的方式。 |
 
 ## 学习记录与参与任务
 
@@ -115,4 +146,6 @@
 
 ## 来源与更新
 
-目录与单集介绍来自 [B 站课程页面](https://www.bilibili.com/video/BV1khpe6bErD/)及其[公开课程信息](https://api.bilibili.com/x/web-interface/view?bvid=BV1khpe6bErD)。更新本页时，核对分 P 编号、课程标题链接和时长，并更新核对日期。视频内容的授权以原页面为准。
+目录与单集介绍来自 [B 站课程页面](https://www.bilibili.com/video/BV1khpe6bErD/)及其[公开课程信息](https://api.bilibili.com/x/web-interface/view?bvid=BV1khpe6bErD)。第 3.3 节发布于 2026 年 10 月 24 日，第 8.1、8.2 节发布于 10 月 24 日，第 8.3 节发布于 10 月 25 日，发布日期按北京时间记录。章节简介依据作者公开的单集介绍整理，上游规则提示依据链接的官方贡献指南。
+
+更新本页时，核对分 P 编号、课程标题链接和时长，并更新核对日期。视频内容的授权以原页面为准。
