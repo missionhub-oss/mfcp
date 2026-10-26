@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
-import { parseCommand, taskSettings } from '../scripts/lib/commands.mjs';
+import { parseCommand, taskSettings as readTaskSettings } from '../scripts/lib/commands.mjs';
 import { validateAssignment, assignmentSuperseded } from '../scripts/lib/assignments.mjs';
 
 const slug = 'mfcp-progress';
@@ -13,6 +13,7 @@ const registration = `${repo}/pull/14`;
 const notification = `${registration}#issuecomment-6316896791`;
 const description = 'Documented command syntax; evidence must be verified before any approval.';
 const participant = JSON.parse(await readFile(new URL('../participants/hongquan-prog.json', import.meta.url), 'utf8'));
+const taskSettings = issue => readTaskSettings(issue, {at: participant.promotions[0].proof.at});
 const catalog = JSON.parse(await readFile(new URL('../.github/labels.json', import.meta.url), 'utf8'));
 const labels = ['kind/task', 'difficulty/level1', '2026'].map(name => {
   const label = catalog.find(item => item.name === name);

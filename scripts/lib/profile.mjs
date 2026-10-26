@@ -20,6 +20,7 @@ const upstream = z.strictObject({repository: z.string(), number: id, author: id,
   merge_commit: sha, merged_at: date, commits: z.array(sha).nonempty(), url: z.url()});
 const contribution = z.strictObject({
   id: z.string(), issue: id, participant_id: id, mentor_id: id,
+  mentors: z.array(z.strictObject({mentor_id: id, configuration: proof})).nonempty().optional(),
   difficulty: level, policy, points: z.number().int().nonnegative(),
   configuration: proof, stages: z.array(z.strictObject({name: z.enum(['reproduced', 'validated']), proof})),
   settlements: z.array(z.strictObject({id: z.string(), proof, upstream: z.array(upstream).nonempty(),
@@ -71,6 +72,7 @@ export function totals(profile) {
     level3_tasks: completed.filter(c => c.difficulty >= 3).length};
 }
 export const eligible = (profile, threshold) => Object.entries(threshold).every(([key, value]) => totals(profile)[key] >= value);
+export const taskMentors = task => task.mentors ?? [{mentor_id: task.mentor_id, configuration: task.configuration}];
 export function validateProfile(value, path) {
   const p = profileSchema.parse(value);
   if (participantPath(p.github_login) !== path) throw new Error('Participant filename does not match username.');
@@ -89,6 +91,16 @@ export function validateProfile(value, path) {
   const seenPrs = new Set();
   for (const c of p.contributions) {
     if (c.participant_id !== p.github_id || c.mentor_id === p.github_id) throw new Error('Invalid task ownership.');
+    const mentors = taskMentors(c);
+    const mentorIds = mentors.map(mentor => mentor.mentor_id);
+    if (new Set(mentorIds).size !== mentorIds.length || mentorIds.includes(p.github_id) ||
+        !mentors.some(mentor => mentor.mentor_id === c.mentor_id && equal(mentor.configuration, c.configuration))) {
+      throw new Error('Task mentors must be unique, independent and preserve the original configuration.');
+    }
+    for (const stage of c.stages) {
+      const mentor = mentors.find(mentor => mentor.mentor_id === stage.proof.actor);
+      if (!mentor || Date.parse(mentor.configuration.at) > Date.parse(stage.proof.at)) throw new Error('Task stages require a previously configured mentor.');
+    }
     if (c.settlements.filter(s => !reversed.has(s.id)).length > 1) throw new Error('Multiple active settlements.');
     const current = activeSettlement(p, c);
     for (const pr of current?.upstream ?? []) {

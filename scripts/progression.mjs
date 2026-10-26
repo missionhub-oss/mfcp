@@ -10,7 +10,7 @@ import { isBotCommand } from './lib/commands.mjs';
 import { replyToCommand } from './lib/command-feedback.mjs';
 import { markCommandProcessing } from './lib/command-reactions.mjs';
 import { digest, equal, validateProfile } from './lib/profile.mjs';
-import {updateMentorSection} from './lib/mentor-section.mjs';
+import {updateMentorSection, readMentorCommands} from './lib/mentor-section.mjs';
 import {formatSignoff, validateCommitMessage} from './lib/commit-policy.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 
@@ -103,7 +103,8 @@ async function executeSource(client, source, {write = false} = {}) {
         const current = await client.request(`${client.root}/issues/${proposal.issue}`);
         const command = await client.request(`${client.root}/issues/comments/${source.comment}`);
         if (command.created_at !== command.updated_at || digest(command.body) !== proposal.commandDigest) throw new Error('Mentor command changed during validation.');
-        const body = updateMentorSection(current.body, {login: proposal.mentor, signoffs: proposal.mentorSignoffs}, command.html_url);
+        if (!equal(readMentorCommands(current.body, {required: false}), proposal.mentorCommands)) continue;
+        const body = updateMentorSection(current.body, proposal.mentors);
         const updated = current.body === body ? current : await client.request(`${client.root}/issues/${proposal.issue}`, 'PATCH', {body});
         if (updated.body !== body) throw new Error('GitHub did not confirm the Mentor section update.');
         return {status: 'mentor-configured', mentor: proposal.mentor, url: updated.html_url};

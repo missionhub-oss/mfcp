@@ -3,6 +3,7 @@
 import { marked } from 'marked';
 import { parseArgsStringToArgv } from 'string-argv';
 import { z } from 'zod';
+import {taskYear} from './program-year.mjs';
 
 const person = z.string().regex(/^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}$/i);
 const url = z.url().refine(value => new URL(value).protocol === 'https:', 'Use HTTPS evidence links.');
@@ -80,14 +81,13 @@ export function parseCommand(body, slug) {
   return {action, data: schemas[action].parse(data)};
 }
 
-export function taskSettings(issue) {
+export function taskSettings(issue, options) {
   if (issue.pull_request) throw new Error('Task commands belong on an issue.');
   const names = issue.labels.map(label => typeof label === 'string' ? label : label.name);
   if (!names.includes('kind/task')) throw new Error('The issue needs the kind/task label.');
   const difficulties = names.filter(name => name.startsWith('difficulty/'));
-  const years = names.filter(name => /^\d{4}$/.test(name));
   if (difficulties.length !== 1 || !/^difficulty\/level[0-4]$/.test(difficulties[0])) throw new Error('Select exactly one difficulty/level0–4 label.');
-  if (years.length !== 1 || !/^20\d{2}$/.test(years[0]) || Number(years[0]) < 2026) throw new Error('Select exactly one supported year label, such as 2026.');
+  const year = taskYear(issue, options);
   if (issue.assignees.length !== 1 || issue.assignees[0].type !== 'User') throw new Error('Assign the issue to exactly one contributor using GitHub Assignees.');
-  return {participant_id: issue.assignees[0].id, difficulty: Number(difficulties[0].slice(-1)), year: Number(years[0])};
+  return {participant_id: issue.assignees[0].id, difficulty: Number(difficulties[0].slice(-1)), year};
 }

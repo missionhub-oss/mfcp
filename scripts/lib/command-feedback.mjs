@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
 import { isBotCommand, parseCommand } from './commands.mjs';
-import { digest, equal, activeSettlement } from './profile.mjs';
+import { digest, equal, activeSettlement, taskMentors } from './profile.mjs';
 import { readProfiles } from './progression.mjs';
 import { isTrustedBotComment } from './bot-identity.mjs';
 import { reactionForOutcome, setCommandReaction } from './command-reactions.mjs';
@@ -102,7 +102,7 @@ async function explainUnchanged(client, source, comment) {
   const profiles = await readProfiles(client, ref);
   for (const {path, profile} of profiles) {
     const proofs = [...profile.promotions.map(event => event.proof), ...profile.contributions.flatMap(task =>
-      [task.configuration, ...task.stages.map(stage => stage.proof), ...task.settlements.map(settlement => settlement.proof)])];
+      [...taskMentors(task).map(mentor => mentor.configuration), ...task.stages.map(stage => stage.proof), ...task.settlements.map(settlement => settlement.proof)])];
     if (proofs.some(proof => matchesProof(proof, source, comment.body))) {
       return {status: 'published', action: command.action, participant: profile.github_login, commit: ref, path};
     }

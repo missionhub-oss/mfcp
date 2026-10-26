@@ -29,17 +29,31 @@ function mentorField(body) {
   return {offset, length};
 }
 
-export function mentorSection(mentor, commandUrl) {
-  const dco = mentor.signoffs?.length
-    ? `DCO:\n\n${mentor.signoffs.map(signoff => `    Signed-off-by: ${signoff}`).join('\n')}\n\n` : '';
-  return `${start}\n\nMentor: [@${mentor.login}](https://github.com/${mentor.login})\n\n${dco}${reference(commandUrl)}\n\n${end}\n`;
+export function mergeMentorConfigurations(configurations, incoming) {
+  const records = new Map();
+  for (const configuration of incoming ? [...configurations, incoming] : configurations) {
+    if (!Number.isSafeInteger(configuration.mentor.id) || configuration.mentor.id <= 0) throw new Error('A verified mentor GitHub ID is required.');
+    if (!records.has(configuration.mentor.id)) records.set(configuration.mentor.id, configuration);
+  }
+  return [...records.values()];
 }
 
-export function updateMentorSection(body, mentor, commandUrl) {
+export function mentorSection(configurations) {
+  const records = mergeMentorConfigurations(configurations);
+  if (!records.length) throw new Error('Configure at least one mentor.');
+  const entries = records.map(({mentor, commandUrl}) => {
+    const dco = mentor.signoffs?.length
+      ? `DCO:\n\n${mentor.signoffs.map(signoff => `    Signed-off-by: ${signoff}`).join('\n')}\n\n` : '';
+    return `Mentor: [@${mentor.login}](https://github.com/${mentor.login})\n\n${dco}${reference(commandUrl)}`;
+  });
+  return `${start}\n\n${entries.join('\n\n')}\n\n${end}\n`;
+}
+
+export function updateMentorSection(body, configurations) {
   body ??= '';
   const field = mentorField(body);
   const current = section(body);
-  const replacement = mentorSection(mentor, commandUrl);
+  const replacement = mentorSection(configurations);
   if (!current) {
     if (!field) return `${body}${body ? '\n\n' : ''}### Mentor / 导师\n\n${replacement}`;
     let notes = body.slice(field.offset, field.offset + field.length).trim();
@@ -55,8 +69,9 @@ export function updateMentorSection(body, mentor, commandUrl) {
   return body.slice(0, offset) + replacement.trimEnd() + trailing + body.slice(offset + length);
 }
 
-export function readMentorCommand(body) {
+export function readMentorCommands(body, {required = true} = {}) {
   const current = section(body);
+  if (!current && !required) return [];
   if (!current) throw new Error('Configure a mentor before accepting or settling the task.');
   const links = [];
   marked.walkTokens(current.tokens.slice(current.first + 1, current.last), token => {
@@ -69,14 +84,16 @@ export function readMentorCommand(body) {
       links.push(url);
     }
   });
-  if (links.length !== 1) throw new Error('The MFCP Mentor section needs one configuration command link.');
-  return links[0];
+  if (!links.length) throw new Error('The MFCP Mentor section needs a configuration command link for each mentor.');
+  return [...new Set(links)];
 }
 
-export function assertMentorSection(body, mentor, commandUrl) {
-  for (const record of [mentor, {login: mentor.login}]) {
-    const expected = updateMentorSection(body, record, commandUrl);
-    const legacy = expected.replace(reference(commandUrl), `[Configuration command](${commandUrl})`);
+export function assertMentorSection(body, configurations) {
+  const variants = [configurations];
+  if (configurations.length === 1) variants.push(configurations.map(record => ({...record, mentor: {...record.mentor, signoffs: undefined}})));
+  for (const records of variants) {
+    const expected = updateMentorSection(body, records);
+    const legacy = records.reduce((value, {commandUrl}) => value.replace(reference(commandUrl), `[Configuration command](${commandUrl})`), expected);
     if (expected === body || legacy === body) return;
   }
   throw new Error('The MFCP Mentor section differs from the authorized command. Configure the mentor again.');

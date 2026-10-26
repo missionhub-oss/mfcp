@@ -52,6 +52,11 @@ Use GitHub Assignees to assign a task to exactly one registered contributor.
 Apply `kind/task`, one `difficulty/level0`–`difficulty/level4` label and one
 four-digit year label, such as `2026`. The year must have published rules.
 These native fields determine the participant, difficulty and annual rules.
+For new tasks the selected year must be the current Beijing calendar year or
+a future year at the command timestamp. Published rules and labels must exist.
+The preparation tool only offers current or future years and checks the current
+date again when preparing a draft. Recorded tasks retain their original year
+across calendar boundaries; replay uses each command's original timestamp.
 
 A Mentor Team member without repository assignment permission can post
 `@mfcp-progress configure assignee @username`. The bot verifies registration
@@ -62,7 +67,7 @@ owners and recorded contributions, and uses assignment events to avoid
 replaying an old command after a later manual assignment or unassignment.
 
 Post a new plain-text comment starting with a command on its first line.
-For example, `@mfcp-progress configure mentor @zevorn` assigns the mentor.
+For example, `@mfcp-progress configure mentor @zevorn` adds that mentor.
 A bare numeric GitHub ID is also accepted: `configure mentor 62325246`.
 Mentor configuration requires a task issue, an authorized maintainer and a
 registered active Mentor Team member with one mentor entry in the command year's
@@ -76,10 +81,12 @@ Assignee, difficulty and year may be set later. The bot updates the existing
 `### Mentor / 导师` issue field with the mentor account and DCO, preserving
 guidance and the rest of the body. The configuration command link is stored in a hidden HTML comment
 for authorization checks. It replaces the TBD placeholder. 👍 confirms the update. Keep the
-immutable command as authorization evidence. Before first acceptance, a new
-authorized command can update the mentor field. Acceptance and settlement verify
-the field against its authorized command and resolve the contributor from the
-issue's single Assignee and require a separate mentor.
+immutable command as authorization evidence. Multiple mentors can be added
+through separate commands. Numeric GitHub IDs identify unique mentors, so
+repeated commands preserve the original evidence and other mentors while
+refreshing registered details. An identical body skips the issue update.
+Acceptance and settlement verify every displayed mentor against their command,
+resolve the contributor from the single Assignee and require independent mentors.
 
 Reprocessing the original configuration command, including scheduled
 reconciliation, fills in or refreshes its DCO from the registered metadata.
@@ -92,8 +99,8 @@ and preserves edits to other issue fields made while validation runs.
 | --- | --- |
 | `configure assignee @username` | Active Mentor Team member; target must be registered and participating in this issue |
 | `configure mentor @username` | Annual maintainer and active Mentor Team member |
-| `accept reproduction evidence-url ...` | Assigned mentor |
-| `accept validation evidence-url ...` | Assigned mentor, after reproduction acceptance |
+| `accept reproduction evidence-url ...` | Any configured independent active mentor |
+| `accept validation evidence-url ...` | Any configured independent active mentor, after reproduction acceptance |
 | `settle upstream-pr-url ...` | Annual maintainer and active Mentor Team member |
 | `endorse @candidate L3` or `endorse @candidate L4` | Independent Mentor Team member |
 | `interview @candidate L3 evidence-url` | Independent annual interviewer and Mentor Team member |
@@ -133,13 +140,18 @@ A maintainer must
 close the issue for automatic close-event settlement; a maintainer can also
 post a new settlement command after closure. Every upstream commit must be
 attributed to the participant and include the author's and authorized mentor's
-DCO sign-offs. Each upstream PR receives credit once among active settlements.
+DCO sign-offs. The mentor signature must belong to the mentor who accepted the
+latest validation stage. Each upstream PR receives credit once among active settlements.
 The 2026 rules currently accept GitHub PRs in `zephyrproject-rtos/zephyr`.
 
 First reproduction acceptance records the native Assignee, mentor command
-proof, difficulty and annual rule version in the contributor JSON. Subsequent
-configuration commands cannot replace the recorded mentor. Acceptance and
-settlement revalidate the original mentor command and current Team membership.
+proofs, difficulty and annual rule version in the contributor JSON. The
+`mentors` array stores each unique mentor ID and authorization proof. Existing
+records without that array use their original `mentor_id` and `configuration`.
+The original fields remain unchanged, and further stage acceptance records
+additional authorized mentors. Any configured independent mentor may accept a
+stage after their configuration command. Acceptance and settlement revalidate
+all recorded authorizations and current Team membership.
 Acceptance and settlement require these issue fields to remain consistent with
 the recorded task. Label or Assignee edits do not rewrite contribution history.
 Correct accidental changes before continuing; use a separate issue for a new

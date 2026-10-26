@@ -22,10 +22,15 @@ def source_file(path, commit)
   [Base64.decode64(result.fetch('content')).force_encoding('UTF-8'), result.fetch('sha')]
 end
 
-def task_labels(defaults, answers, catalog, year)
-  unless year.is_a?(String) && year.match?(/\A20\d{2}\z/) && year.to_i >= 2026
-    raise 'Confirm the task year and pass --year YYYY, for example --year 2026'
+def validate_task_year(year, at: Time.now)
+  minimum = [2026, at.getlocal('+08:00').year].max
+  unless year.is_a?(String) && year.match?(/\A20\d{2}\z/) && year.to_i >= minimum
+    raise "Select task year #{minimum} or later and pass --year YYYY; past years are unavailable for new tasks"
   end
+end
+
+def task_labels(defaults, answers, catalog, year)
+  validate_task_year(year)
   raise "Task year #{year} is not available in the label catalog" unless catalog.include?(year)
   difficulty = /\AL([0-4]) - /.match(answers.fetch('difficulty', '').to_s)
   raise 'Confirm a difficulty from L0 to L4 before preparing a task for publication' unless difficulty
@@ -52,6 +57,7 @@ end
 def prepare(options)
   template = options.fetch(:template)
   raise 'Choose a supported template' unless TEMPLATES.include?(template)
+  validate_task_year(options[:year]) if template == '01-task.yml' && !options[:inspect]
   repo = api("repos/#{REPO}")
   raise 'Unexpected repository identity' unless repo.fetch('id') == REPO_ID
   branch = repo.fetch('default_branch')
@@ -73,7 +79,7 @@ def prepare(options)
   end
   if options[:inspect]
     puts JSON.pretty_generate({repo: REPO, commit: commit, template: form,
-      available_year_labels: catalog.grep(/\A20\d{2}\z/).sort,
+      available_year_labels: catalog.grep(/\A20\d{2}\z/).select { |year| year.to_i >= Time.now.getlocal('+08:00').year }.sort,
       task_metadata: template == '01-task.yml' ? 'Confirm difficulty, project and --year before publication' : nil})
     return
   end

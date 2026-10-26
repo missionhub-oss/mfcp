@@ -1,0 +1,44 @@
+[
+  {
+    "mentor": {
+      "id": 81150281,
+      "login": "hongquan-prog",
+      "signoffs": [
+        "Hongquan Li <hongquan.li@processmission.com>"
+      ]
+    },
+    "proof": {
+      "source": {
+        "kind": "comment",
+        "issue": 15,
+        "comment": 6328283665
+      },
+      "actor": 62325246,
+      "at": "2026-10-21T22:49:46Z",
+      "digest": "46a45aada58b8af42473cb8451e29323050696b63c4f1e5723fffeb0b05e7e7e",
+      "details": "{\"mentor\":\"@hongquan-prog\"}"
+    },
+    "commandUrl": "https://github.com/processmission-intern/mission-forge/issues/15#issuecomment-6328283665"
+  },
+  {
+    "mentor": {
+      "id": 62325246,
+      "login": "zevorn",
+      "signoffs": [
+        "Chao Liu <chao.liu@processmission.com>"
+      ]
+    },
+    "proof": {
+      "source": {
+        "kind": "comment",
+        "issue": 1,
+        "comment": 6328333205
+      },
+      "actor": 62325246,
+      "at": "2026-10-21T22:52:41Z",
+      "digest": "b9f2f2e7adc47eac6e546cc57be013b7f7db62ee9e04a0c2e31c01c5ed5cf612",
+      "details": "{\"mentor\":\"@zevorn\"}"
+    },
+    "commandUrl": "https://github.com/processmission-intern/mission-forge/issues/1#issuecomment-6328333205"
+  }
+]
