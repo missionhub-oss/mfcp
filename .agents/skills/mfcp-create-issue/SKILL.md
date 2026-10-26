@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 # SPDX-License-Identifier: MIT
 name: mfcp-create-issue
-description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再使用仓库当前表单设置正文和标签。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
+description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再按当前表单设置正文和标签，为实践任务设置原生 Task 类型。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
 ---
 
 # MFCP Issue 创建
@@ -59,13 +59,14 @@ ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>
 
 `--year` 使用用户确认的年份。用户明确指定负责人时添加 `--assignee 用户名`，脚本核对注册记录和 GitHub 身份。非任务表单不传 `--year`，也无需询问任务难度和年度。
 
-脚本输出 `body.md`、`issue.json` 和 `source.json`。它根据回答生成项目、难度及年度标签，检查年度规则存在、标签在目录和远端均存在，并按表单顺序生成 `### 原字段名称` 与回答。未填写的可选字段显示 `_No response_`。正文保留表单实际字段；标题采用表单的 `title` 前缀。
+脚本输出 `body.md`、`issue.json` 和 `source.json`。它根据回答生成项目、难度及年度标签，为实践任务设置原生 `type: Task`，检查年度规则存在、标签在目录和远端均存在，并按表单顺序生成 `### 原字段名称` 与回答。未填写的可选字段显示 `_No response_`。正文保留表单实际字段；标题采用表单的 `title` 前缀。
 
 ## 标签与权限
 
 - 创建或评论前，读取实际提交身份的 GitHub 用户名和数字 ID，检查默认分支 `participants/<小写用户名>.json` 中的登记，并核对文件内的 `github_login` 和 `github_id`。尚未登记或身份不匹配时保留草稿，指向 `participants/README.md` 的 Fork 与注册 PR 流程。使用连接工具与 CLI 时分别确认实际提交账号，避免混用身份。
 
-- 任务使用 `kind/task`、用户确认的项目标签、唯一的 `difficulty/level0` 至 `difficulty/level4` 标签及唯一的四位数字年度标签。年度须为北京时间的当前年份或未来年份，且已有对应规则与标签，不增加年度前缀。问题报告、建议和求助保留对应模板的默认标签。
+- 任务使用原生 Issue Type `Task`、用户确认的项目标签、唯一的 `difficulty/level0` 至 `difficulty/level4` 标签及唯一的四位数字年度标签。年度须为北京时间的当前年份或未来年份，且已有对应规则与标签，不增加年度前缀。问题报告、建议和求助保留对应模板的默认标签。
+- 实践任务同时设置 GitHub 原生 Issue Type 为 `Task`。通过连接工具创建时传入原生类型；工具缺少该字段时，使用保留 `issue.json` 中 `type` 字段的 GitHub REST 请求。页面统计及任务事件触发的构建以原生类型为准。
 - 难度标签必须与正文中的难度选择一致，年度必须对应已发布规则。未确认时继续询问或保留草稿。发布前确认提交身份能够设置所选标签；权限不足时保留准备结果并说明需要维护者设置的内容。
 - 指定 Assignee 时确认用户明确授权、该成员已注册且 GitHub 接受该分配；不推断负责人、Mentor 授权、Milestone 或其他标签。
 - 正文填写 Mentor 用户名仅记录协作安排。用户明确要求正式配置 Mentor 时，再按 `docs/bot-command-examples.md` 检查权限并发送命令，核对 Bot 的结果回复。
@@ -78,4 +79,4 @@ ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>
 3. 再次查询近期相关 Issue。存在等价记录时向用户返回该记录，保留当前草稿；用户明确要求独立事项时按其范围处理。
 4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `processmission-intern/mission-forge`，传入 `issue.json` 的标题、正文、标签及用户明确指定的 Assignee。使用 CLI 时执行 `gh api repos/processmission-intern/mission-forge/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
 5. 创建请求超时或返回结果不明时，先查询当前用户近期创建的 Issue，核对标题和完整正文。找到匹配项就读取并返回它；结果仍不明时停止自动重试，说明状态与草稿位置，避免重复发布。
-6. 创建成功后读取该 Issue，核对目标仓库、标题、正文、项目、难度、年度标签和 Assignee，返回真实链接。读取不一致时说明具体差异，再按原授权修正；无法设置的字段如实报告，不重复创建 Issue。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。
+6. 创建成功后读取该 Issue，核对目标仓库、标题、正文、原生 `type.name`、项目、难度、年度标签和 Assignee，返回真实链接。实践任务须确认 `type.name` 为 `Task`；GitHub 可能忽略权限不足的类型设置，应由有权限的维护者补设，类型设置完成后自动构建页面。读取不一致时说明具体差异，再按原授权修正；无法设置的字段如实报告，不重复创建 Issue。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。

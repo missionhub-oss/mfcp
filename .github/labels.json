@@ -1,5 +1,4 @@
 [
-  {"name":"kind/task","color":"1D76DB","description":"Open-source practice task / 开源实践任务"},
   {"name":"kind/bug","color":"D73A4A","description":"Reproducible problem in MFCP resources / MFCP 资料或流程问题"},
   {"name":"kind/improvement","color":"A2EEEF","description":"Program or resource improvement / 培养机制或资料改进"},
   {"name":"kind/question","color":"D876E3","description":"Participation or technical question / 参与或技术求助"},

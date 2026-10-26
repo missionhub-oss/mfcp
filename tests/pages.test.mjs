@@ -25,7 +25,7 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal($('.contributor-card').length, profiles.length);
     assert.deepEqual($('.ranking-list>.contributor-card').map((_, element) => $(element).attr('data-login')).get(),
       program.leaderboard.map(person => person.login.toLowerCase()));
-    const tasks = issues.filter(issue => !issue.pull_request && issue.labels.some(label => label.name === 'kind/task'));
+    const tasks = issues.filter(issue => !issue.pull_request && issue.type?.name === 'Task');
     const inProgress = tasks.filter(issue => issue.state === 'open' && issue.assignees.length > 0);
     const completed = tasks.filter(issue => issue.state === 'closed' && issue.state_reason === 'completed');
     assert.equal(program.stats.tasks, tasks.length);

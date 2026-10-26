@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
+import {isTaskIssue} from './issue-types.mjs';
 
 export function validateAssignment(issue, participant, profiles, comments) {
-  if (issue.pull_request || !issue.labels.some(label => label.name === 'kind/task')) throw new Error('Assign contributors on a kind/task issue.');
+  if (!isTaskIssue(issue)) throw new Error('Set the native issue type to Task before assigning a contributor.');
   if (participant.type !== 'User' || !profiles.some(record => record.profile.github_id === participant.id &&
       record.profile.github_login.toLowerCase() === participant.login.toLowerCase())) throw new Error('The assignee must have a matching registration.');
   if (issue.user.id !== participant.id && !comments.some(comment => comment.user.type === 'User' && comment.user.id === participant.id)) {

@@ -1,7 +1,8 @@
 name: Task proposal / 实践任务提议
 description: Propose an open-source practice task / 提出开源实践任务
 title: "[Task] "
-labels: ["kind/task", "2026"]
+labels: ["2026"]
+type: Task
 body:
   - type: markdown
     attributes:

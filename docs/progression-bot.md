@@ -49,8 +49,9 @@ actual merged PRs.
 ## Task commands
 
 Use GitHub Assignees to assign a task to exactly one registered contributor.
-Apply `kind/task`, one `difficulty/level0`–`difficulty/level4` label and one
-four-digit year label, such as `2026`. The year must have published rules.
+Set the native GitHub Issue Type to `Task`, apply one difficulty label from
+`difficulty/level0` through `difficulty/level4`, and one four-digit year label,
+such as `2026`. The year must have published rules.
 These native fields determine the participant, difficulty and annual rules.
 For new tasks the selected year must be the current Beijing calendar year or
 a future year at the command timestamp. Published rules and labels must exist.

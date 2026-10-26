@@ -9,6 +9,7 @@ import { parseCommand, taskSettings } from './commands.mjs';
 import { planAssignment } from './assignments.mjs';
 import {updateMentorSection, readMentorCommands, assertMentorSection, mergeMentorConfigurations} from './mentor-section.mjs';
 import {programYearAt, taskYear} from './program-year.mjs';
+import {isTaskIssue} from './issue-types.mjs';
 export { parseCommand } from './commands.mjs';
 
 const eventKey = source => `${source.kind}-${source.comment ?? source.pr ?? source.event}`;
@@ -57,7 +58,7 @@ async function readComment(client, source, slug) {
 }
 
 export async function validateMentorConfiguration(client, issue, profiles, read, ref) {
-  if (issue.pull_request || !issue.labels.some(label => label.name === 'kind/task')) throw new Error('Configure a mentor on a kind/task issue.');
+  if (!isTaskIssue(issue)) throw new Error('Set the native issue type to Task before configuring a mentor.');
   taskYear(issue, {at: read.proof.at, recordedYear: recordedYear(recordedTask(profiles, issue)), required: false});
   const {governance} = await currentRules(client, ref, read.proof.at);
   requireRole(governance.maintainers, read.proof.actor, 'Only maintainers can configure tasks.');
@@ -208,7 +209,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
       details: JSON.stringify({registration_pr: pr.html_url, merge_commit: pr.merge_commit_sha})};
   } else if (source.kind === 'completed') {
     issue = await client.request(`${client.root}/issues/${source.issue}`);
-    if (issue.pull_request || issue.state !== 'closed' || issue.state_reason !== 'completed') return null;
+    if (!isTaskIssue(issue) || issue.state !== 'closed' || issue.state_reason !== 'completed') return null;
     const events = await client.list(`${client.root}/issues/${source.issue}/events`);
     const event = events.find(e => e.id === source.event && e.event === 'closed');
     if (!event) throw new Error('Unknown completion event.');
@@ -239,7 +240,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
       details: JSON.stringify({...data, evidence_comment: comment.id})};
   } else if (source.kind === 'reopened') {
     issue = await client.request(`${client.root}/issues/${source.issue}`);
-    if (issue.state !== 'open' || issue.pull_request) return null;
+    if (issue.state !== 'open' || !isTaskIssue(issue)) return null;
     const events = await client.list(`${client.root}/issues/${source.issue}/events`);
     const event = events.find(e => e.id === source.event && e.event === 'reopened');
     if (!event) throw new Error('Unknown reopen event.');
@@ -280,7 +281,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     throw new Error('Issue labels differ from the recorded task rules; restore the configured difficulty and year.');
   }
   if (issue?.pull_request) throw new Error('Use an issue for contribution commands.');
-  if (['configure', 'stage', 'settle'].includes(action) && !issue.labels.some(l => l.name === 'kind/task')) throw new Error('Expected kind/task issue.');
+  if (['configure', 'stage', 'settle'].includes(action) && !isTaskIssue(issue)) throw new Error('Expected native issue type Task.');
   if (action === 'stage') {
     if (!task || !taskMentors(task).some(mentor => mentor.mentor_id === proof.actor) || proof.actor === before.github_id) throw new Error('Only an assigned independent mentor can accept a stage.');
     if (activeSettlement(after, task)) throw new Error('Task is already settled.');

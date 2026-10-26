@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
   issues:
-    types: [opened, edited, deleted, transferred, assigned, unassigned, closed, reopened, labeled, unlabeled]
+    types: [opened, edited, deleted, transferred, assigned, unassigned, closed, reopened, labeled, unlabeled, typed, untyped]
   schedule:
     - cron: '23 * * * *'
   workflow_dispatch:
@@ -15,7 +15,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: github.repository_id == '1428030862' && github.ref == 'refs/heads/main'
+    if: >-
+      github.repository_id == '1428030862' && github.ref == 'refs/heads/main' &&
+      (github.event_name != 'issues' || github.event.issue.type.name == 'Task' ||
+       ((github.event.action == 'typed' || github.event.action == 'untyped') &&
+        github.event.type.name == 'Task'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:

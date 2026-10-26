@@ -15,7 +15,8 @@ const description = 'Documented command syntax; evidence must be verified before
 const participant = JSON.parse(await readFile(new URL('../participants/hongquan-prog.json', import.meta.url), 'utf8'));
 const taskSettings = issue => readTaskSettings(issue, {at: participant.promotions[0].proof.at});
 const catalog = JSON.parse(await readFile(new URL('../.github/labels.json', import.meta.url), 'utf8'));
-const labels = ['kind/task', 'difficulty/level1', '2026'].map(name => {
+const taskType = JSON.parse(await readFile(new URL('./fixtures/native-task-issues.json', import.meta.url), 'utf8')).task.type;
+const labels = ['difficulty/level1', '2026'].map(name => {
   const label = catalog.find(item => item.name === name);
   assert.ok(label, `${name} must be in the repository label catalog`);
   return label;
@@ -37,7 +38,7 @@ test('task commands use only mentor or evidence arguments', () => {
 test('assignment requires registration and discussion participation without replacing an owner', () => {
   const account = {id: participant.github_id, login: participant.github_login, type: 'User'};
   const profiles = [{profile: participant}];
-  const issue = {labels, assignees: [], user: account};
+  const issue = {type: taskType, labels, assignees: [], user: account};
   assert.doesNotThrow(() => validateAssignment(issue, account, profiles, []));
   assert.throws(() => validateAssignment(issue, account, [], []));
   const mentor = {id: 62325246, login: 'zevorn', type: 'User'};
@@ -80,7 +81,7 @@ test('quoted examples and unrelated mentions never execute commands', () => {
 });
 
 test('native task fields are mandatory and unambiguous', () => {
-  const issue = {labels, assignees: [{id: participant.github_id, login: participant.github_login, type: 'User'}]};
+  const issue = {type: taskType, labels, assignees: [{id: participant.github_id, login: participant.github_login, type: 'User'}]};
   assert.deepEqual(taskSettings(issue), {participant_id: participant.github_id, difficulty: 1, year: 2026});
   assert.throws(() => taskSettings({...issue, assignees: []}));
   assert.throws(() => taskSettings({...issue, assignees: [...issue.assignees, ...issue.assignees]}));

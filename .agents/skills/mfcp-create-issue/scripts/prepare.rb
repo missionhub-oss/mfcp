@@ -136,6 +136,7 @@ def prepare(options)
   body = sections.join("\n\n") + "\n"
   raise 'Body exceeds GitHub limit' if body.length > 65_536
   payload = {title: title, body: body, labels: labels}
+  payload[:type] = template == '01-task.yml' ? 'Task' : form['type'] if template == '01-task.yml' || form['type']
   payload[:assignees] = [registered_assignee(options[:assignee], commit)] if options[:assignee]
   output = File.expand_path(options.fetch(:output))
   raise 'Output directory already exists; choose a new directory' if File.exist?(output)
@@ -144,7 +145,7 @@ def prepare(options)
   File.write(File.join(output, 'issue.json'), JSON.pretty_generate(payload) + "\n")
   File.write(File.join(output, 'source.json'), JSON.pretty_generate({repo: REPO,
     branch: branch, commit: commit, template: path, template_sha: form_sha,
-    labels_sha: labels_sha, selected_labels: labels, selected_year: options[:year]}) + "\n")
+    labels_sha: labels_sha, selected_labels: labels, selected_year: options[:year], issue_type: payload[:type]}) + "\n")
   puts "Validated draft: #{output}"
 end
 

@@ -66,11 +66,15 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 - 验收条件：运行步骤、预期结果和需要提交的验证证据。
 - 协作安排：参与者、导师及计划时间；尚未确定的信息标记为待确认。
 
+实践任务使用 GitHub 原生 Type `Task`。任务模板和创建脚本会填写该类型，
+创建后请核对 Issue 侧边栏的 Type。类型设置完成后，新建任务、分配或取消
+负责人会自动触发网站构建和发布。
+
 开始任务前，由参与者与导师在 Issue 中确认范围和验收条件。
 
 ## 申领任务
 
-1. 在开放的 Issue 中按 `kind/task`、项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选任务，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
+1. 在开放的 Issue 中选择原生 Type 为 `Task` 的任务，再按项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
 2. 在原任务下发表评论，介绍相关经验、可参与时间、开发条件和对任务的理解。
 3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个四位数字年度标签，例如 `2026`。
 4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配。使用 `@mfcp-progress configure mentor @导师用户名` 独立指定 Mentor，Bot 更新 Issue 的导师区域；首次验收时读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。

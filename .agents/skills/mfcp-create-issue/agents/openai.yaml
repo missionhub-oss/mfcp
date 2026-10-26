@@ -1,4 +1,4 @@
 interface:
   display_name: "MFCP Issue 创建"
-  short_description: "先确认任务难度、年度与验收条件，再按 MFCP 当前模板准备 Issue"
-  default_prompt: "使用 $mfcp-create-issue，先确认未明确的难度、年度及关键任务参数，再按仓库当前表单准备并创建 Issue。"
+  short_description: "确认任务难度、年度与验收条件，按 MFCP 模板和原生 Task 类型准备 Issue"
+  default_prompt: "使用 $mfcp-create-issue，先确认未明确的难度、年度及关键任务参数，再按当前表单创建原生 Type 为 Task 的实践任务。"

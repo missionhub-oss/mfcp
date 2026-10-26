@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 import { activeSettlement, digest, participantPath, validateProfile } from './profile.mjs';
 import { isTrustedBotComment } from './bot-identity.mjs';
+import {isTaskIssue} from './issue-types.mjs';
 
 export function notificationsFor(profile) {
   const p = validateProfile(profile, participantPath(profile.github_login));
@@ -49,7 +50,7 @@ export async function deliverNotifications(client, profiles, {appId, slug, write
       try {
         if (message.kind === 'completion') {
           const issue = await client.request(`${client.root}/issues/${message.issue}`);
-          if (issue.pull_request || issue.state !== 'closed' || issue.state_reason !== 'completed') {
+          if (!isTaskIssue(issue) || issue.state !== 'closed' || issue.state_reason !== 'completed') {
             results.push({kind: message.kind, issue: message.issue, status: 'task-not-completed'});
             continue;
           }

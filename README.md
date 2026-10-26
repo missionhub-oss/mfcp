@@ -107,7 +107,8 @@ Choose a project and build experience through practical contributions.
 2. **Choose a project.** Read the [participation guidelines](docs/program.md),
    explore the project guides and review the
    [Program 2026](programs/2026/README.md).
-3. **Claim a task.** Find an open `kind/task` Issue by project and difficulty.
+3. **Claim a task.** Find an open Issue with native type `Task`, then filter
+   by project and difficulty.
    Comment with your experience, availability and development environment.
    After mentor confirmation, a maintainer assigns the Issue to you and records
    the agreed scope and goals. See the [claiming guide](CONTRIBUTING.md#申领任务).

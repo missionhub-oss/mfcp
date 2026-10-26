@@ -13,6 +13,7 @@ import { digest, equal, validateProfile } from './lib/profile.mjs';
 import {updateMentorSection, readMentorCommands} from './lib/mentor-section.mjs';
 import {formatSignoff, validateCommitMessage} from './lib/commit-policy.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
+import {isTaskIssue, TASK_ISSUE_TYPE} from './lib/issue-types.mjs';
 
 const CHECKS = ['JSON format and fields', 'validate', 'Progression integrity'];
 const botLogin = () => `${process.env.MFCP_APP_SLUG}[bot]`;
@@ -229,8 +230,8 @@ async function reconcile(client, write) {
     try {reports.push(await processSource(client, {kind: 'registration', pr: pr.number}, {write}));}
     catch (error) {if (!error.message.startsWith('Not an initial') && !error.message.startsWith('Expected a merged registration')) reports.push({status: 'pending', pr: pr.number, reason: error.message});}
   }
-  const issues = await client.list(`${client.root}/issues?state=all`);
-  for (const issue of issues.filter(i => !i.pull_request && i.labels.some(l => l.name === 'kind/task'))) {
+  const issues = await client.list(`${client.root}/issues?state=all&type=${TASK_ISSUE_TYPE}`);
+  for (const issue of issues.filter(isTaskIssue)) {
     const comments = await client.list(`${client.root}/issues/${issue.number}/comments`);
     for (const comment of comments) {
       try {

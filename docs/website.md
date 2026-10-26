@@ -5,7 +5,8 @@
 
 The public website is built with `npm run build:pages` and deployed from
 `site-dist/` by `.github/workflows/pages.yml`. Pushes to `main` and manual
-workflow runs publish a new snapshot. Task issue changes also publish a new
+workflow runs publish a new snapshot. Changes to issues with the native GitHub
+Issue Type `Task` also publish a new
 snapshot, with an hourly refresh covering changes made by automation.
 The first visit uses Chinese; the language control remembers the visitor's
 English or Chinese preference.
@@ -61,14 +62,27 @@ Touch layouts show the background directly; reduced motion disables the transiti
 
 The homepage shows Contributors, Total tasks, In progress and Completed.
 Task statistics come from all pages of the repository's GitHub Issues API
-at build time. Total tasks counts every `kind/task` issue. In progress counts
+at build time, using the `type=Task` API filter. Total tasks counts every issue
+whose native GitHub Issue Type is `Task`. In progress counts
 open task issues with at least one Assignee. Completed counts task issues
 closed with the `completed` reason. Each issue counts once, including when
 it has multiple Assignees. Pull requests and other issue kinds are excluded.
 The desktop layout has four columns; screens up to 700 pixels use two columns.
 
-Issue creation, deletion, transfer, edits, assignment changes, closure,
-reopening and label changes trigger a rebuild. The build uses the workflow's
+Task issue creation, deletion, transfer, edits, assignment changes, closure,
+reopening and label changes trigger a rebuild. Assigning an Assignee or removing
+an Assignee runs the same build and deployment workflow. Setting the native
+type to `Task` triggers a rebuild even when the issue was created without it.
+Removing the `Task` type triggers a rebuild using the removed type in the event
+payload, so the published count reflects the change. Other issue types skip
+event-driven builds. Pushes to `main`, manual runs and hourly refreshes remain
+available independently of issue type.
+
+The task issue template sets `type: Task`, and the repository's issue preparation
+script includes that field in its REST payload. After creation, verify that
+GitHub returned `type.name: Task`; setting it requires repository push access,
+and GitHub can silently omit it for other callers. A maintainer can set the
+type afterward to trigger publication. The build uses the workflow's
 GitHub token with read access to issues. Local builds can use `GITHUB_TOKEN`
 or the public API without authentication. GitHub request or response validation
 failures stop the build and preserve the previously published snapshot.

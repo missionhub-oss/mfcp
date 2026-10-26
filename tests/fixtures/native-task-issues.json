@@ -1,0 +1,60 @@
+{
+  "task": {
+    "url": "https://github.com/processmission-intern/mission-forge/issues/1",
+    "updated_at": "2026-10-26T13:37:21Z",
+    "number": 1,
+    "state": "open",
+    "state_reason": null,
+    "assignees": [
+      {
+        "id": 191454483,
+        "login": "asymecat",
+        "type": "User"
+      }
+    ],
+    "labels": [
+      {
+        "name": "kind/task"
+      },
+      {
+        "name": "difficulty/level1"
+      },
+      {
+        "name": "2026"
+      }
+    ],
+    "type": {
+      "id": 912549159,
+      "name": "Task"
+    }
+  },
+  "untyped": {
+    "url": "https://github.com/processmission-intern/mission-forge/issues/51",
+    "updated_at": "2026-10-25T08:08:42Z",
+    "number": 51,
+    "state": "open",
+    "state_reason": null,
+    "assignees": [
+      {
+        "id": 176694783,
+        "login": "Gingkoleaves",
+        "type": "User"
+      }
+    ],
+    "labels": [
+      {
+        "name": "kind/task"
+      },
+      {
+        "name": "project/linux"
+      },
+      {
+        "name": "difficulty/level1"
+      },
+      {
+        "name": "2026"
+      }
+    ],
+    "type": null
+  }
+}

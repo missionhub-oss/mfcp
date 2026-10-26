@@ -4,6 +4,7 @@ import { marked } from 'marked';
 import { parseArgsStringToArgv } from 'string-argv';
 import { z } from 'zod';
 import {taskYear} from './program-year.mjs';
+import {isTaskIssue} from './issue-types.mjs';
 
 const person = z.string().regex(/^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}$/i);
 const url = z.url().refine(value => new URL(value).protocol === 'https:', 'Use HTTPS evidence links.');
@@ -82,9 +83,8 @@ export function parseCommand(body, slug) {
 }
 
 export function taskSettings(issue, options) {
-  if (issue.pull_request) throw new Error('Task commands belong on an issue.');
+  if (!isTaskIssue(issue)) throw new Error('Set the native issue type to Task before using task commands.');
   const names = issue.labels.map(label => typeof label === 'string' ? label : label.name);
-  if (!names.includes('kind/task')) throw new Error('The issue needs the kind/task label.');
   const difficulties = names.filter(name => name.startsWith('difficulty/'));
   if (difficulties.length !== 1 || !/^difficulty\/level[0-4]$/.test(difficulties[0])) throw new Error('Select exactly one difficulty/level0–4 label.');
   const year = taskYear(issue, options);
