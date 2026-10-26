@@ -76,14 +76,24 @@ Bot 直接调用 GitHub 设置 Assignee，GitHub 时间线会记录这次分配�
 @mfcp-progress configure mentor 62325246
 ```
 
-Mentor 必须已注册并属于 Mentors Team。配置时只要求 Issue 带有
+Mentor 必须已注册并属于 Mentors Team，同时在命令所属年度的
+`programs/<year>/governance.json` 中登记 DCO。Bot 按导师的 GitHub
+数字 ID 查找 `mentors[].signoffs`，读取默认分支当前提交中的签署记录。
+每条记录填写 `姓名 <邮箱>`，由 Bot 添加 `Signed-off-by:` 前缀；
+登记多个签署记录时逐条展示。缺少导师记录或同一 GitHub ID 对应多条
+导师记录时，Bot 提示先完善 JSON。
+配置时只要求 Issue 带有
 `kind/task` 标签，可以在尚未分配负责人、设置难度和年度时执行。
 Bot 更新 Issue 正文现有的 `### Mentor / 导师` 区域，显示 Mentor
-账号，保留职责说明及其他正文，替换 `TBD` 占位内容。
+账号及可复制的 DCO 签署文本，保留职责说明及其他正文，替换 `TBD` 占位内容。
 配置命令链接保存在 HTML 注释中，供 Bot 校验，页面不显示。
 验证并更新成功后，Bot 给命令添加 👍。原命令作为权限证据保留。
 首次验收前，可以发表新的 Mentor 命令更新该区域。
 需要修改时发表新命令，保留原评论。
+
+已登记导师的 Issue 可通过重新处理原配置命令补充或更新 DCO；
+定期检查任务时也会处理这些配置命令。仅展示导师账号的既有记录仍可用于
+导师身份验证。已展示的 DCO 须与 JSON 一致，验收与结算会检查该内容。
 
 验收和结算时，Bot 检查唯一且已注册的 Assignee、独立的 Mentor、
 难度和年度标签。首次复现验收将双方数字 ID、Mentor 命令证据、难度和

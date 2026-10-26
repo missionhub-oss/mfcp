@@ -1,0 +1,39 @@
+{
+  "repository": "processmission-intern/mission-forge",
+  "governance_ref": "3603a23de0e0dd1aa358d6fc2712b5b9cbd39ac9",
+  "governance": {
+    "maintainers": [
+      62325246
+    ],
+    "reviewers": [
+      62325246
+    ],
+    "interviewers": [],
+    "mentors": [
+      {
+        "github_id": 62325246,
+        "github_login": "zevorn",
+        "signoffs": [
+          "Chao Liu <chao.liu@processmission.com>"
+        ]
+      },
+      {
+        "github_id": 81150281,
+        "github_login": "hongquan-prog",
+        "signoffs": [
+          "Hongquan Li <hongquan.li@processmission.com>"
+        ]
+      }
+    ]
+  },
+  "issue": {
+    "number": 15,
+    "url": "https://github.com/processmission-intern/mission-forge/issues/15",
+    "updated_at": "2026-10-23T05:29:45Z",
+    "body": "### Project / 实践项目\n\nZephyr\n\n### Suggested difficulty / 建议难度\n\n\nL2 - 独立分析、实现与验证\n\n### Difficulty rationale / 难度依据\n\n\n建议难度为 L2：修改限定在 `tests/kernel/timer` 的测试代码，参与者需要独立分析定时器和溢出行为，选择合适的现有测试集，并设计结果确定的边界用例。使用 west twister 在 `native_sim` 上验证，必要时增加 QEMU。上游 Issue 是缺少验收条件的待补充条目；导师要求覆盖多个定时器驱动或平台时，应重新评定为 L3。\n\n### Background / 问题背景\n\n\n上游 Zephyr Issue #72388 创建于 2024-05-06，调研时处于开放状态，最近更新时间为 2026-05-31。该条目要求增加较大超时值，以及连续定时器之间较长时间间隔的测试，覆盖内部定时器驱动和 `sys_clock_announce()` 参数接近数值溢出或回绕的情况。标签为 `area: Timer` 和 `area: Tests`。Issue 关联了 PR #71167（已关闭、未合入）和 PR #72326（于 2024-05-08 合入，修正部分定时器驱动的防溢出逻辑）；#72326 的修改未包含测试。调研时未发现提及 #72388 的开放 PR，Issue 中也没有评论。`tests/kernel/timer` 下已有 `timeout_churn`、`timer_api`、`timer_behavior`、`timer_error_case`、`timer_observer` 和 `timer_starve`，新增覆盖通常应扩展现有测试集。\n\n### Goals and deliverables / 目标与交付内容\n\n\n为较大超时值和连续定时器之间较长间隔的行为添加回归覆盖，重点验证定时器驱动与 `sys_clock_announce()` 中的回绕和接近溢出路径。与定时器维护者确认用例所属的现有测试集，以及在 `native_sim`、QEMU 或两者上运行的安排。测试结果必须确定，运行时间需要有明确上限，并说明每个用例验证的溢出条件。生产定时器代码的修改需要由导师和维护者确认确有必要，以支持行为验证。\n\n### Prerequisites / 实践条件\n\n\n需要掌握 C、Zephyr 定时器 API 和 `sys_clock_announce()` 语义、ztest 与 twister，并理解 tick/cycle 换算及 32/64 位回绕。准备 west、Zephyr SDK 和 `native_sim`；约定范围需要真实驱动时使用 QEMU，无需实体硬件。编写测试前，与定时器维护者确认如何在所选平台构造很大的超时值或时间间隔，例如使用较低 tick 频率、模拟时钟或驱动专用测试回调。\n\n### Acceptance criteria / 验收条件\n\n\n1. 明确选用的现有测试集并说明理由，关联上游 Issue 和与定时器维护者达成的范围约定。\n2. 新测试至少验证较大超时值，以及连续定时器之间接近溢出或回绕的较长间隔。溢出处理发生回归时测试必须失败，并说明检测该回归的断言。\n3. 使用 west twister 运行目标测试集，至少包含 `-p native_sim -T tests/kernel/timer`，并增加约定的 QEMU 目标；提供日志，多次运行的结果应稳定。\n4. 向 `zephyrproject-rtos/zephyr` 提交 PR，由实际作者提供 `Signed-off-by`，关联 PR、提交和验证证据。上游 PR 合入，或导师记录约定的其他完成结果后，任务完成。\n5. 实施前重新检查上游是否存在范围重叠的 PR；已有其他贡献者覆盖相同场景时，停止实施并重新评定任务。\n\n### Mentor / 导师\n\n\n\n\n<!-- mfcp-mentor:start -->\n\nMentor: [@hongquan-prog](https://github.com/hongquan-prog)\n\n<!-- mfcp-mentor-command: \"https://github.com/processmission-intern/mission-forge/issues/15#issuecomment-6328283665\" -->\n\n<!-- mfcp-mentor:end -->\n\n需要导师确认上游范围，与 Zephyr 定时器维护者沟通，约定平台和测试位置，并提供 DCO 签名。\n\n### Schedule / 时间安排\n\n\n导师确认并约定任务范围后可以开始，截止时间待确定。\n\n### References / 参考资料\n\nhttps://github.com/zephyrproject-rtos/zephyr/issues/72388\nhttps://github.com/zephyrproject-rtos/zephyr/pull/72326\nhttps://github.com/zephyrproject-rtos/zephyr/pull/71167\nhttps://github.com/zephyrproject-rtos/zephyr/tree/main/tests/kernel/timer\nhttps://github.com/zephyrproject-rtos/zephyr/blob/main/kernel/timeout.c\nhttps://docs.zephyrproject.org/latest/kernel/services/timing/timers.html\n"
+  },
+  "contributor": {
+    "github_id": 230519547,
+    "github_login": "Aphlita"
+  }
+}

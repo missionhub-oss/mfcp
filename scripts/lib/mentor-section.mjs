@@ -30,7 +30,9 @@ function mentorField(body) {
 }
 
 export function mentorSection(mentor, commandUrl) {
-  return `${start}\n\nMentor: [@${mentor.login}](https://github.com/${mentor.login})\n\n${reference(commandUrl)}\n\n${end}\n`;
+  const dco = mentor.signoffs?.length
+    ? `DCO:\n\n${mentor.signoffs.map(signoff => `    Signed-off-by: ${signoff}`).join('\n')}\n\n` : '';
+  return `${start}\n\nMentor: [@${mentor.login}](https://github.com/${mentor.login})\n\n${dco}${reference(commandUrl)}\n\n${end}\n`;
 }
 
 export function updateMentorSection(body, mentor, commandUrl) {
@@ -72,7 +74,10 @@ export function readMentorCommand(body) {
 }
 
 export function assertMentorSection(body, mentor, commandUrl) {
-  const expected = updateMentorSection(body, mentor, commandUrl);
-  const legacy = expected.replace(reference(commandUrl), `[Configuration command](${commandUrl})`);
-  if (expected !== body && legacy !== body) throw new Error('The MFCP Mentor section differs from the authorized command. Configure the mentor again.');
+  for (const record of [mentor, {login: mentor.login}]) {
+    const expected = updateMentorSection(body, record, commandUrl);
+    const legacy = expected.replace(reference(commandUrl), `[Configuration command](${commandUrl})`);
+    if (expected === body || legacy === body) return;
+  }
+  throw new Error('The MFCP Mentor section differs from the authorized command. Configure the mentor again.');
 }

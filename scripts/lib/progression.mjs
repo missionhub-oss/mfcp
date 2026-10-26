@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 import { execFileSync } from 'node:child_process';
 import { REPOSITORY_ID } from './github.mjs';
-import { isMentor, requireMentor } from './mentors.mjs';
+import { isMentor, requireMentor, withMentorSignoffs } from './mentors.mjs';
 import { participantPath, normalizeProfile, validateProfile, rulesSchema, governanceSchema,
   totals, eligible, activeSettlement, digest, equal } from './profile.mjs';
 import { parseCommand, taskSettings } from './commands.mjs';
@@ -66,7 +66,7 @@ export async function validateMentorConfiguration(client, issue, profiles, read,
   const mentor = await client.request(`users/${encodeURIComponent(record.profile.github_login)}`);
   if (mentor.id !== record.profile.github_id) throw new Error('Mentor registration no longer matches GitHub.');
   await requireMentor(mentor);
-  return {mentor, proof: read.proof};
+  return {mentor: withMentorSignoffs(mentor, governance), proof: read.proof};
 }
 
 export function mentorCommandCandidates(comments, at, slug) {
@@ -177,6 +177,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
         if (governance.maintainers.includes(later.user.id) && await isMentor(later.user)) return null;
       }
       return {mode: 'native', action, mentor: configuration.mentor.login, issue: issue.number,
+        mentorSignoffs: configuration.mentor.signoffs,
         body: updateMentorSection(issue.body, configuration.mentor, read.comment.html_url), commandDigest: proof.digest, source};
     }
     if (['stage', 'settle'].includes(action)) {

@@ -103,7 +103,7 @@ async function executeSource(client, source, {write = false} = {}) {
         const current = await client.request(`${client.root}/issues/${proposal.issue}`);
         const command = await client.request(`${client.root}/issues/comments/${source.comment}`);
         if (command.created_at !== command.updated_at || digest(command.body) !== proposal.commandDigest) throw new Error('Mentor command changed during validation.');
-        const body = updateMentorSection(current.body, {login: proposal.mentor}, command.html_url);
+        const body = updateMentorSection(current.body, {login: proposal.mentor, signoffs: proposal.mentorSignoffs}, command.html_url);
         const updated = current.body === body ? current : await client.request(`${client.root}/issues/${proposal.issue}`, 'PATCH', {body});
         if (updated.body !== body) throw new Error('GitHub did not confirm the Mentor section update.');
         return {status: 'mentor-configured', mentor: proposal.mentor, url: updated.html_url};

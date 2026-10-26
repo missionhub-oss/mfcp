@@ -28,8 +28,9 @@ uses merged registration evidence and does not require Team membership.
 
 The `mentors` entries in annual `governance.json` record GitHub identities and
 authorized DCO signature strings for patch verification. They do not grant
-Mentor eligibility. A Team member can validate their assigned task and endorse
-another contributor; settlement also needs that mentor's DCO metadata.
+Mentor eligibility. Mentor configuration and settlement require the mentor's
+DCO metadata. A Team member can validate their assigned task and endorse
+another contributor under the task and annual authorization rules.
 
 ## Registration
 
@@ -64,15 +65,28 @@ Post a new plain-text comment starting with a command on its first line.
 For example, `@mfcp-progress configure mentor @zevorn` assigns the mentor.
 A bare numeric GitHub ID is also accepted: `configure mentor 62325246`.
 Mentor configuration requires a task issue, an authorized maintainer and a
-registered active Mentor Team member. Assignee, difficulty and year may be set
-later. The bot updates the existing `### Mentor / 导师` issue field with the
-mentor account, preserving guidance and the rest
-of the body. The configuration command link is stored in a hidden HTML comment
+registered active Mentor Team member with one mentor entry in the command year's
+`programs/<year>/governance.json`. The bot matches `mentors[].github_id` to the
+verified GitHub ID and reads `signoffs` from the current default-branch commit.
+Each entry contains `Name <email>`; the bot displays every registered entry
+with a `Signed-off-by:` prefix in a copyable code block. Missing or duplicate
+mentor entries, empty signature lists and multiline signatures stop configuration
+with an explanatory error.
+Assignee, difficulty and year may be set later. The bot updates the existing
+`### Mentor / 导师` issue field with the mentor account and DCO, preserving
+guidance and the rest of the body. The configuration command link is stored in a hidden HTML comment
 for authorization checks. It replaces the TBD placeholder. 👍 confirms the update. Keep the
 immutable command as authorization evidence. Before first acceptance, a new
 authorized command can update the mentor field. Acceptance and settlement verify
 the field against its authorized command and resolve the contributor from the
 issue's single Assignee and require a separate mentor.
+
+Reprocessing the original configuration command, including scheduled
+reconciliation, fills in or refreshes its DCO from the registered metadata.
+Existing account-only mentor sections remain valid authorization evidence.
+Sections that display DCO must match the registered signatures during acceptance
+and settlement. Publishing uses the same verified signatures as the proposal
+and preserves edits to other issue fields made while validation runs.
 
 | Command after `@mfcp-progress` | Authorization |
 | --- | --- |
