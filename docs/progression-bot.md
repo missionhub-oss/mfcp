@@ -27,7 +27,8 @@ remain additional requirements for their respective operations. L0 → L1
 uses merged registration evidence and does not require Team membership.
 
 The `mentors` entries in annual `governance.json` record GitHub identities and
-authorized DCO signature strings for patch verification. They do not grant
+authorized DCO signature strings using each mentor's real full name and
+personally confirmed sign-off email for patch verification. They do not grant
 Mentor eligibility. Mentor configuration and settlement require the mentor's
 DCO metadata. A Team member can validate their assigned task and endorse
 another contributor under the task and annual authorization rules.
@@ -74,7 +75,8 @@ Mentor configuration requires a task issue, an authorized maintainer and a
 registered active Mentor Team member with one mentor entry in the command year's
 `programs/<year>/governance.json`. The bot matches `mentors[].github_id` to the
 verified GitHub ID and reads `signoffs` from the current default-branch commit.
-Each entry contains `Name <email>`; the bot displays every registered entry
+Each entry contains `Mentor Real Full Name <email>`, confirmed by that mentor;
+the bot displays every registered entry
 with a `Signed-off-by:` prefix in a copyable code block. Missing or duplicate
 mentor entries, empty signature lists and multiline signatures stop configuration
 with an explanatory error.
@@ -141,7 +143,9 @@ A maintainer must
 close the issue for automatic close-event settlement; a maintainer can also
 post a new settlement command after closure. Every upstream commit must be
 attributed to the participant and include the author's and authorized mentor's
-DCO sign-offs. The mentor signature must belong to the mentor who accepted the
+DCO sign-offs. Human authors and mentors must sign with their own real full
+names. The author's sign-off name and email must match the commit author.
+The mentor signature must belong to the mentor who accepted the
 latest validation stage. Each upstream PR receives credit once among active settlements.
 The 2026 rules currently accept GitHub PRs in `zephyrproject-rtos/zephyr`.
 

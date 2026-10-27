@@ -33,6 +33,11 @@ MFCP 由<strong>进程使命（Process Mission）</strong>发起，通过开源�
 
 ## 开始参与：提交第一个 PR
 
+> [!IMPORTANT]
+> **DCO 必须使用本人真实姓名签署。** Git `user.name`、commit 作者姓名和
+> `Signed-off-by` 中的姓名须一致。GitHub 用户名、昵称和代号不能代替本人
+> 真实姓名。签署邮箱须与 commit 作者邮箱一致。
+
 Fork 本仓库并创建分支，按[注册说明](participants/README.md)添加本人身份文件。
 提交前配置本人的 Git 姓名和邮箱。每个 commit 和 PR 标题使用
 `module: subject` 格式；commit 标题、正文和 DCO 的每行均不得超过 **72 个字符**。
@@ -43,10 +48,12 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Name <your-email@example.com>
+Signed-off-by: Your Real Full Name <your-email@example.com>
 ```
 
-将示例身份替换为本人信息。使用 `git add` 暂存身份文件，运行
+将示例姓名替换为本人真实姓名，邮箱填写本人提交使用的邮箱。
+身份文件中的 `github_login` 填写 GitHub 用户名。
+使用 `git add` 暂存身份文件，运行
 `git commit -s` 添加本人 DCO 签署，再推送到个人 Fork，向本仓库 `main`
 提交 PR。PR 标题也使用 `module: subject`。
 必过的 `Progression integrity` 检查会逐个验证 PR 中的 commit、作者 DCO

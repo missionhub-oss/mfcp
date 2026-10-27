@@ -37,6 +37,12 @@ upstream projects. Supporting guides are currently available in Chinese.
 
 ## Getting started: your first PR
 
+> [!IMPORTANT]
+> **Sign the DCO with your own real full name.** Your Git `user.name`, commit
+> author name and `Signed-off-by` name must match. GitHub usernames and
+> nicknames cannot substitute for your personal name. The sign-off email
+> must match the commit author's email.
+
 Fork this repository, create a branch, and add your own identity file using the
 [registration guide](participants/README.md). Configure your Git author name
 and email before committing. Every commit and PR title uses `module: subject`.
@@ -48,10 +54,12 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Name <your-email@example.com>
+Signed-off-by: Your Real Full Name <your-email@example.com>
 ```
 
-Replace the example identity with your own. Run `git add` for your identity file,
+Replace the example name with your own real full name and use your author email.
+The identity file's `github_login` field contains your GitHub username.
+Run `git add` for your identity file,
 then `git commit -s` to add your DCO sign-off. Push the branch to your fork and
 open a PR against this repository's `main`. Use a matching `module: subject`
 PR title. The required `Progression integrity` check validates every PR commit,

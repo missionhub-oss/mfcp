@@ -84,7 +84,8 @@ Bot 按 GitHub 数字 ID 去重。重复添加同一导师会刷新其登记信�
 Mentor 必须已注册并属于 Mentors Team，同时在命令所属年度的
 `programs/<year>/governance.json` 中登记 DCO。Bot 按导师的 GitHub
 数字 ID 查找 `mentors[].signoffs`，读取默认分支当前提交中的签署记录。
-每条记录填写 `姓名 <邮箱>`，由 Bot 添加 `Signed-off-by:` 前缀；
+每条记录填写 `导师本人真实姓名 <导师签署邮箱>`，由导师确认并与其实际签署
+保持一致，Bot 添加 `Signed-off-by:` 前缀；
 登记多个签署记录时逐条展示。缺少导师记录或同一 GitHub ID 对应多条
 导师记录时，Bot 提示先完善 JSON。
 配置时要求 Issue 的原生 Type 为 `Task`，可以在尚未分配负责人、
@@ -163,7 +164,8 @@ Bot 更新 Issue 正文现有的 `### Mentor / 导师` 区域，显示 Mentor
 - Assignee、难度标签和年度标签与任务记录一致。
 - 已有指定 Mentor 的复现和验证验收，Mentor 当前仍有资格。
 - PR 来自该年度支持的上游仓库，作者是任务负责人，且已合入默认分支。
-- 每个补丁提交包含作者及 Mentor 的 DCO 签名。导师签名资料登记在年度
+- 每个补丁提交包含作者及 Mentor 使用各自真实姓名签署的 DCO；作者的
+  `Signed-off-by` 姓名和邮箱与提交作者一致。导师签名资料登记在年度
   `governance.json` 的 `mentors` 字段中。
 - PR 未在其他有效结算中重复计分。
 

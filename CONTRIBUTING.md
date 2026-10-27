@@ -11,6 +11,12 @@
 
 ## 提交格式与 DCO
 
+**参与者和导师必须使用本人真实姓名签署 DCO。** 作者的 Git `user.name`、
+commit 的 `Author` 姓名和作者 `Signed-off-by` 中的姓名须一致；
+作者的签署邮箱须与该 commit 的作者邮箱一致。导师追加签署时填写导师本人的
+真实姓名与邮箱，并与年度登记的导师签署资料一致。GitHub 用户名、昵称和代号
+不能代替个人真实姓名。身份文件中的 `github_login` 填写 GitHub 用户名。
+
 所有 commit 及 PR 标题使用 `module: subject`。module 使用小写字母开头，
 可以包含小写字母、数字、`/` 和 `-`，例如 `participants`、`docs`、`ci`。
 subject 简洁说明修改。标题与正文之间空一行，正文说明具体修改和目的，
@@ -21,21 +27,29 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Name <your-email@example.com>
+Signed-off-by: Your Real Full Name <your-email@example.com>
 ```
 
-配置本人 `git config user.name` 和 `git config user.email`，使用
-`git commit -s` 添加自己的 DCO。签署邮箱必须与该 commit 的作者邮箱一致。
+将示例中的姓名和邮箱替换为本人真实姓名及提交使用的邮箱，在当前仓库配置：
+
+```sh
+git config user.name "Your Real Full Name"
+git config user.email "your-email@example.com"
+```
+
+提交前使用 `git var GIT_AUTHOR_IDENT` 核对实际作者姓名和邮箱，使用
+`git commit -s` 添加自己的 DCO，并用 `git log -1 --format=full` 检查提交结果。
 签署者须本人确认 [Developer Certificate of Origin](https://developercertificate.org/)
 声明，不能由维护者代签其他作者。DCO 表明贡献者确认有权提交这些内容。
 
 姓名和邮箱较长时，Git 支持将邮箱放在以一个空格开头的续行：
 
 ```text
-Signed-off-by: Your Name
+Signed-off-by: Your Real Full Name
  <your-email@example.com>
 ```
 
+提交者确认姓名真实，维护者审核时核对作者与签署信息。
 CI 使用 Git 解析签署，逐行检查 72 字符限制；每个 commit 都需要解释正文
 和作者本人的签署。检查覆盖 PR 全部提交，包括合并提交和 Bot 提交。
 PR 修改代码作为数据读取，校验程序来自默认分支。

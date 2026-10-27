@@ -10,11 +10,11 @@
 
 | 优先学习 | 时长 | 学习重点 |
 | --- | --- | --- |
-| [8.1 Zephyr 社区的 AI 贡献准则](https://www.bilibili.com/video/BV16vHN6gECR/) | 16:07 | 理解人类提交者对生成内容的审查、许可证核查与 DCO 签署责任。 |
+| [8.1 Zephyr 社区的 AI 贡献准则](https://www.bilibili.com/video/BV16vHN6gECR/) | 16:07 | 理解人类提交者对生成内容的审查、许可证核查，以及使用本人真实姓名签署 DCO 的责任。 |
 | [8.2 Zephyr Assisted-by 标签与溯源规范](https://www.bilibili.com/video/BV1XiHM6KERT/) | 11:19 | 学习如何记录使用的 Agent、模型版本和辅助工具，向评审者披露 AI 参与情况。 |
 | [8.3 Zephyr Agent 开发的设计与审查策略](https://www.bilibili.com/video/BV1uMnS6CEsR/) | 31:15 | 学习在编写代码前明确设计与修改范围，形成架构决策记录（ADR），由人工审查后开始实现。 |
 
-向 Zephyr 提交贡献时，同时阅读官方 [AI Coding Assistants 准则](https://docs.zephyrproject.org/latest/contribute/guidelines.html#ai-coding-assistants)和[使用披露说明](https://docs.zephyrproject.org/latest/contribute/guidelines.html#usage-disclosure-and-attribution)。人类提交者需要理解并审查修改、检查许可证、完成验证和 DCO 签署；官方建议通过 `Assisted-by` 记录 AI 辅助情况。具体格式与要求以提交时的上游指南为准。
+向 Zephyr 提交贡献时，同时阅读官方 [AI Coding Assistants 准则](https://docs.zephyrproject.org/latest/contribute/guidelines.html#ai-coding-assistants)和[使用披露说明](https://docs.zephyrproject.org/latest/contribute/guidelines.html#usage-disclosure-and-attribution)。人类提交者需要理解并审查修改、检查许可证、完成验证，并以本人真实姓名签署 DCO；签署姓名和邮箱须与提交作者一致，参阅 [DCO 签署要求](https://docs.zephyrproject.org/latest/contribute/guidelines.html#dco-sign-off)。官方建议通过 `Assisted-by` 记录 AI 辅助情况。具体格式与要求以提交时的上游指南为准。
 
 第 8.3 节介绍设计与审查的实践方法。其他上游项目的任务，请同时核对目标仓库自己的贡献指南，按该项目规定准备使用披露和提交材料。
 
@@ -54,7 +54,7 @@
 
 | 阶段 | 章节 | 学习目标与实践 |
 | --- | --- | --- |
-| 准备上游贡献与 Agent 辅助开发 | 第 8 章 | 优先了解人工审查、DCO 与使用披露，阅读目标仓库的贡献指南，明确设计范围和验证安排。 |
+| 准备上游贡献与 Agent 辅助开发 | 第 8 章 | 优先了解人工审查、以本人真实姓名签署 DCO 和使用披露要求，阅读目标仓库的贡献指南，明确设计范围和验证安排。 |
 | 认识 Zephyr 并运行程序 | 第 1 章 | 理解工具分工，准备环境，获取源码并运行 Hello World；记录实际构建与运行结果。 |
 | 理解配置与硬件描述 | 第 2、3 章 | 阅读应用配置、构建文件和设备树，能够查找配置来源及构建生成文件。 |
 | 理解设备与线程 | 第 4、5 章 | 跟踪设备初始化过程，理解线程状态、优先级及线程内存安排。 |
@@ -128,7 +128,7 @@
 
 | 编号与课程 | 时长 | 学习内容 |
 | --- | --- | --- |
-| [8.1 Zephyr 社区的 AI 贡献准则](https://www.bilibili.com/video/BV1khpe6bErD/?p=24) | 16:07 | 结合 Contribution Guidelines，理解人工审查、许可证核查和 DCO 签署责任。 |
+| [8.1 Zephyr 社区的 AI 贡献准则](https://www.bilibili.com/video/BV1khpe6bErD/?p=24) | 16:07 | 结合 Contribution Guidelines，理解人工审查、许可证核查，以及使用本人真实姓名签署 DCO 的责任。 |
 | [8.2 Zephyr Assisted-by 标签与溯源规范](https://www.bilibili.com/video/BV1khpe6bErD/?p=25) | 11:19 | 学习使用 Assisted-by 记录 Agent、模型版本与辅助工具，提供评审所需的使用披露。 |
 | [8.3 Zephyr Agent 开发的设计与审查策略](https://www.bilibili.com/video/BV1khpe6bErD/?p=26) | 31:15 | 学习在实现前形成架构决策记录，由人工审查设计与修改范围，避免增加未经确认的功能。 |
 
