@@ -38,8 +38,10 @@ upstream projects. Supporting guides are currently available in Chinese.
 ## Getting started: your first PR
 
 > [!IMPORTANT]
-> **Sign the DCO with your own real full name.** Your Git `user.name`, commit
-> author name and `Signed-off-by` name must match. GitHub usernames and
+> **Sign the DCO with your own real full name in uppercase English letters.**
+> For a Chinese name, use the full Pinyin spelling of your real name in
+> uppercase, for example `CHAO LIU`. Your Git `user.name`, commit author name
+> and `Signed-off-by` name must match. GitHub usernames and
 > nicknames cannot substitute for your personal name. The sign-off email
 > must match the commit author's email.
 
@@ -54,10 +56,12 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Real Full Name <your-email@example.com>
+Signed-off-by: YOUR REAL FULL NAME <your-email@example.com>
 ```
 
-Replace the example name with your own real full name and use your author email.
+Replace the example name with your own real full name in uppercase English
+letters and use your author email. For a Chinese name, use your real name's
+full Pinyin spelling in uppercase, for example `CHAO LIU`.
 The identity file's `github_login` field contains your GitHub username.
 Run `git add` for your identity file,
 then `git commit -s` to add your DCO sign-off. Push the branch to your fork and

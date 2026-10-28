@@ -11,7 +11,9 @@
 
 ## 提交格式与 DCO
 
-**参与者和导师必须使用本人真实姓名签署 DCO。** 作者的 Git `user.name`、
+**参与者和导师必须使用本人真实姓名的英文全称签署 DCO，全部字母大写。**
+中文姓名使用本人真实姓名的完整拼音，全部字母大写，例如 `CHAO LIU`。
+作者的 Git `user.name`、
 commit 的 `Author` 姓名和作者 `Signed-off-by` 中的姓名须一致；
 作者的签署邮箱须与该 commit 的作者邮箱一致。导师追加签署时填写导师本人的
 真实姓名与邮箱，并与年度登记的导师签署资料一致。GitHub 用户名、昵称和代号
@@ -27,13 +29,14 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: Your Real Full Name <your-email@example.com>
+Signed-off-by: YOUR REAL FULL NAME <your-email@example.com>
 ```
 
-将示例中的姓名和邮箱替换为本人真实姓名及提交使用的邮箱，在当前仓库配置：
+将示例中的姓名替换为本人真实姓名的英文全称，中文姓名使用完整拼音，
+全部字母大写；邮箱填写本人提交使用的邮箱。在当前仓库配置：
 
 ```sh
-git config user.name "Your Real Full Name"
+git config user.name "YOUR REAL FULL NAME"
 git config user.email "your-email@example.com"
 ```
 
@@ -45,11 +48,12 @@ git config user.email "your-email@example.com"
 姓名和邮箱较长时，Git 支持将邮箱放在以一个空格开头的续行：
 
 ```text
-Signed-off-by: Your Real Full Name
+Signed-off-by: YOUR REAL FULL NAME
  <your-email@example.com>
 ```
 
-提交者确认姓名真实，维护者审核时核对作者与签署信息。
+提交者确认姓名真实，维护者审核时核对英文全称或完整拼音、全部大写的格式，
+以及作者与签署信息的一致性。
 CI 使用 Git 解析签署，逐行检查 72 字符限制；每个 commit 都需要解释正文
 和作者本人的签署。检查覆盖 PR 全部提交，包括合并提交和 Bot 提交。
 PR 修改代码作为数据读取，校验程序来自默认分支。
