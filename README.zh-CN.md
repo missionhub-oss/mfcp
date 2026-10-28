@@ -34,8 +34,9 @@ MFCP 由<strong>进程使命（Process Mission）</strong>发起，通过开源�
 ## 开始参与：提交第一个 PR
 
 > [!IMPORTANT]
-> **DCO 必须使用本人真实姓名的英文全称，全部字母大写。** 中文姓名使用
-> 本人真实姓名的完整拼音，全部字母大写，例如 `CHAO LIU`。
+> **DCO 必须使用本人真实姓名的英文全称。** 中文姓名使用本人真实姓名的
+> 完整拼音。通常将姓名各部分的首字母大写，例如 `Chao Liu`；也可以将
+> 姓氏全部大写，例如 `Chao LIU`。
 > Git `user.name`、commit 作者姓名和
 > `Signed-off-by` 中的姓名须一致。GitHub 用户名、昵称和代号不能代替本人
 > 真实姓名。签署邮箱须与 commit 作者邮箱一致。
@@ -50,11 +51,12 @@ participants: register your-username
 
 Add my GitHub identity to join the contributor program.
 
-Signed-off-by: YOUR REAL FULL NAME <your-email@example.com>
+Signed-off-by: Your Real Full Name <your-email@example.com>
 ```
 
-将示例姓名替换为本人真实姓名的英文全称，全部字母大写；中文姓名使用本人
-真实姓名的完整拼音并全部大写，例如 `CHAO LIU`。邮箱填写本人提交使用的邮箱。
+将示例姓名替换为本人真实姓名的英文全称，中文姓名使用完整拼音。通常将
+姓名各部分的首字母大写，例如 `Chao Liu`；也可以将姓氏全部大写，例如
+`Chao LIU`。邮箱填写本人提交使用的邮箱。
 身份文件中的 `github_login` 填写 GitHub 用户名。
 使用 `git add` 暂存身份文件，运行
 `git commit -s` 添加本人 DCO 签署，再推送到个人 Fork，向本仓库 `main`

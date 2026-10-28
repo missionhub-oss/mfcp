@@ -7,12 +7,14 @@ reviews and merges the registration. PR discussions remain open during registrat
 参与 MFCP Issue 讨论前，先 Fork 本仓库，添加本人身份文件并向 `main` 提交 PR，由维护者审核合并。注册期间可以在 PR 中讨论。
 
 > [!IMPORTANT]
-> **Use your own real full name in uppercase English letters for the DCO
-> sign-off.** For a Chinese name, use your real name's full Pinyin spelling
-> in uppercase, for example `CHAO LIU`. Your Git author name
+> **Use your own real full name in English for the DCO sign-off.** For a
+> Chinese name, use your real name's full Pinyin spelling. Normally capitalize
+> the first letter of each name part, for example `Chao Liu`; an uppercase
+> family name is also acceptable, for example `Chao LIU`. Your Git author name
 > and `Signed-off-by` name must match; use your commit author email.
-> **DCO 必须使用本人真实姓名的英文全称，全部字母大写。** 中文姓名使用
-> 本人真实姓名的完整拼音并全部大写，例如 `CHAO LIU`。
+> **DCO 必须使用本人真实姓名的英文全称。** 中文姓名使用本人真实姓名的
+> 完整拼音。通常将姓名各部分的首字母大写，例如 `Chao Liu`；也可以将
+> 姓氏全部大写，例如 `Chao LIU`。
 > Git 作者姓名与 DCO 姓名保持一致，
 > 邮箱使用该 commit 的作者邮箱。身份 JSON 中的 `github_login` 填写 GitHub 用户名。
 
@@ -21,7 +23,7 @@ reviews and merges the registration. PR discussions remain open during registrat
 1. Fork `processmission-intern/mission-forge`，在自己的 Fork 中创建分支。
 2. 使用 `gh api user --jq '{github_id: .id, github_login: .login}'` 获取本人身份信息，也可以访问 `https://api.github.com/users/你的用户名` 查看数字 `id` 和 `login`。
 3. 将返回的真实数字 ID 和用户名写入 `participants/<GitHub用户名>.json`，文件名中的用户名统一使用小写，例如 `participants/zevorn.json`。文件只包含 `github_id`（数字）与 `github_login`（字符串）两个字段。
-4. 按[提交规范](../CONTRIBUTING.md#提交格式与-dco)将 Git `user.name` 配置为本人真实姓名的英文全称，中文姓名使用完整拼音，全部字母大写，并核对作者邮箱；使用 `participants: register 用户名` 标题，填写说明正文，通过 `git commit -s` 添加相同姓名和邮箱的 DCO；每行最多 72 个字符。将分支推送到自己的 Fork，再向本仓库 `main` 创建 PR。注册 PR 只新增本人身份文件。
+4. 按[提交规范](../CONTRIBUTING.md#提交格式与-dco)将 Git `user.name` 配置为本人真实姓名的英文全称，中文姓名使用完整拼音；通常将姓名各部分的首字母大写，也可以将姓氏全部大写，并核对作者邮箱。使用 `participants: register 用户名` 标题，填写说明正文，通过 `git commit -s` 添加相同姓名和邮箱的 DCO；每行最多 72 个字符。将分支推送到自己的 Fork，再向本仓库 `main` 创建 PR。注册 PR 只新增本人身份文件。
 5. 在 PR 中处理检查结果和维护者意见。维护者审核合并后，登记生效。
 
 用户名用于查找登记文件，数字 ID 用于核对账号身份。账号更名后，通过 PR 将本人文件改为新用户名，并更新 `github_login`，保持 `github_id` 不变；PR 合并后恢复 Issue 参与资格。检查会核对原文件属于同一数字 ID，防止修改他人的登记。本人身份文件中的信息均公开可见。
