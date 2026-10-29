@@ -38,41 +38,12 @@ upstream projects. Supporting guides are currently available in Chinese.
 ## Getting started: your first PR
 
 > [!IMPORTANT]
-> **Sign the DCO with your own real full name in English.** For a Chinese
-> name, use the full Pinyin spelling of your real name. Normally capitalize
-> the first letter of each name part, for example `Chao Liu`; an uppercase
-> family name is also acceptable, for example `Chao LIU`.
-> Your Git `user.name`, commit author name
-> and `Signed-off-by` name must match. GitHub usernames and
-> nicknames cannot substitute for your personal name. The sign-off email
-> must match the commit author's email.
+> **Every commit must include your DCO sign-off**, confirming your right to
+> contribute the work. Use your real full name in English; for a Chinese
+> name, use the full Pinyin spelling of your real name.
 
-Fork this repository, create a branch, and add your own identity file using the
-[registration guide](participants/README.md). Configure your Git author name
-and email before committing. Every commit and PR title uses `module: subject`.
-Every commit line must be **72 characters or fewer**, including the subject,
-body and DCO trailer. Explain the change in the body after a blank line.
-
-```text
-participants: register your-username
-
-Add my GitHub identity to join the contributor program.
-
-Signed-off-by: Your Real Full Name <your-email@example.com>
-```
-
-Replace the example name with your own real full name in English and use your
-author email. For a Chinese name, use your real name's full Pinyin spelling.
-Normally capitalize the first letter of each name part, for example `Chao Liu`;
-you may also capitalize the entire family name, for example `Chao LIU`.
-The identity file's `github_login` field contains your GitHub username.
-Run `git add` for your identity file,
-then `git commit -s` to add your DCO sign-off. Push the branch to your fork and
-open a PR against this repository's `main`. Use a matching `module: subject`
-PR title. The required `Progression integrity` check validates every PR commit,
-its author sign-off and the PR title. See [commit requirements](CONTRIBUTING.md#提交格式与-dco)
-for corrections and long DCO identities. Maintainers use rebase merging to
-preserve validated commit messages.
+Fork this repository, follow the [registration guide](participants/README.md)
+to add your identity file, and open a PR against `main`.
 
 ## Explore the projects
 
