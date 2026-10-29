@@ -3,10 +3,9 @@
 import {readFile, readdir} from 'node:fs/promises';
 import {join} from 'node:path';
 import {normalizeProfile, totals, activeSettlement, rulesSchema} from './profile.mjs';
-import {DEFAULT_REPOSITORY} from './github.mjs';
 import {loadTaskIssues, taskStats} from './task-stats.mjs';
 
-export const repositoryUrl = `https://github.com/${DEFAULT_REPOSITORY}`;
+export const repositoryUrl = 'https://github.com/missionhub-oss/mfcp';
 const usernameOrder = (a, b) => a.login.toLowerCase().localeCompare(b.login.toLowerCase(), 'en');
 const evidenceUrl = source => source.kind === 'registration' ? `${repositoryUrl}/pull/${source.pr}`
   : `${repositoryUrl}/issues/${source.issue}${source.kind === 'comment' ? `#issuecomment-${source.comment}` : ''}`;

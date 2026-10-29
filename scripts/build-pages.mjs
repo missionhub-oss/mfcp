@@ -20,7 +20,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   const assetVersions = Object.fromEntries(await Promise.all(['site.css', 'app.mjs'].map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const html = template.render('index.njk', {copy, projects, program, repositoryUrl, assetVersions,
-    payload: {copy}, siteUrl: 'https://processmission-intern.github.io/mission-forge/'});
+    payload: {copy}, siteUrl: 'https://missionhub-oss.github.io/mfcp/'});
   await mkdir(output, {recursive: true});
   await writeFile(join(output, 'index.html'), html);
   await writeFile(join(output, '.nojekyll'), '');
