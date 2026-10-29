@@ -95,19 +95,18 @@
                   <img src="https://ghfind.com/api/card/mini/{{ person.login }}?variant=bars&amp;theme=dark&amp;lang=zh" data-ghfind-image="card" alt="{{ copy['ghfind.cardAlt'].zh }}" data-i18n-alt="ghfind.cardAlt" width="440" height="200" loading="lazy" decoding="async">
                   <span class="ghfind-image-fallback" hidden><span class="ghfind-wordmark">ghfind</span>{{ t('ghfind.cardUnavailable') }}</span>
                 </a>
-                <a class="text-link ghfind-visit" href="https://ghfind.com/u/{{ person.login }}" target="_blank" rel="noopener noreferrer">{{ t('ghfind.visit') }} <span aria-hidden="true">↗</span></a>
+                <div class="guide-links profile-links">
+                  <a class="text-link" href="https://ghfind.com/u/{{ person.login }}" target="_blank" rel="noopener noreferrer">{{ t('ghfind.visit') }} <span aria-hidden="true">↗</span></a>
+                  <a class="text-link" href="{{ person.githubUrl }}" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+                  <a class="text-link" href="{{ person.recordUrl }}" target="_blank" rel="noopener noreferrer">{{ t('profile.record') }} <span aria-hidden="true">↗</span></a>
+                </div>
                 <p class="ghfind-invitation">{{ t('ghfind.invitation') }}</p>
+                {% if person.history.length %}<ul class="history-list" aria-label="{{ copy['profile.history'].zh }}" data-i18n-aria-label="profile.history">{% for event in person.history %}<li><a href="{{ event.href }}" target="_blank" rel="noopener noreferrer">{{ localized(event.title) }} <span aria-hidden="true">↗</span></a><time datetime="{{ event.at }}" data-date="{{ event.at }}">{{ event.at | date }}</time></li>{% endfor %}</ul>{% else %}<p class="small muted profile-empty-history">{{ t('profile.noHistory') }}</p>{% endif %}
               </section>
               <div class="person-progress">
               <dl class="person-stats"><div><dt>XP</dt><dd>{{ person.stats.experience }}</dd></div><div><dt>{{ t('profile.tasks') }}</dt><dd>{{ person.stats.tasks }}</dd></div><div><dt>{{ t('profile.prs') }}</dt><dd>{{ person.stats.pull_requests }}</dd></div></dl>
               {% if person.criteria.length %}<div class="criteria"><p class="criteria-title">{{ t('profile.next') }} <strong>L{{ person.nextLevel }}</strong></p>{% for criterion in person.criteria %}<label><span>{{ t('criterion.' ~ criterion.key) }}<strong>{{ criterion.current }} / {{ criterion.required }}</strong></span><progress max="{{ criterion.required }}" value="{{ criterion.value }}">{{ criterion.current }} / {{ criterion.required }}</progress></label>{% endfor %}<p class="small muted">{{ t('profile.progressNote') }}{% if person.level == 2 %} {{ t('profile.review') }}{% endif %}</p></div>{% else %}<p class="small muted">{{ t('profile.l' ~ person.level) }}</p>{% endif %}
               </div>
-              <div class="person-history">
-              <h3>{{ t('profile.history') }}</h3>
-              {% if person.history.length %}<ul class="history-list">{% for event in person.history %}<li><a href="{{ event.href }}" target="_blank" rel="noopener noreferrer">{{ localized(event.title) }} <span aria-hidden="true">↗</span></a><time datetime="{{ event.at }}" data-date="{{ event.at }}">{{ event.at | date }}</time></li>{% endfor %}</ul>{% else %}<p class="small muted">{{ t('profile.noHistory') }}</p>{% endif %}
-              <div class="guide-links"><a class="text-link small" href="{{ person.githubUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-              <a class="text-link small" href="{{ person.recordUrl }}" target="_blank" rel="noopener noreferrer">{{ t('profile.record') }} <span aria-hidden="true">↗</span></a>
-              </div></div>
             </div>
           </details>
         </li>

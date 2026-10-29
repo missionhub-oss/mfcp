@@ -48,7 +48,8 @@ test('trusted site rendering publishes real records from a separate data directo
       assert.equal(card.attr('data-xp'), String(person.stats.experience));
       assert.deepEqual(card.find('.person-stats dd').map((_, element) => Number($(element).text())).get(),
         [person.stats.experience, person.stats.tasks, person.stats.pull_requests]);
-      assert.equal(card.find('a[href]').last().attr('href'), person.recordUrl);
+      assert.deepEqual(card.find('.profile-links a[href]').map((_, element) => $(element).attr('href')).get(),
+        [`https://ghfind.com/u/${person.login}`, person.githubUrl, person.recordUrl]);
       assert.ok(person.recordUrl.includes(`/blob/${sha}/participants/`));
       assert.equal(card.find('.rank-number').text(), String(person.rank));
       assert.equal(card.attr('value'), String(person.rank));
