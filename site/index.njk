@@ -19,7 +19,7 @@
   <meta property="og:url" content="{{ siteUrl }}">
   <link rel="canonical" href="{{ siteUrl }}">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./site.css?v={{ program.sha }}">
+  <link rel="stylesheet" href="./site.css?v={{ assetVersions['site.css'] }}">
   <title>{{ copy['meta.title'].zh }}</title>
 </head>
 <body id="top">
@@ -123,6 +123,6 @@
 
   <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
   <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
-  <script type="module" src="./app.mjs?v={{ program.sha }}"></script>
+  <script type="module" src="./app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
-import {mkdir, writeFile, copyFile, cp} from 'node:fs/promises';
+import {mkdir, writeFile, copyFile, cp, readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {resolve, join} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
@@ -16,7 +17,9 @@ template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.s
 export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const html = template.render('index.njk', {copy, projects, program, repositoryUrl,
+  const assetVersions = Object.fromEntries(await Promise.all(['site.css', 'app.mjs'].map(async name =>
+    [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
+  const html = template.render('index.njk', {copy, projects, program, repositoryUrl, assetVersions,
     payload: {copy}, siteUrl: 'https://processmission-intern.github.io/mission-forge/'});
   await mkdir(output, {recursive: true});
   await writeFile(join(output, 'index.html'), html);
