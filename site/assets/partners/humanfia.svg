@@ -1,0 +1,6 @@
+<!-- Humanfia logo geometry: https://humanfia.ai/logo.svg; official dark palette. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 108" role="img" aria-labelledby="humanfia-logo-title">
+  <title id="humanfia-logo-title">Humanfia</title>
+  <path fill="#e8f0f2" d="M0 0H24V50L96 26V108H72V55L24 71V108H0Z"/>
+  <circle fill="#76b900" cx="84" cy="12" r="12"/>
+</svg>
