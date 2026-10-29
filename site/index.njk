@@ -67,7 +67,7 @@
 
     <section class="section container" id="program" aria-labelledby="program-title">
       <div class="section-intro"><h2 class="highlight-title" id="program-title">{{ t('program.title') }}</h2><div><p class="section-description">{{ t('program.description') }}</p><div class="guide-links"><a class="text-link" href="{{ repositoryUrl }}/blob/main/docs/program.md" target="_blank" rel="noopener noreferrer">{{ t('program.guide') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ program.rulesUrl }}" target="_blank" rel="noopener noreferrer">{{ t('levels.rules') }} <span aria-hidden="true">↗</span></a></div></div></div>
-      <div class="project-grid">{% for project in projects %}<a class="project-card project-{{ project.id }}" href="{{ repositoryUrl }}/blob/main/projects/{{ project.id }}/README.md" target="_blank" rel="noopener noreferrer"><h3 class="project-wordmark">{{ project.name }}<span aria-hidden="true">↗</span></h3><p>{{ t('tracks.' ~ project.id) }}</p></a>{% endfor %}</div>
+      <div class="project-grid">{% for project in projects %}<a class="project-card project-{{ project.id }}" href="{{ project.url or (repositoryUrl ~ '/blob/main/projects/' ~ project.id ~ '/README.md') }}" target="_blank" rel="noopener noreferrer"><h3 class="project-wordmark">{{ project.name }}<span aria-hidden="true">↗</span></h3><p>{{ t('tracks.' ~ project.id) }}</p></a>{% endfor %}</div>
     </section>
 
     <section class="section container" id="leaderboard" aria-labelledby="ranking-title">

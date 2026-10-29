@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 const strings = {
   'meta.title': ['Mission Forge Contributor Program', 'MFCP · Mission Forge 开源贡献者培养计划'],
-  'meta.description': ['Learn with mentors and contribute to Zephyr, Linux and Yocto through the Mission Forge Contributor Program.', 'Mission Forge 开源贡献者培养计划，通过导师指导和真实任务，参与 Zephyr、Linux 与 Yocto 的上游贡献。'],
+  'meta.description': ['Learn with mentors and contribute to Zephyr, Linux, Yocto and Humanize through the Mission Forge Contributor Program.', 'Mission Forge 开源贡献者培养计划，通过导师指导和真实任务，参与 Zephyr、Linux、Yocto 和 Humanize 的上游贡献。'],
   'nav.skip': ['Skip to content', '跳转到正文'],
   'nav.label': ['Main navigation', '主导航'],
   'nav.home': ['Mission Forge home', 'Mission Forge 首页'],
@@ -13,7 +13,7 @@ const strings = {
   'hero.eyebrow': ['Mission Forge Contributor Program', 'Mission Forge 开源贡献者培养计划'],
   'hero.title1': ['Learn through', '参与真实贡献，'],
   'hero.title2': ['real contributions.', '积累工程能力。'],
-  'hero.description': ['Learn with mentors. Solve real problems in Zephyr, Linux and Yocto, and contribute your work upstream.', '在导师指导下解决 Zephyr、Linux 和 Yocto 中的实际问题，向上游贡献成果。'],
+  'hero.description': ['Learn with mentors. Solve real problems in Zephyr, Linux, Yocto and Humanize, and contribute your work upstream.', '在导师指导下解决 Zephyr、Linux、Yocto 和 Humanize 中的实际问题，向上游贡献成果。'],
   'hero.start': ['Get involved', '开始参与'],
   'hero.tasks': ['Explore tasks', '查看任务'],
   'hero.community': ['Join the community', '加入社群'],
@@ -22,11 +22,12 @@ const strings = {
   'stats.inProgress': ['In progress', '进行中'],
   'stats.completed': ['Completed', '已完成'],
   'program.title': ['Build experience, in the open.', '在开源实践中成长。'],
-  'program.description': ['The Mission Forge Contributor Program (MFCP) is initiated by Process Mission. It brings together practical tasks, mentorship and reviewed contributions across three open-source projects.', 'Mission Forge Contributor Program（MFCP）由进程使命发起，围绕三个开源项目，通过实践任务、导师指导和成果评审培养贡献者。'],
+  'program.description': ['The Mission Forge Contributor Program (MFCP) is initiated by Process Mission. It brings together practical tasks, mentorship and reviewed contributions across open-source projects.', 'Mission Forge Contributor Program（MFCP）由进程使命发起，围绕开源项目，通过实践任务、导师指导和成果评审培养贡献者。'],
   'program.guide': ['Participation guide', '参与指南'],
   'tracks.zephyr': ['Embedded systems, device drivers and real-time applications.', '嵌入式系统、设备驱动与实时应用。'],
   'tracks.linux': ['Kernel analysis, testing and documentation.', '内核分析、测试与文档贡献。'],
   'tracks.yocto': ['Recipes, layers and Linux system images.', '配方、分层与 Linux 系统镜像。'],
+  'tracks.humanize': ['Coding-agent workflows, CLI tools, tests and documentation.', '编程 Agent 协作流程、命令行工具、测试与文档。'],
   'people.search': ['Search username', '搜索 GitHub 用户名'],
   'people.count': ['contributors', '位贡献者'],
   'people.empty': ['No matching contributors.', '没有符合搜索条件的贡献者。'],
@@ -90,4 +91,5 @@ export const projects = [
   {id: 'zephyr', name: 'Zephyr'},
   {id: 'linux', name: 'Linux'},
   {id: 'yocto', name: 'Yocto Project'},
+  {id: 'humanize', name: 'Humanize', url: 'https://humanfia.ai/projects/humanize'},
 ];
