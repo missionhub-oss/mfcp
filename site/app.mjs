@@ -30,6 +30,14 @@ function setLanguage(next) {
   document.title = copy['meta.title'][language];
   document.querySelector('meta[name="description"]').content = copy['meta.description'][language];
   languageButton.textContent = language === 'en' ? '中文' : 'English';
+  document.querySelectorAll('[data-ghfind-image]').forEach(img => {
+    const url = new URL(img.src);
+    if (url.searchParams.get('lang') === language) return;
+    url.searchParams.set('lang', language);
+    img.hidden = false;
+    img.parentElement.querySelector('.ghfind-image-fallback').hidden = true;
+    img.src = url.href;
+  });
   try {localStorage.setItem('mfcp.language', language);} catch {}
   renderContributors();
 }
@@ -80,6 +88,16 @@ document.querySelectorAll('#main-nav a').forEach(link => link.addEventListener('
   document.documentElement.classList.remove('menu-open');
 }));
 document.querySelectorAll('.avatar img').forEach(img => img.addEventListener('error', () => {img.hidden = true;}));
+document.querySelectorAll('[data-ghfind-image]').forEach(img => {
+  const updateImage = () => {
+    const failed = img.complete && img.naturalWidth === 0;
+    img.hidden = failed;
+    img.parentElement.querySelector('.ghfind-image-fallback').hidden = !failed;
+  };
+  img.addEventListener('load', updateImage);
+  img.addEventListener('error', updateImage);
+  if (img.complete) updateImage();
+});
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') {
     menuButton.setAttribute('aria-expanded', 'false');

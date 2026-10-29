@@ -81,16 +81,33 @@
             <span class="rank-position"><span class="sr-only">{{ t('ranking.rank') }} </span><span class="rank-number">{{ person.rank }}</span></span>
             {{ avatar(person) }}
             <span class="person-identity"><strong>{{ person.login }}</strong><span>L{{ person.level }} · {{ t('level.' ~ person.level) }}</span></span>
+            <span class="ghfind-summary">
+              <span class="ghfind-wordmark">ghfind</span>
+              <span class="ghfind-badge-media"><img src="https://ghfind.com/api/badge/{{ person.login }}?lang=zh" data-ghfind-image="badge" alt="{{ copy['ghfind.badgeAlt'].zh }}" data-i18n-alt="ghfind.badgeAlt" height="20" loading="lazy" decoding="async"><span class="ghfind-image-fallback" hidden>{{ t('ghfind.unavailable') }}</span></span>
+            </span>
             <span class="rank-xp"><strong>{{ person.stats.experience }}</strong> XP</span>
             <span class="expand-mark" aria-hidden="true">+</span><span class="sr-only">{{ t('profile.history') }}</span>
           </summary>
-            <div class="person-detail-body"><div>
+            <div class="person-detail-body">
+              <section class="ghfind-panel" aria-labelledby="ghfind-{{ person.id }}">
+                <div class="ghfind-panel-heading"><span class="ghfind-wordmark">ghfind <span aria-hidden="true">↗</span></span><h3 id="ghfind-{{ person.id }}">{{ t('ghfind.title') }}</h3></div>
+                <a class="ghfind-card-link" href="https://ghfind.com/u/{{ person.login }}" target="_blank" rel="noopener noreferrer">
+                  <img src="https://ghfind.com/api/card/mini/{{ person.login }}?variant=bars&amp;theme=dark&amp;lang=zh" data-ghfind-image="card" alt="{{ copy['ghfind.cardAlt'].zh }}" data-i18n-alt="ghfind.cardAlt" width="440" height="200" loading="lazy" decoding="async">
+                  <span class="ghfind-image-fallback" hidden><span class="ghfind-wordmark">ghfind</span>{{ t('ghfind.cardUnavailable') }}</span>
+                </a>
+                <a class="text-link ghfind-visit" href="https://ghfind.com/u/{{ person.login }}" target="_blank" rel="noopener noreferrer">{{ t('ghfind.visit') }} <span aria-hidden="true">↗</span></a>
+                <p class="ghfind-invitation">{{ t('ghfind.invitation') }}</p>
+              </section>
+              <div class="person-progress">
               <dl class="person-stats"><div><dt>XP</dt><dd>{{ person.stats.experience }}</dd></div><div><dt>{{ t('profile.tasks') }}</dt><dd>{{ person.stats.tasks }}</dd></div><div><dt>{{ t('profile.prs') }}</dt><dd>{{ person.stats.pull_requests }}</dd></div></dl>
+              {% if person.criteria.length %}<div class="criteria"><p class="criteria-title">{{ t('profile.next') }} <strong>L{{ person.nextLevel }}</strong></p>{% for criterion in person.criteria %}<label><span>{{ t('criterion.' ~ criterion.key) }}<strong>{{ criterion.current }} / {{ criterion.required }}</strong></span><progress max="{{ criterion.required }}" value="{{ criterion.value }}">{{ criterion.current }} / {{ criterion.required }}</progress></label>{% endfor %}<p class="small muted">{{ t('profile.progressNote') }}{% if person.level == 2 %} {{ t('profile.review') }}{% endif %}</p></div>{% else %}<p class="small muted">{{ t('profile.l' ~ person.level) }}</p>{% endif %}
+              </div>
+              <div class="person-history">
+              <h3>{{ t('profile.history') }}</h3>
               {% if person.history.length %}<ul class="history-list">{% for event in person.history %}<li><a href="{{ event.href }}" target="_blank" rel="noopener noreferrer">{{ localized(event.title) }} <span aria-hidden="true">↗</span></a><time datetime="{{ event.at }}" data-date="{{ event.at }}">{{ event.at | date }}</time></li>{% endfor %}</ul>{% else %}<p class="small muted">{{ t('profile.noHistory') }}</p>{% endif %}
               <div class="guide-links"><a class="text-link small" href="{{ person.githubUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
               <a class="text-link small" href="{{ person.recordUrl }}" target="_blank" rel="noopener noreferrer">{{ t('profile.record') }} <span aria-hidden="true">↗</span></a>
               </div></div>
-              {% if person.criteria.length %}<div class="criteria"><p class="criteria-title">{{ t('profile.next') }} <strong>L{{ person.nextLevel }}</strong></p>{% for criterion in person.criteria %}<label><span>{{ t('criterion.' ~ criterion.key) }}<strong>{{ criterion.current }} / {{ criterion.required }}</strong></span><progress max="{{ criterion.required }}" value="{{ criterion.value }}">{{ criterion.current }} / {{ criterion.required }}</progress></label>{% endfor %}<p class="small muted">{{ t('profile.progressNote') }}{% if person.level == 2 %} {{ t('profile.review') }}{% endif %}</p></div>{% else %}<p class="small muted">{{ t('profile.l' ~ person.level) }}</p>{% endif %}
             </div>
           </details>
         </li>
@@ -101,7 +118,7 @@
         <button type="button" id="next-page" aria-controls="contributor-grid">{{ t('pagination.next') }}</button>
       </nav>
       <div class="empty-state" id="people-empty" hidden><p>{{ t('people.empty') }}</p><button type="button" class="button secondary" id="clear-filters">{{ t('people.clear') }}</button></div>
-      <p class="small muted ranking-note">{{ t('ranking.note') }}</p>
+      <p class="small muted ranking-note">{{ t('ranking.note') }} {{ t('ghfind.note') }}</p>
     </section>
 
     <section class="section container partners-section" id="partners" aria-labelledby="partners-title">
