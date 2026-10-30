@@ -11,6 +11,7 @@
   <a href="projects/zephyr/README.md"><img src="https://img.shields.io/badge/Zephyr-7A51C2?style=flat-square" alt="探索 Zephyr"></a>
   <a href="projects/linux/README.md"><img src="https://img.shields.io/badge/Linux-315879?style=flat-square&amp;logo=linux&amp;logoColor=white" alt="探索 Linux"></a>
   <a href="projects/yocto/README.md"><img src="https://img.shields.io/badge/Yocto-168681?style=flat-square" alt="探索 Yocto"></a>
+  <a href="projects/humanize/README.md"><img src="https://img.shields.io/badge/Humanize-4D7C0F?style=flat-square" alt="探索 Humanize"></a>
   <a href="programs/2026/README.md"><img src="https://img.shields.io/badge/Program-2026-d29922?style=flat-square" alt="2026 年培养安排"></a>
 </p>
 
@@ -101,6 +102,17 @@ Signed-off-by: Your Real Full Name <your-email@example.com>
     </td>
     <td width="50%" align="center" valign="middle">
       <a href="projects/yocto/README.md"><img src="images/yocto.png" width="100%" alt="Yocto Project：参考官网蓝色山峦横幅绘制的嵌入式设备插图"></a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/humanize/README.md"><img src="images/humanize.png" width="100%" alt="Humanize：终端与编程、审查、验证面板的立体插图"></a>
+    </td>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/humanize/README.md">Humanize</a></h3>
+      <p><strong>参与编程 Agent 协作工具的开发。</strong></p>
+      <p>围绕协作流程、命令行和桌面工具开展实践，改进 Agent 接入、测试与文档，并按上游流程验证和提交成果。</p>
+      <p><a href="projects/humanize/README.md">探索 Humanize →</a></p>
     </td>
   </tr>
 </table>

@@ -11,6 +11,7 @@
   <a href="projects/zephyr/README.md"><img src="https://img.shields.io/badge/Zephyr-7A51C2?style=flat-square" alt="Explore Zephyr"></a>
   <a href="projects/linux/README.md"><img src="https://img.shields.io/badge/Linux-315879?style=flat-square&amp;logo=linux&amp;logoColor=white" alt="Explore Linux"></a>
   <a href="projects/yocto/README.md"><img src="https://img.shields.io/badge/Yocto-168681?style=flat-square" alt="Explore Yocto"></a>
+  <a href="projects/humanize/README.md"><img src="https://img.shields.io/badge/Humanize-4D7C0F?style=flat-square" alt="Explore Humanize"></a>
   <a href="programs/2026/README.md"><img src="https://img.shields.io/badge/Program-2026-d29922?style=flat-square" alt="Program 2026"></a>
 </p>
 
@@ -81,6 +82,17 @@ Choose a project and build experience through practical contributions.
     </td>
     <td width="50%" align="center" valign="middle">
       <a href="projects/yocto/README.md"><img src="images/yocto.png" width="100%" alt="Yocto Project: an embedded computer and mountains inspired by the official website"></a>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/humanize/README.md"><img src="images/humanize.png" width="100%" alt="Humanize: a terminal with coding, review and verification panels"></a>
+    </td>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/humanize/README.md">Humanize</a></h3>
+      <p><strong>Build reliable coding-agent workflows.</strong></p>
+      <p>Contribute to agent workflows, CLI and desktop tools. Improve agent integrations, tests and documentation, and validate changes through upstream review.</p>
+      <p><a href="projects/humanize/README.md">Explore Humanize →</a></p>
     </td>
   </tr>
 </table>
