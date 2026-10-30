@@ -76,6 +76,7 @@ const strings = {
   'partners.rustsbi': ['RustSBI', 'RustSBI'],
   'partners.cnb': ['CNB', 'CNB'],
   'partners.humanfia': ['Humanfia Community', 'Humanfia 社区'],
+  'partners.openruyi': ['openRuyi', 'openRuyi'],
   'join.title': ['Make your first contribution.', '开始你的开源贡献。'],
   'join.body': ['Register, choose a project, and join the community.', '完成注册，选择实践方向，参与社区讨论。'],
   'join.register': ['Register with a PR', '提交注册 PR'],
