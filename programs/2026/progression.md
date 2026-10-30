@@ -3,23 +3,23 @@
 
 # 2026 年贡献者晋级规则
 
-当前规则版本为 `2026.v4`，机器读取的数量与积分条件保存在
-[rules/v4.json](rules/v4.json)。`2026.v1`、`2026.v2` 和 `2026.v3` 保留用于已记录的任务合同和晋级记录。
+当前规则版本为 `2026.v5`，机器读取的数量与积分条件保存在
+[rules/v5.json](rules/v5.json)。`2026.v1` 至 `2026.v4` 保留用于已记录的任务合同和晋级记录。
 每条晋级记录保存规则版本及文件 SHA。
 
 任务通过 `2026` 标签选择本年度规则，通过 `difficulty/level0` 至
 `difficulty/level4` 标签选择难度，并通过唯一 Assignee 分配负责人。
-Mentor 指定、阶段验收和经验结算使用 [Bot 简短命令](../../docs/bot-command-examples.md)。
+Mentor 指定和经验结算使用 [Bot 简短命令](../../docs/bot-command-examples.md)。
 
 ## 实践项目与上游仓库
 
-2026.v4 支持 Zephyr、Linux、Yocto 和 Humanize 四个实践方向。任务成果需要合入
-下列 GitHub 仓库之一；结算时按任务接受时生效的规则版本核对仓库。
+2026.v5 支持 Zephyr、Linux、Yocto 和 Humanize 四个实践方向。任务成果需要合入
+下列 GitHub 仓库之一；结算时按任务记录中的规则版本核对仓库。
 
 | 项目 | 上游仓库 |
 | --- | --- |
 | Zephyr | `zephyrproject-rtos/zephyr` |
-| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs`、`openRuyi-Project/openRuyi`、`openRuyi-Project/homepage` |
+| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs`、`openRuyi-Project/openRuyi`、`openRuyi-Project/homepage`、`sashiko-dev/sashiko` |
 | Yocto | `yoctoproject/poky`、`openembedded/openembedded-core`、`openembedded/meta-openembedded` |
 | Humanize | `humanfia/humanize` |
 
@@ -27,8 +27,9 @@ openRuyi 的软件包维护、系统验证和文档任务归入 Linux，使用�
 `project/linux`、`2026` 和已确认的难度标签。其上游目标分别为
 `openRuyi-Project/openRuyi` 和 `openRuyi-Project/homepage`。
 Humanize 任务使用 `project/humanize` 标签。
-首次验收按命令发生时间选择生效规则；`2026.v4` 自北京时间 2026 年 10 月 30 日
-14:29:33 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
+Sashiko 的 Linux 内核评审资料与工具任务归入 Linux，使用 `project/linux`。
+新任务首次结算按命令发生时间选择生效规则；`2026.v5` 自北京时间 2026 年 10 月 30 日
+23:55:27 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
 上游 PR 需要合入默认分支，并包含可核实的作者及验收导师 DCO。
 
 ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用邮件补丁
@@ -61,6 +62,11 @@ ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用
 首字母大写，也可以将姓氏全部大写；
 作者的签署姓名和邮箱与提交作者一致。
 
+维护者审核成果后，在任务中发表 `@mfcp-progress settle <上游 PR 链接>`。
+Bot 直接核对负责人、标签、导师配置、上游合入、作者与导师 DCO 和重复计分。
+验证通过并写入结算记录后，Bot 自动将 Issue 关闭为 Completed。已手动关闭为
+Completed 的任务也使用同一命令结算。上游 PR 及作者、导师签署信息是结算证据。
+
 ## L2 → L3
 
 至少完成 12 个验收任务、12 个独立上游合入 PR，累计至少 300 分。
@@ -92,12 +98,13 @@ L0 → L1 晋级始终按注册条件执行。
 
 ## 成果与晋级通知
 
-任务经验结算成功写入默认分支后，Bot 在原任务 Issue 中使用英文发表评论，
+任务经验结算成功写入默认分支并关闭后，Bot 在原任务 Issue 中使用英文发表评论，
 @贡献者并祝贺其完成任务，列出本次经验值和任务难度。
 本次结算同时触发晋级时，Bot 额外发表晋级祝贺，写明原等级和新等级。
 L0 → L1 的晋级祝贺回复到本人的注册 PR。
 
 通知读取默认分支中已生效的个人记录。待审晋级和撤销不触发祝贺。
 每条结算和晋级记录分别生成固定通知标识，Bot 检查自己已发表的评论，
-避免正常重试重复 @用户。通知失败后，每小时检查一次并补发缺失通知。
+避免正常重试重复 @用户。记录更新与 Issue 关闭都会触发通知检查；通知失败后，
+每小时检查一次并补发缺失通知。
 所有通知通过同一个串行工作流发送；用户的邮件接收方式由 GitHub 通知设置决定。

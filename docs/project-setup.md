@@ -14,7 +14,7 @@
 | 验收规则 | `programs/<year>/rules/vN.json` | `upstream_repositories` 包含明确的上游 `owner/repo`，版本和生效时间唯一 |
 | 参与和 Bot 说明 | `CONTRIBUTING.md`、`docs/program.md`、`docs/progression-bot.md` | 项目方向和结算要求与当前规则一致 |
 
-已发布的年度规则保持原文件内容，扩展上游目标时新增规则版本。首次验收按命令时间选择生效规则，
+已发布的年度规则保持原文件内容，扩展上游目标时新增规则版本。新任务首次结算按命令时间选择生效规则，
 任务记录保存规则版本、文件 SHA 和积分；后续结算使用该任务保存的规则。
 项目标签用于分类，上游准入由 `upstream_repositories` 控制。验收还会核对默认分支合入、PR 作者、
 每个提交的作者及导师 DCO，以及任务的负责人、难度和年度。
@@ -29,3 +29,4 @@ Humanize 的项目标识为 `humanize`，标签为 `project/humanize`，2026 年
 归入已有方向的上游项目沿用该方向的表单选项、项目标签和页面卡片，并补充资料与
 年度仓库规则。openRuyi 归入 Linux，沿用 `project/linux`；`2026.v4` 接受
 `openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。
+Sashiko 同样归入 Linux，`2026.v5` 接受 `sashiko-dev/sashiko` 的 PR。

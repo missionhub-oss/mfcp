@@ -24,7 +24,7 @@ const contribution = z.strictObject({
   difficulty: level, policy, points: z.number().int().nonnegative(),
   configuration: proof, stages: z.array(z.strictObject({name: z.enum(['reproduced', 'validated']), proof})),
   settlements: z.array(z.strictObject({id: z.string(), proof, upstream: z.array(upstream).nonempty(),
-    points: z.number().int().nonnegative()})),
+    points: z.number().int().nonnegative(), mentor_id: id.optional()})),
 });
 const promotion = z.strictObject({id: z.string(), from: level, to: level, policy, proof,
   reason: z.string(), evidence: z.array(proof), review_pr: id.nullable()});
@@ -102,6 +102,14 @@ export function validateProfile(value, path) {
       if (!mentor || Date.parse(mentor.configuration.at) > Date.parse(stage.proof.at)) throw new Error('Task stages require a previously configured mentor.');
     }
     if (c.settlements.filter(s => !reversed.has(s.id)).length > 1) throw new Error('Multiple active settlements.');
+    for (const settlement of c.settlements) {
+      if (settlement.mentor_id !== undefined) {
+        const mentor = mentors.find(record => record.mentor_id === settlement.mentor_id);
+        if (!mentor || Date.parse(mentor.configuration.at) > Date.parse(settlement.proof.at)) {
+          throw new Error('Settlement requires a previously configured independent mentor.');
+        }
+      }
+    }
     const current = activeSettlement(p, c);
     for (const pr of current?.upstream ?? []) {
       const key = `${pr.repository}#${pr.number}`;

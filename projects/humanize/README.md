@@ -24,6 +24,6 @@ Humanize（`hmz`）通过协作流程组织编程 Agent 完成实现、审查和
 [2026.v3](../../programs/2026/rules/v3.json) 将 `humanfia/humanize` 列为可结算的上游仓库。
 参与者完成复现和验证验收，上游 PR 合入默认分支后，按[Bot 操作说明](../../docs/bot-command-examples.md)
 提交结算证据并以 Completed 关闭任务。Bot 核对 PR 作者、提交归属、作者与验收导师的 DCO，
-以及任务记录中的规则版本。首次验收时保存的规则版本用于该任务的后续结算。
+以及任务记录中的规则版本。首次结算时保存的规则版本用于该任务的后续操作。
 
 任务发布方式见[贡献指南](../../CONTRIBUTING.md)，年度安排见[2026 年培养安排](../../programs/2026/README.md)。

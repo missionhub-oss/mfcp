@@ -101,14 +101,8 @@ function assertRecordedMentors(configurations, task) {
 export function selectTaskMentor(configurations, mentorId, at, task) {
   assertRecordedMentors(configurations, task);
   const configuration = configurations.find(record => record.mentor.id === mentorId);
-  if (!configuration || Date.parse(configuration.proof.at) > Date.parse(at)) throw new Error('Stage acceptance requires a previously configured mentor.');
+  if (!configuration || Date.parse(configuration.proof.at) > Date.parse(at)) throw new Error('Task approval requires a previously configured mentor.');
   return configuration;
-}
-
-export async function resolveTaskMentor(client, issue, profiles, ref, at, slug, task, mentorId) {
-  const mentors = await readIssueMentors(client, issue, profiles, ref, slug);
-  assertMentorSection(issue.body, mentors);
-  return {...selectTaskMentor(mentors, mentorId, at, task), mentors};
 }
 
 async function evidenceComment(client, url, action, candidate, level, governance, ref, slug) {
@@ -136,7 +130,22 @@ export function signoffs(message) {
     .map(line => line.slice(line.indexOf(':') + 1).trim().toLowerCase());
 }
 
-async function verifyUpstream(client, url, participant, mentor, rules) {
+export function verifySettlementSignoffs(commits, participant, mentors) {
+  let eligibleMentors = mentors.filter(mentor => mentor.id !== participant.github_id);
+  if (!commits.length) throw new Error('Upstream PR has no patch commits.');
+  for (const commit of commits) {
+    const trailers = signoffs(commit.commit.message);
+    const author = `${commit.commit.author.name} <${commit.commit.author.email}>`.toLowerCase();
+    if (commit.author?.id !== participant.github_id || !trailers.includes(author)) {
+      throw new Error('Every patch commit needs an attributable author and the matching author DCO sign-off.');
+    }
+    eligibleMentors = eligibleMentors.filter(mentor => mentor.signoffs.some(signoff => trailers.includes(signoff.toLowerCase())));
+  }
+  if (!eligibleMentors.length) throw new Error('Every patch commit needs the DCO sign-off of a configured independent mentor.');
+  return eligibleMentors;
+}
+
+async function verifyUpstream(client, url, participant, mentors, rules) {
   const parsed = new URL(url);
   const match = /^\/([^/]+)\/([^/]+)\/pull\/([1-9][0-9]*)\/?$/.exec(parsed.pathname);
   if (parsed.origin !== 'https://github.com' || !match || parsed.search || parsed.hash) throw new Error('Use the canonical upstream pull request URL.');
@@ -149,16 +158,9 @@ async function verifyUpstream(client, url, participant, mentor, rules) {
       pr.user.id !== participant.github_id) throw new Error('PR must be merged to upstream default branch and authored by the participant.');
   const commits = await client.list(`repos/${repository}/pulls/${number}/commits`);
   if (!commits.length || commits.length !== pr.commits) throw new Error('Incomplete upstream commit list.');
-  for (const c of commits) {
-    const trailers = signoffs(c.commit.message);
-    const author = `${c.commit.author.name} <${c.commit.author.email}>`.toLowerCase();
-    if (c.author?.id !== participant.github_id || !trailers.includes(author) ||
-        !mentor.signoffs.some(s => trailers.includes(s.toLowerCase()))) {
-      throw new Error('Every patch commit needs attributable author and authorized mentor DCO sign-offs.');
-    }
-  }
-  return {repository, number, author: pr.user.id, merge_commit: pr.merge_commit_sha,
-    merged_at: pr.merged_at, commits: commits.map(c => c.sha), url: pr.html_url};
+  return {mentors: verifySettlementSignoffs(commits, participant, mentors),
+    upstream: {repository, number, author: pr.user.id, merge_commit: pr.merge_commit_sha,
+      merged_at: pr.merged_at, commits: commits.map(c => c.sha), url: pr.html_url}};
 }
 
 export async function hasPendingReversal(client, participantId, slug) {
@@ -168,11 +170,15 @@ export async function hasPendingReversal(client, participantId, slug) {
 
 export async function buildProposal(client, source, ref, {slug, reviewPr = null} = {}) {
   const profiles = await readProfiles(client, ref);
-  let selected, proof, action, data, issue, settlementAuthor, settings, commandSource;
+  let selected, proof, action, data, issue, settings, commandSource;
   if (source.kind === 'comment') {
     const read = await readComment(client, source, slug);
     ({action, data} = read.command);
     proof = read.proof;
+    if (action === 'stage') {
+      if (profiles.some(({profile}) => profile.contributions.some(task => task.stages.some(stage => equal(stage.proof, proof))))) return null;
+      throw new Error('Use settle <upstream-pr-url> to validate, award experience and close the task.');
+    }
     if (['endorse', 'interview', 'recommend'].includes(action)) {
       const candidate = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
       if (!candidate) throw new Error('The candidate must be registered.');
@@ -190,7 +196,8 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
         mentors, mentorCommands: readMentorCommands(issue.body, {required: false}),
         body: updateMentorSection(issue.body, mentors), commandDigest: proof.digest, source};
     }
-    if (['stage', 'settle'].includes(action)) {
+    if (action === 'settle') {
+      commandSource = source;
       settings = taskSettings(issue, {at: proof.at, recordedYear: recordedYear(recordedTask(profiles, issue))});
       selected = profiles.find(p => p.profile.github_id === settings.participant_id);
     } else selected = profiles.find(p => p.profile.github_login.toLowerCase() === data.participant.toLowerCase());
@@ -211,14 +218,12 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     issue = await client.request(`${client.root}/issues/${source.issue}`);
     if (!isTaskIssue(issue) || issue.state !== 'closed' || issue.state_reason !== 'completed') return null;
     const events = await client.list(`${client.root}/issues/${source.issue}/events`);
-    const event = events.find(e => e.id === source.event && e.event === 'closed');
-    if (!event) throw new Error('Unknown completion event.');
+    const event = events.filter(e => e.event === 'closed').at(-1);
+    if (event?.id !== source.event) return null;
     const comments = await client.list(`${client.root}/issues/${source.issue}/comments`);
     const contract = profiles.find(p => p.profile.contributions.some(c => c.issue === source.issue));
-    if (!contract) return null;
-    settings = taskSettings(issue, {at: event.created_at, recordedYear: recordedYear(recordedTask(profiles, issue))});
-    if (settings.participant_id !== contract.profile.github_id) throw new Error('Issue Assignee differs from the recorded task owner.');
-    await requireMentor(event.actor);
+    const task = contract?.profile.contributions.find(c => c.issue === source.issue);
+    if (task && activeSettlement(contract.profile, task)) return null;
     const closingRules = await currentRules(client, ref, event.created_at);
     const candidates = comments.filter(c => {
       if (c.user.type !== 'User' || c.created_at !== c.updated_at || !closingRules.governance.maintainers.includes(c.user.id)) return false;
@@ -228,16 +233,8 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     for (const candidate of candidates.reverse()) {
       if (await isMentor(candidate.user)) {comment = candidate; break;}
     }
-    if (!comment) throw new Error('Post settlement evidence before closing the task.');
-    const read = await readComment(client, {kind: 'comment', issue: source.issue, comment: comment.id}, slug);
-    commandSource = read.proof.source;
-    selected = contract;
-    action = 'settle';
-    data = read.command.data;
-    settlementAuthor = read.proof.actor;
-    proof = {source, actor: event.actor.id, at: event.created_at,
-      digest: digest({event: event.id, evidence: read.proof.digest}),
-      details: JSON.stringify({...data, evidence_comment: comment.id})};
+    if (!comment) return null;
+    return buildProposal(client, {kind: 'comment', issue: source.issue, comment: comment.id}, ref, {slug, reviewPr});
   } else if (source.kind === 'reopened') {
     issue = await client.request(`${client.root}/issues/${source.issue}`);
     if (issue.state !== 'open' || !isTaskIssue(issue)) return null;
@@ -260,53 +257,46 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
   const policy = {id: rules.id, sha};
   let mode = 'auto';
   let task = issue && after.contributions.find(c => c.issue === issue.number);
-  if (['stage', 'settle'].includes(action)) {
+  if (action === 'settle') {
     const owner = profiles.find(p => p.profile.contributions.some(c => c.issue === issue.number));
     if (owner && owner.profile.github_id !== before.github_id) throw new Error('Issue Assignee differs from the recorded task owner.');
-    const mentorId = action === 'stage' ? proof.actor : task?.stages.filter(stage => stage.name === 'validated').at(-1)?.proof.actor;
-    const configuration = await resolveTaskMentor(client, issue, profiles, ref, proof.at, slug, task, mentorId);
-    if (configuration.mentor.id === before.github_id) throw new Error('Choose a registered, independent Mentor Team member.');
-    if (!task && action === 'stage') {
-      const contractRules = await currentRules(client, ref, proof.at, settings.year);
-      task = {id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
-        mentor_id: configuration.mentor.id, difficulty: settings.difficulty,
-        policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[settings.difficulty],
-        configuration: configuration.proof, stages: [], settlements: []};
-      after.contributions.push(task);
-    }
-    if (!task) throw new Error('Accept reproduction and validation before settlement.');
-    task.mentors = configuration.mentors.map(record => ({mentor_id: record.mentor.id, configuration: record.proof}));
   }
   if (settings && task && (task.difficulty !== settings.difficulty || Number(task.policy.id.split('.')[0]) !== settings.year)) {
     throw new Error('Issue labels differ from the recorded task rules; restore the configured difficulty and year.');
   }
   if (issue?.pull_request) throw new Error('Use an issue for contribution commands.');
-  if (['configure', 'stage', 'settle'].includes(action) && !isTaskIssue(issue)) throw new Error('Expected native issue type Task.');
-  if (action === 'stage') {
-    if (!task || !taskMentors(task).some(mentor => mentor.mentor_id === proof.actor) || proof.actor === before.github_id) throw new Error('Only an assigned independent mentor can accept a stage.');
-    if (activeSettlement(after, task)) throw new Error('Task is already settled.');
-    if (data.stage === 'validated' && !task.stages.some(s => s.name === 'reproduced')) throw new Error('Accept reproduction before implementation validation.');
-    task.stages.push({name: data.stage, proof});
-  } else if (action === 'settle') {
+  if (action === 'settle') {
     requireRole(governance.maintainers, proof.actor, 'Final settlement requires a maintainer.');
-    if (settlementAuthor) requireRole(governance.maintainers, settlementAuthor, 'Settlement evidence must be submitted by a maintainer.');
-    if (!task || activeSettlement(after, task)) return null;
-    if (issue.state !== 'closed' || issue.state_reason !== 'completed') return null;
-    const latestStage = task.stages.filter(s => s.name === 'validated').at(-1);
-    const lastAdjustment = after.adjustments.filter(a => a.contribution_id === task.id).at(-1);
+    if (proof.actor === before.github_id) throw new Error('A contributor cannot settle their own task.');
+    if (task && activeSettlement(after, task)) return null;
+    if (issue.state === 'closed' && issue.state_reason !== 'completed') throw new Error('Reopen tasks closed as Not planned before requesting settlement.');
+    const events = await client.list(`${client.root}/issues/${issue.number}/events`);
+    if (events.some(event => event.event === 'reopened' && Date.parse(event.created_at) >= Date.parse(proof.at))) {
+      throw new Error('Post a new settlement command after the latest reopen event.');
+    }
+    if (await hasPendingReversal(client, before.github_id, slug)) throw new Error('Resolve pending reversals before settlement.');
+    const lastAdjustment = task && after.adjustments.filter(a => a.contribution_id === task.id).at(-1);
     const reversal = lastAdjustment && await client.request(`${client.root}/pulls/${lastAdjustment.review_pr}`);
-    if (!latestStage || reversal && (!reversal.merged_at || Date.parse(latestStage.proof.at) <= Date.parse(reversal.merged_at))) throw new Error('A fresh mentor validation after reversal merge is required.');
-    if (Date.parse(latestStage.proof.at) > Date.parse(proof.at)) throw new Error('Settlement must follow mentor validation.');
-    const mentor = governance.mentors.find(m => m.github_id === latestStage.proof.actor);
-    if (!mentor || mentor.github_id === before.github_id) throw new Error('Independent mentor DCO signature metadata is required.');
-    const verifiedStage = await readComment(client, latestStage.proof.source, slug);
-    if (verifiedStage.proof.digest !== latestStage.proof.digest || verifiedStage.proof.actor !== mentor.github_id) throw new Error('Mentor acceptance changed or disappeared.');
-    const [year, version] = task.policy.id.split('.');
-    const contract = await client.file(`programs/${year}/rules/${version}.json`, ref);
-    if (contract.sha !== task.policy.sha) throw new Error('Published task rules were modified.');
-    const originalRules = rulesSchema.parse(contract.value);
+    if (reversal && (!reversal.merged_at || Date.parse(proof.at) <= Date.parse(reversal.merged_at))) throw new Error('Post a new settlement command after the reversal PR merges.');
+    const configurations = await readIssueMentors(client, issue, profiles, ref, slug);
+    assertMentorSection(issue.body, configurations);
+    assertRecordedMentors(configurations, task);
+    let mentors = configurations.filter(record => Date.parse(record.proof.at) <= Date.parse(proof.at))
+      .map(record => record.mentor).filter(mentor => mentor.id !== before.github_id);
+    if (!mentors.length) throw new Error('Configure an independent mentor before requesting settlement.');
+    let contractRules;
+    if (task) {
+      const [year, version] = task.policy.id.split('.');
+      const contract = await client.file(`programs/${year}/rules/${version}.json`, ref);
+      if (contract.sha !== task.policy.sha) throw new Error('Published task rules were modified.');
+      contractRules = {rules: rulesSchema.parse(contract.value), sha: contract.sha};
+    } else contractRules = await currentRules(client, ref, proof.at, settings.year);
     const prs = [];
-    for (const url of data.pull_requests) prs.push(await verifyUpstream(client, url, before, mentor, originalRules));
+    for (const url of data.pull_requests) {
+      const verified = await verifyUpstream(client, url, before, mentors, contractRules.rules);
+      mentors = verified.mentors;
+      prs.push(verified.upstream);
+    }
     if (prs.some(pr => Date.parse(pr.merged_at) > Date.parse(proof.at))) throw new Error('Settlement must occur after upstream merge.');
     const used = new Set(profiles.flatMap(p => p.profile.contributions.flatMap(c => activeSettlement(p.profile, c)?.upstream.map(pr => `${pr.repository}#${pr.number}`) ?? [])));
     for (const pr of prs) {
@@ -314,7 +304,16 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
       if (used.has(id)) throw new Error('Upstream PR already credited.');
       used.add(id);
     }
-    task.settlements.push({id: key, proof, upstream: prs, points: task.points});
+    const configuration = selectTaskMentor(configurations, mentors[0].id, proof.at, task);
+    if (!task) {
+      task = {id: `task-${issue.number}`, issue: issue.number, participant_id: before.github_id,
+        mentor_id: configuration.mentor.id, difficulty: settings.difficulty,
+        policy: {id: contractRules.rules.id, sha: contractRules.sha}, points: contractRules.rules.points[settings.difficulty],
+        configuration: configuration.proof, stages: [], settlements: []};
+      after.contributions.push(task);
+    }
+    task.mentors = configurations.map(record => ({mentor_id: record.mentor.id, configuration: record.proof}));
+    task.settlements.push({id: key, proof, mentor_id: configuration.mentor.id, upstream: prs, points: task.points});
   } else if (action === 'register') {
     if (after.level >= 1) return null;
     after.promotions.push({id: key, from: 0, to: 1, policy, proof, reason: 'Identity registration PR merged.', evidence: [], review_pr: null});

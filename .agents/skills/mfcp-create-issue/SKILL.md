@@ -55,7 +55,9 @@ openRuyi 任务选择 `Linux`，使用 `project/linux` 标签；`2026.v4` 接受
 `openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。
 核对具体软件版本、目标体系结构、真实构建与运行证据，以及上游的 Agent 使用规则。
 Humanize 使用 `project/humanize` 标签；2026 年的 `2026.v3` 规则接受
-`humanfia/humanize` 的 PR。已有任务按首次验收时记录的规则版本核对上游仓库。
+`humanfia/humanize` 的 PR。Sashiko 任务选择 `Linux`，`2026.v5` 接受
+`sashiko-dev/sashiko` 的 PR。新任务首次结算保存规则版本，已有任务使用已记录的版本。
+成果合入后，维护者使用 `settle <上游 PR 链接>` 完成校验与结算，Bot 随后关闭 Issue。
 
 ## 读取与准备
 

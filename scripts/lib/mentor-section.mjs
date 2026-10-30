@@ -72,7 +72,7 @@ export function updateMentorSection(body, configurations) {
 export function readMentorCommands(body, {required = true} = {}) {
   const current = section(body);
   if (!current && !required) return [];
-  if (!current) throw new Error('Configure a mentor before accepting or settling the task.');
+  if (!current) throw new Error('Configure a mentor with configure mentor @username before settling the task.');
   const links = [];
   marked.walkTokens(current.tokens.slice(current.first + 1, current.last), token => {
     if (token.type === 'link' && token.text === 'Configuration command') links.push(token.href);

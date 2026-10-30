@@ -15,7 +15,7 @@ export function errorOutcome(error) {
     ? error.issues.slice(0, 3).map(issue => `${issue.path.join('.') || 'command'}: ${issue.message}`).join('; ')
     : error.message;
   const waiting = error.status === 429 || error.status >= 500 ||
-    /^(Candidate checks are pending|Main changed repeatedly)/.test(reason ?? '');
+    /^(Candidate checks are pending|Main changed repeatedly|Settlement is recorded; automatic closure is pending)/.test(reason ?? '');
   return {status: waiting ? 'waiting' : 'failed', reason: reason || 'Command processing could not be completed.'};
 }
 
@@ -27,7 +27,7 @@ export function formatCommandFeedback(comment, outcome, repository) {
     case 'mentor-configured':
       success = true;
       title = '✅ Mentor configured';
-      detail = `Mentor: \`${inline(outcome.mentor)}\`. The Mentor / 导师 field in the issue body records this configuration. Assign a contributor before stage acceptance or settlement.`;
+      detail = `Mentor: \`${inline(outcome.mentor)}\`. The Mentor / 导师 field in the issue body records this configuration. Assign a contributor before settlement.`;
       break;
     case 'assigned':
       success = true;
@@ -37,7 +37,7 @@ export function formatCommandFeedback(comment, outcome, repository) {
     case 'published':
       success = true;
       title = '✅ Command completed';
-      detail = ({configure: 'Mentor configuration saved.', stage: 'Stage acceptance recorded.',
+      detail = ({configure: 'Mentor configuration saved.',
         settle: 'Experience settlement recorded.', promote: 'Promotion recorded.'})[outcome.action] || 'The change is recorded.';
       if (outcome.participant) detail += ` Contributor: \`${inline(outcome.participant)}\`.`;
       if (outcome.commit && outcome.path) detail += `\n\n[View the recorded change](https://github.com/${repository}/blob/${outcome.commit}/${outcome.path}).`;
@@ -109,11 +109,9 @@ async function explainUnchanged(client, source, comment) {
   }
   if (command.action === 'settle') {
     const owner = profiles.find(record => record.profile.contributions.some(task => task.issue === source.issue));
-    if (!owner) return {status: 'failed', reason: 'Configure this task and its mentor before requesting settlement.'};
+    if (!owner) return {status: 'failed', reason: 'No settlement was recorded. Check Assignees, labels, mentor configuration and upstream PR evidence.'};
     const task = owner.profile.contributions.find(task => task.issue === source.issue);
     if (activeSettlement(owner.profile, task)) return {status: 'no-change', reason: 'This task is already credited. No additional experience was awarded.'};
-    if (issue.state === 'open') return {status: 'waiting', reason: 'Settlement evidence received. After acceptance, a maintainer must close the task as Completed to award experience.'};
-    if (issue.state_reason !== 'completed') return {status: 'no-change', reason: 'Only tasks closed as Completed can receive experience.'};
   }
   return {status: 'no-change', reason: 'No new change was required. Check the current issue and contributor record.'};
 }
