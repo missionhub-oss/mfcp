@@ -25,7 +25,7 @@ const strings = {
   'program.description': ['The Mission Forge Contributor Program (MFCP) is initiated by Process Mission. It brings together practical tasks, mentorship and reviewed contributions across open-source projects.', 'Mission Forge Contributor Program（MFCP）由进程使命发起，围绕开源项目，通过实践任务、导师指导和成果评审培养贡献者。'],
   'program.guide': ['Participation guide', '参与指南'],
   'tracks.zephyr': ['Embedded systems, device drivers and real-time applications.', '嵌入式系统、设备驱动与实时应用。'],
-  'tracks.linux': ['Kernel analysis, testing and documentation.', '内核分析、测试与文档贡献。'],
+  'tracks.linux': ['Kernel contributions, openRuyi packages and system testing.', '内核贡献、openRuyi 软件包与系统测试。'],
   'tracks.yocto': ['Recipes, layers and Linux system images.', '配方、分层与 Linux 系统镜像。'],
   'tracks.humanize': ['Coding-agent workflows, CLI tools, tests and documentation.', '编程 Agent 协作流程、命令行工具、测试与文档。'],
   'people.search': ['Search username', '搜索 GitHub 用户名'],

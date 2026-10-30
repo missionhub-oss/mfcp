@@ -51,6 +51,9 @@ description: 为 missionhub-oss/mfcp 创建或起草 GitHub Issue，先确认任
 `github_login` 和命令中的账号参数填写 GitHub 用户名。
 
 涉及上游合入和经验结算时，核对所选年度生效规则的 `upstream_repositories`。
+openRuyi 任务选择 `Linux`，使用 `project/linux` 标签；`2026.v4` 接受
+`openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。
+核对具体软件版本、目标体系结构、真实构建与运行证据，以及上游的 Agent 使用规则。
 Humanize 使用 `project/humanize` 标签；2026 年的 `2026.v3` 规则接受
 `humanfia/humanize` 的 PR。已有任务按首次验收时记录的规则版本核对上游仓库。
 

@@ -68,8 +68,8 @@ Choose a project and build experience through practical contributions.
     </td>
     <td width="50%" valign="middle">
       <h3><a href="projects/linux/README.md">Linux</a></h3>
-      <p><strong>Understand the kernel through practice.</strong></p>
-      <p>Investigate issues, work on drivers, and contribute tests and documentation through the kernel community's review process.</p>
+      <p><strong>Build experience with kernels and distributions.</strong></p>
+      <p>Investigate kernel issues, work on drivers, and contribute tests and documentation. Maintain openRuyi packages and validate RISC-V systems within the Linux track.</p>
       <p><a href="projects/linux/README.md">Explore Linux →</a></p>
     </td>
   </tr>

@@ -17,6 +17,7 @@ body:
     id: project
     attributes:
       label: Project / 实践项目
+      description: Select Linux for openRuyi tasks / openRuyi 任务选择 Linux
       multiple: true
       options:
         - Zephyr
