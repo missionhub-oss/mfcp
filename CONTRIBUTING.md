@@ -79,7 +79,7 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 
 通过[新建 Issue](https://github.com/missionhub-oss/mfcp/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
 
-- 项目方向：Zephyr、Linux、Yocto 或 Humanize。
+- 项目方向：Zephyr、Linux、Yocto 或 Humanize；openRuyi 的软件包、系统验证与文档任务选择 Linux。
 - 问题背景：实际需求、已有问题链接和相关技术资料。
 - 任务目标：需要实现的行为、涉及的范围和交付内容。
 - 实践条件：所需知识、设备、开发环境和上游版本。

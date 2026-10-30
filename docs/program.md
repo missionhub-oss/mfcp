@@ -5,6 +5,9 @@
 
 Mission Forge Contributor Program（MFCP）面向希望参与真实开源项目的学习者与开发者，实践方向包括 Zephyr、Linux、Yocto 和 Humanize。
 
+Linux 方向包含 openRuyi 的软件包维护、系统验证与文档贡献，资料和上游入口见
+[Linux 项目说明](../projects/linux/README.md#openruyi-实践)。
+
 ## 参与流程
 
 1. 按[参与者注册说明](../participants/README.md) Fork 仓库，以本人真实姓名的英文全称签署 DCO，中文姓名使用完整拼音；通常将姓名各部分的首字母大写，也可以将姓氏全部大写。提交本人身份文件的 PR，经过审核合并后，阅读项目资料与当期公告，选择实践方向。

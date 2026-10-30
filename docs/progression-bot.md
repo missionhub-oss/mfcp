@@ -153,9 +153,10 @@ family name is also acceptable. The author's sign-off name and email
 must match the commit author.
 The mentor signature must belong to the mentor who accepted the
 latest validation stage. Each upstream PR receives credit once among active settlements.
-The active 2026.v3 rules accept GitHub PRs from the repositories listed in the
+The active 2026.v4 rules accept GitHub PRs from the repositories listed in the
 [annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
-`humanfia/humanize`. Humanize tasks use the `project/humanize` label. Task
+`humanfia/humanize`, `openRuyi-Project/openRuyi` and `openRuyi-Project/homepage`.
+Humanize tasks use `project/humanize`; openRuyi tasks use `project/linux`. Task
 settlement verifies the repository against the immutable rule version recorded
 at first acceptance, along with the author and mentor DCO evidence.
 

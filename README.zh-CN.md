@@ -88,8 +88,8 @@ Signed-off-by: Your Real Full Name <your-email@example.com>
     </td>
     <td width="50%" valign="middle">
       <h3><a href="projects/linux/README.md">Linux</a></h3>
-      <p><strong>通过实践理解内核。</strong></p>
-      <p>分析实际问题，参与驱动开发，完善测试与文档，并按照内核社区的流程参与评审。</p>
+      <p><strong>参与内核与发行版开发。</strong></p>
+      <p>分析内核问题，参与驱动开发，完善测试与文档。Linux 方向同时支持 openRuyi 软件包维护和 RISC-V 系统验证。</p>
       <p><a href="projects/linux/README.md">探索 Linux →</a></p>
     </td>
   </tr>

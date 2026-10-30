@@ -25,3 +25,7 @@
 
 Humanize 的项目标识为 `humanize`，标签为 `project/humanize`，2026 年上游目标为
 `humanfia/humanize`，由 `2026.v3` 规则定义。
+
+归入已有方向的上游项目沿用该方向的表单选项、项目标签和页面卡片，并补充资料与
+年度仓库规则。openRuyi 归入 Linux，沿用 `project/linux`；`2026.v4` 接受
+`openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。

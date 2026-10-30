@@ -3,7 +3,7 @@
 项目方向：
 
 - [Zephyr](../../projects/zephyr/README.md)
-- [Linux](../../projects/linux/README.md)
+- [Linux](../../projects/linux/README.md)：内核贡献，以及 openRuyi 软件包维护、系统验证与文档。
 - [Yocto](../../projects/yocto/README.md)
 - [Humanize](../../projects/humanize/README.md)
 
@@ -11,4 +11,7 @@
 
 参与流程见[参与规则](../../docs/program.md)，任务提议按[贡献指南](../../CONTRIBUTING.md)提交。
 
-贡献者晋级采用 [2026 年晋级规则](progression.md)，自动化使用 [v3 规则](rules/v3.json)。Humanize 任务使用 `project/humanize` 标签，上游目标为 `humanfia/humanize`。维护操作见 [Bot 操作说明](../../docs/progression-bot.md)。
+贡献者晋级采用 [2026 年晋级规则](progression.md)，自动化使用 [v4 规则](rules/v4.json)。
+openRuyi 任务使用 `project/linux` 标签，上游目标为 `openRuyi-Project/openRuyi`
+和 `openRuyi-Project/homepage`。Humanize 任务使用 `project/humanize` 标签，
+上游目标为 `humanfia/humanize`。维护操作见 [Bot 操作说明](../../docs/progression-bot.md)。

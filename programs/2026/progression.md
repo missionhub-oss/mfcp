@@ -3,8 +3,8 @@
 
 # 2026 年贡献者晋级规则
 
-当前规则版本为 `2026.v3`，机器读取的数量与积分条件保存在
-[rules/v3.json](rules/v3.json)。`2026.v1` 和 `2026.v2` 保留用于已记录的任务合同和晋级记录。
+当前规则版本为 `2026.v4`，机器读取的数量与积分条件保存在
+[rules/v4.json](rules/v4.json)。`2026.v1`、`2026.v2` 和 `2026.v3` 保留用于已记录的任务合同和晋级记录。
 每条晋级记录保存规则版本及文件 SHA。
 
 任务通过 `2026` 标签选择本年度规则，通过 `difficulty/level0` 至
@@ -13,20 +13,23 @@ Mentor 指定、阶段验收和经验结算使用 [Bot 简短命令](../../docs/
 
 ## 实践项目与上游仓库
 
-2026.v3 支持 Zephyr、Linux、Yocto 和 Humanize 四个实践方向。任务成果需要合入
+2026.v4 支持 Zephyr、Linux、Yocto 和 Humanize 四个实践方向。任务成果需要合入
 下列 GitHub 仓库之一；结算时按任务接受时生效的规则版本核对仓库。
 
 | 项目 | 上游仓库 |
 | --- | --- |
 | Zephyr | `zephyrproject-rtos/zephyr` |
-| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs` |
+| Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs`、`openRuyi-Project/openRuyi`、`openRuyi-Project/homepage` |
 | Yocto | `yoctoproject/poky`、`openembedded/openembedded-core`、`openembedded/meta-openembedded` |
 | Humanize | `humanfia/humanize` |
 
-Humanize 任务使用原生 Type `Task`、`project/humanize`、`2026` 和已确认的难度标签。
-首次验收按命令发生时间选择生效规则；`2026.v3` 自北京时间 2026 年 10 月 30 日
-08:01:24 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
-Humanize 上游 PR 同样需要合入默认分支，并包含可核实的作者及验收导师 DCO。
+openRuyi 的软件包维护、系统验证和文档任务归入 Linux，使用原生 Type `Task`、
+`project/linux`、`2026` 和已确认的难度标签。其上游目标分别为
+`openRuyi-Project/openRuyi` 和 `openRuyi-Project/homepage`。
+Humanize 任务使用 `project/humanize` 标签。
+首次验收按命令发生时间选择生效规则；`2026.v4` 自北京时间 2026 年 10 月 30 日
+14:29:33 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
+上游 PR 需要合入默认分支，并包含可核实的作者及验收导师 DCO。
 
 ELISA 仓库当前归入 Linux 方向。Linux 内核和部分 Yocto 仓库采用邮件补丁
 流程；`upstream_acceptance` 仍为 `github_pr`，这些流程的结算方式在后续
