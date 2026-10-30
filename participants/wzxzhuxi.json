@@ -3,8 +3,81 @@
   "github_login": "wzxzhuxi",
   "schema_version": 1,
   "level": 1,
-  "experience": 0,
-  "contributions": [],
+  "experience": 30,
+  "contributions": [
+    {
+      "id": "task-72",
+      "issue": 72,
+      "participant_id": 156671260,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v5",
+        "sha": "952c6f3fc504f5743e7a03555893a4cb1c6ca9e8"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 72,
+          "comment": 6527447568
+        },
+        "actor": 62325246,
+        "at": "2026-10-30T16:09:43Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6527555428",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 72,
+              "comment": 6527555428
+            },
+            "actor": 62325246,
+            "at": "2026-10-30T16:14:42Z",
+            "digest": "98dfc8b780f5e88f2c850bb0caa555bc9d391cc5198d897a40834180c8bf9b1f",
+            "details": "{\"pull_requests\":[\"https://github.com/sashiko-dev/sashiko/pull/786\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "sashiko-dev/sashiko",
+              "number": 786,
+              "author": 156671260,
+              "merge_commit": "6155d6e9f0106c8b8e35ba65e6782232bc29ce4a",
+              "merged_at": "2026-10-30T15:26:39Z",
+              "commits": [
+                "2c097ae55bf63a8c007f66d82f7106be364b90ef",
+                "ff294f1ae0d938bd6683ec88fe113147ab9f06b6"
+              ],
+              "url": "https://github.com/sashiko-dev/sashiko/pull/786"
+            }
+          ],
+          "points": 30
+        }
+      ],
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 72,
+              "comment": 6527447568
+            },
+            "actor": 62325246,
+            "at": "2026-10-30T16:09:43Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ]
+    }
+  ],
   "promotions": [
     {
       "id": "registration-65",
@@ -31,8 +104,9 @@
   ],
   "adjustments": [],
   "last_event": {
-    "kind": "registration",
-    "pr": 65
+    "kind": "comment",
+    "issue": 72,
+    "comment": 6527555428
   },
-  "updated_at": "2026-10-26T08:15:18Z"
+  "updated_at": "2026-10-30T16:14:42Z"
 }
