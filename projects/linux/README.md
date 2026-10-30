@@ -10,6 +10,13 @@ Linux 方向包括内核贡献和 openRuyi 发行版实践，覆盖设备驱动�
 - [openRuyi 官网](https://www.openruyi.cn/)与[文档中心](https://www.openruyi.cn/docs/)
 - [openRuyi 软件包仓库](https://github.com/openRuyi-Project/openRuyi)
 - [openRuyi 文档仓库](https://github.com/openRuyi-Project/homepage)
+- [Sashiko 内核评审工具与资料](https://github.com/sashiko-dev/sashiko)
+
+## Sashiko 实践
+
+Sashiko 的 Linux 内核评审策略、维护者资料和工具改进归入 Linux 方向，使用
+`project/linux`。2026 年自 `2026.v5` 起接受 `sashiko-dev/sashiko` 默认分支
+合入 PR。贡献须遵循上游规范，提供实际验证记录和作者、导师的 DCO。
 
 ## openRuyi 实践
 
@@ -31,7 +38,7 @@ QEMU、固件、内核和系统镜像版本、完整启动参数及日志。
 
 软件包修改提交到 `openRuyi-Project/openRuyi`，指南和测试文档提交到
 `openRuyi-Project/homepage`。2026 年自 `2026.v4` 起接受这两个仓库的
-默认分支合入 PR；首次验收及后续结算按[年度规则](../../programs/2026/progression.md)执行。
+默认分支合入 PR；首次结算及后续操作按[年度规则](../../programs/2026/progression.md)执行。
 
 ## 实践记录
 

@@ -91,22 +91,20 @@ immutable command as authorization evidence. Multiple mentors can be added
 through separate commands. Numeric GitHub IDs identify unique mentors, so
 repeated commands preserve the original evidence and other mentors while
 refreshing registered details. An identical body skips the issue update.
-Acceptance and settlement verify every displayed mentor against their command,
+Settlement verifies every displayed mentor against their command,
 resolve the contributor from the single Assignee and require independent mentors.
 
 Reprocessing the original configuration command, including scheduled
 reconciliation, fills in or refreshes its DCO from the registered metadata.
 Existing account-only mentor sections remain valid authorization evidence.
-Sections that display DCO must match the registered signatures during acceptance
-and settlement. Publishing uses the same verified signatures as the proposal
+Sections that display DCO must match the registered signatures during
+settlement. Publishing uses the same verified signatures as the proposal
 and preserves edits to other issue fields made while validation runs.
 
 | Command after `@mfcp-progress` | Authorization |
 | --- | --- |
 | `configure assignee @username` | Active Mentor Team member; target must be registered and participating in this issue |
 | `configure mentor @username` | Annual maintainer and active Mentor Team member |
-| `accept reproduction evidence-url ...` | Any configured independent active mentor |
-| `accept validation evidence-url ...` | Any configured independent active mentor, after reproduction acceptance |
 | `settle upstream-pr-url ...` | Annual maintainer and active Mentor Team member |
 | `endorse @candidate L3` or `endorse @candidate L4` | Independent Mentor Team member |
 | `interview @candidate L3 evidence-url` | Independent annual interviewer and Mentor Team member |
@@ -122,7 +120,7 @@ this repository. Edited command comments are rejected. Quoted or fenced
 examples do not execute. Links use HTTPS and may include comment anchors.
 
 See [完整命令示例](bot-command-examples.md) for copyable comment templates,
-native task assignment, acceptance, settlement and L3/L4 review examples.
+native task assignment, settlement and L3/L4 review examples.
 
 The bot adds 👀 to the original command while processing or awaiting conditions.
 Completed operations replace it with 👍. Failures remove the processing reaction
@@ -139,43 +137,48 @@ Moderation identifies trusted feedback by App ID, or by the configured numeric
 bot user ID when GitHub omits App metadata. An explicitly different App ID is
 rejected. Other bots remain subject to registration checks.
 
-Accept reproduction before validation. After validation and upstream merge,
-post `settle` with the upstream PR URLs and close the issue as completed.
-An open issue keeps the settlement command as evidence without awarding XP.
-A maintainer must
-close the issue for automatic close-event settlement; a maintainer can also
-post a new settlement command after closure. Every upstream commit must be
+After reviewing the deliverables and upstream merge, a maintainer posts
+`settle` with the upstream PR URLs. This command validates the evidence and
+records experience directly. After the validated record is published, the
+bot closes the issue as Completed. A task already closed as Completed can
+use the same command. A close event can retry an existing authorized settlement
+command; PR evidence must be supplied through `settle`.
+Every upstream commit must be
 attributed to the participant and include the author's and authorized mentor's
 DCO sign-offs. Human authors and mentors must sign with their own real full
 names in English. For a Chinese name, use the full Pinyin spelling of the real
 name. Normally capitalize the first letter of each name part; an uppercase
 family name is also acceptable. The author's sign-off name and email
 must match the commit author.
-The mentor signature must belong to the mentor who accepted the
-latest validation stage. Each upstream PR receives credit once among active settlements.
-The active 2026.v4 rules accept GitHub PRs from the repositories listed in the
+All patch commits must share a DCO signature from a configured, independent,
+active mentor whose authorization predates the settlement command. The selected
+mentor ID is stored with the settlement. Each upstream PR receives credit once
+among active settlements. The active 2026.v5 rules accept GitHub PRs from the repositories listed in the
 [annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
-`humanfia/humanize`, `openRuyi-Project/openRuyi` and `openRuyi-Project/homepage`.
-Humanize tasks use `project/humanize`; openRuyi tasks use `project/linux`. Task
+`humanfia/humanize`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`
+and `sashiko-dev/sashiko`. Humanize tasks use `project/humanize`;
+openRuyi and Sashiko tasks use `project/linux`. Task
 settlement verifies the repository against the immutable rule version recorded
-at first acceptance, along with the author and mentor DCO evidence.
+in the task contract, along with the author and mentor DCO evidence.
 
-First reproduction acceptance records the native Assignee, mentor command
-proofs, difficulty and annual rule version in the contributor JSON. The
+First settlement records the native Assignee, mentor command proofs,
+difficulty and the rule version effective at the command timestamp. The
 `mentors` array stores each unique mentor ID and authorization proof. Existing
 records without that array use their original `mentor_id` and `configuration`.
-The original fields remain unchanged, and further stage acceptance records
-additional authorized mentors. Any configured independent mentor may accept a
-stage after their configuration command. Acceptance and settlement revalidate
-all recorded authorizations and current Team membership.
-Acceptance and settlement require these issue fields to remain consistent with
+Existing contracts retain their original policy, authorizations and stage history.
+Settlement revalidates all recorded authorizations and current Team membership.
+Settlement requires these issue fields to remain consistent with
 the recorded task. Label or Assignee edits do not rewrite contribution history.
 Correct accidental changes before continuing; use a separate issue for a new
 independent assignment or delivery scope.
 
 Reopening a credited task creates a reversal PR. Experience is deducted only
-when the PR merges. A fresh mentor validation after the reversal merge is
-required before another settlement. L3/L4 promotions and all changes for
+when the PR merges. A new settlement command after the reversal merge is
+required before another settlement. Commands older than a reopen event cannot
+settle or automatically close the reopened task. Pending reversals block settlement.
+If automatic closure fails after publication, reconciliation retries closure
+against the recorded settlement without awarding points again.
+L3/L4 promotions and all changes for
 contributors already at L3/L4 use reviewed PRs. Reviews must approve the
 current PR revision, come from authorized people, and be independent of the
 participant. The bot enables auto-merge after these conditions pass.
@@ -188,7 +191,9 @@ participant. The bot enables auto-merge after these conditions pass.
 - `Automatic progression checks`: validates candidate commits before main
   can advance. All three required check names run under GitHub Actions.
 - `Contributor progression`: serializes writes and reconciles every ten minutes.
-- `Contributor notifications`: serializes congratulations and retries hourly.
+- `Contributor notifications`: serializes congratulations after record updates
+  and issue closure, and retries hourly. Task completion is announced before a
+  related L2 promotion, with separate notification keys preventing duplicates.
 - `MFCP website`: validates records, tests, builds and deploys the bilingual
   GitHub Pages website after every push to `main`, including published level
   and contribution updates. See [website behavior](website.md).

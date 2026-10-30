@@ -97,7 +97,7 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 1. 在开放的 Issue 中选择原生 Type 为 `Task` 的任务，再按项目和 `difficulty/level0` 至 `difficulty/level4` 标签筛选，阅读任务正文、Assignees 和最新讨论，确认导师已说明可以申领。难度依据见[任务难度](docs/levels.md#任务难度)。
 2. 在原任务下发表评论，介绍相关经验、可参与时间、开发条件和对任务的理解。
 3. 导师在评论中确认任务范围、验收条件、指导安排和约定目标；维护者设置一个 `difficulty/level0` 至 `difficulty/level4` 难度标签，以及一个四位数字年度标签，例如 `2026`。
-4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配。使用 `@mfcp-progress configure mentor @导师用户名` 独立指定 Mentor，Bot 更新 Issue 的导师区域；首次验收时读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
+4. 维护者将参与者的 GitHub 账号设置为唯一 Assignee，即完成任务分配。使用 `@mfcp-progress configure mentor @导师用户名` 独立指定 Mentor，Bot 更新 Issue 的导师区域；首次结算时读取 Assignee 和标签，保存任务记录。完整操作见 [Bot 命令示例](docs/bot-command-examples.md)。
 
 申领通过 Issue 评论与 Assignee 完成。实际代码或文档修改通过对应仓库的 Pull Request 或上游规定的补丁流程提交。
 
@@ -130,7 +130,7 @@ Mentor 没有设置 Assignee 的仓库权限时，可以发表
 
 提交公开记录前，检查其中的个人信息、访问凭据和内部资料。薪酬协议及个人联系方式通过组织者指定的私有渠道处理。
 
-进展更新、成果提交、导师评估与组织者复核均记录在原任务评论中，使用[任务评论模板](docs/task-comments.md)。维护者在任务正文维护最新进展和评估评论链接。阶段评估通过后继续执行任务，最终验收与组织者复核通过后关闭任务。
+进展更新、成果提交、导师评估与组织者复核均记录在原任务评论中，使用[任务评论模板](docs/task-comments.md)。维护者在任务正文维护最新进展和评估评论链接。成果审核并合入上游后，维护者发送 `@mfcp-progress settle <上游 PR 链接>`，Bot 校验、结算并自动关闭任务，再回复贡献者的完成祝贺；同时晋级时另发晋级祝贺。
 
 ## 更新培养记录
 

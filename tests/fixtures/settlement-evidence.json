@@ -1,0 +1,112 @@
+{
+  "source": "https://github.com/sashiko-dev/sashiko/pull/786",
+  "issue_source": "https://github.com/missionhub-oss/mfcp/issues/72",
+  "issue": {
+    "number": 72,
+    "state": "open",
+    "state_reason": null,
+    "type": {
+      "id": 912549159,
+      "node_id": "IT_kwDOFJxNys42ZGUn",
+      "name": "Task",
+      "description": "A specific piece of work",
+      "color": "yellow",
+      "created_at": "2026-10-21T11:12:04Z",
+      "updated_at": "2026-10-21T11:12:04Z",
+      "is_enabled": true
+    },
+    "labels": [
+      {
+        "name": "project/linux"
+      },
+      {
+        "name": "difficulty/level2"
+      },
+      {
+        "name": "2026"
+      }
+    ],
+    "assignees": [
+      {
+        "id": 156671260,
+        "login": "wzxzhuxi",
+        "type": "User"
+      }
+    ]
+  },
+  "profile": {
+    "github_id": 156671260,
+    "github_login": "wzxzhuxi",
+    "schema_version": 1,
+    "level": 1,
+    "experience": 0,
+    "contributions": [],
+    "promotions": [
+      {
+        "id": "registration-65",
+        "from": 0,
+        "to": 1,
+        "policy": {
+          "id": "2026.v2",
+          "sha": "67501ff31a14a5510d1632013f187e9374143b33"
+        },
+        "proof": {
+          "source": {
+            "kind": "registration",
+            "pr": 65
+          },
+          "actor": 156671260,
+          "at": "2026-10-26T08:15:18Z",
+          "digest": "c811a9ff208c6a8c81417f47a4004746e4ac946ff6660539c3a0287edfb36273",
+          "details": "{\"registration_pr\":\"https://github.com/processmission-intern/mission-forge/pull/65\",\"merge_commit\":\"68a2cf51bee7d4361b514b9e99f5a7648e58becf\"}"
+        },
+        "reason": "Identity registration PR merged.",
+        "evidence": [],
+        "review_pr": null
+      }
+    ],
+    "adjustments": [],
+    "last_event": {
+      "kind": "registration",
+      "pr": 65
+    },
+    "updated_at": "2026-10-26T08:15:18Z"
+  },
+  "command_source": {
+    "kind": "comment",
+    "issue": 72,
+    "comment": 6526778679
+  },
+  "commits": [
+    {
+      "sha": "2c097ae55bf63a8c007f66d82f7106be364b90ef",
+      "author": {
+        "id": 156671260,
+        "login": "wzxzhuxi"
+      },
+      "commit": {
+        "author": {
+          "name": "Zixin Wang",
+          "email": "w1355457260@gmail.com",
+          "date": "2026-10-29T02:16:16Z"
+        },
+        "message": "prompts: linux: add Chinese documentation maintainer notes\n\nAdd a maintainer note for patches that touch\nDocumentation/translations/zh_CN/. It records the translation policy\nthat cannot be derived from the source: translation-only scope, the\nEnglish source and tracking fields, the commit reference that\nchecktransupdate follows, line and heading width, RST labels and\nbuilds, checkpatch and the mail flow, and the boundary between\ntranslation defects worth reporting and wording preferences that are\nnot.\n\nThe note is selected by the zh_CN directory prefix, with one rule per\nbullet as the maintainer guide asks. No Rust code, code notes\nprofile, or mailing list configuration changes.\n\nSigned-off-by: Zixin Wang <w1355457260@gmail.com>\nSigned-off-by: Chao Liu <chao.liu@processmission.com>"
+      }
+    },
+    {
+      "sha": "ff294f1ae0d938bd6683ec88fe113147ab9f06b6",
+      "author": {
+        "id": 156671260,
+        "login": "wzxzhuxi"
+      },
+      "commit": {
+        "author": {
+          "name": "Zixin Wang",
+          "email": "w1355457260@gmail.com",
+          "date": "2026-10-30T08:41:01Z"
+        },
+        "message": "prompts: linux: scope zh_CN note rules to observable evidence\n\nScope the commit-message and header rules to the applicable commit\ntype, make the proofreader field optional, and state the line-width\nlimit in Chinese characters rather than raw characters.\n\nReplace requirements that depend on unobservable contributor steps\n(build logs, Documentation/output inspection, checkpatch, mail\ndelivery, mailing-list concurrency) with reporting only issues\nvisible in the patch, and allow single-file translations.\n\nSigned-off-by: Zixin Wang <w1355457260@gmail.com>\nSigned-off-by: Chao Liu <chao.liu@processmission.com>"
+      }
+    }
+  ]
+}

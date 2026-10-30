@@ -78,7 +78,7 @@ export function parseCommand(body, slug) {
         data = {...candidate, mentor_comment: args[3], recommendations: args.slice(5)};
       }
     }
-  } else throw new Error('Supported commands: configure, accept, settle, endorse, interview, recommend, promote.');
+  } else throw new Error('Supported commands: configure, settle, endorse, interview, recommend, promote.');
   return {action, data: schemas[action].parse(data)};
 }
 

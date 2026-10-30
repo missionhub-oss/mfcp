@@ -15,9 +15,9 @@ export function notificationsFor(profile) {
       kind: 'completion', issue: task.issue,
       key: digest({participant: p.github_id, kind: 'completion', record: settlement.id}),
       body: `🎉 Congratulations, ${mention}! You've completed this task and your contribution has been accepted!\n\n` +
-        `From working through the problem to getting your changes merged upstream, you've made a real contribution. Thank you for seeing it through!\n\n` +
+        `You turned this task into an upstream contribution that others can build on. Excellent work seeing it through review and merge — thank you for the care and persistence you brought to it!\n\n` +
         `**Experience earned: +${settlement.points} XP** · **Task difficulty: L${task.difficulty}**\n\n` +
-        'Keep learning, keep contributing — we look forward to your next contribution!',
+        'This is how an open-source contributor grows: one real contribution at a time. Keep going — we look forward to what you build next!',
     });
   }
   for (const promotion of p.promotions) {
@@ -29,9 +29,10 @@ export function notificationsFor(profile) {
       : 'Your contributions and growth have earned you this new level. Thank you for the care and effort you bring to the community!';
     messages.push({
       kind: 'promotion', issue,
+      afterCompletion: promotion.to === 2 && source.kind !== 'registration',
       key: digest({participant: p.github_id, kind: 'promotion', record: promotion.id}),
       body: `🚀 Congratulations, ${mention}! You've advanced from **L${promotion.from} to L${promotion.to}**!\n\n` +
-        `${welcome}\n\nYour promotion is now recorded in your contributor profile. Keep exploring and sharing what you learn!`,
+        `${welcome}\n\nYour promotion is now recorded in your contributor profile. Well earned — keep exploring, sharing what you learn, and helping the community move forward!`,
     });
   }
   return messages;
@@ -45,12 +46,18 @@ export async function deliverNotifications(client, profiles, {appId, slug, write
   }
   const results = [];
   const commentsByIssue = new Map();
+  const pendingCompletions = new Set();
   for (const {profile} of profiles) {
     for (const message of notificationsFor(profile)) {
       try {
-        if (message.kind === 'completion') {
+        if (message.afterCompletion && pendingCompletions.has(message.issue)) {
+          results.push({kind: message.kind, issue: message.issue, status: 'completion-notice-pending'});
+          continue;
+        }
+        if (message.kind === 'completion' || message.afterCompletion) {
           const issue = await client.request(`${client.root}/issues/${message.issue}`);
           if (!isTaskIssue(issue) || issue.state !== 'closed' || issue.state_reason !== 'completed') {
+            if (message.kind === 'completion') pendingCompletions.add(message.issue);
             results.push({kind: message.kind, issue: message.issue, status: 'task-not-completed'});
             continue;
           }
@@ -76,6 +83,7 @@ export async function deliverNotifications(client, profiles, {appId, slug, write
         comments.push(comment);
         results.push({kind: message.kind, issue: message.issue, status: 'notified', url: comment.html_url});
       } catch (error) {
+        if (message.kind === 'completion') pendingCompletions.add(message.issue);
         results.push({kind: message.kind, issue: message.issue, status: 'failed', reason: error.message});
       }
     }

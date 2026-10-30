@@ -14,6 +14,7 @@ import {updateMentorSection, readMentorCommands} from './lib/mentor-section.mjs'
 import {formatSignoff, validateCommitMessage} from './lib/commit-policy.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
 import {isTaskIssue, TASK_ISSUE_TYPE} from './lib/issue-types.mjs';
+import {completeSettledTask} from './lib/task-completion.mjs';
 
 const CHECKS = ['JSON format and fields', 'validate', 'Progression integrity'];
 const botLogin = () => `${process.env.MFCP_APP_SLUG}[bot]`;
@@ -176,6 +177,10 @@ export async function processSource(client, source, {write = false} = {}) {
   }
   catch (error) {failure = error;}
   const commandSource = source.kind === 'comment' ? source : result?.commandSource;
+  if (write && !failure && commandSource && ['published', 'unchanged', 'already-merged'].includes(result.status)) {
+    try {result.completion = await completeSettledTask(client, commandSource, process.env.MFCP_APP_SLUG);}
+    catch (error) {failure = error;}
+  }
   if (write && commandSource) {
     try {
       const reply = await replyToCommand(client, commandSource, result, failure);

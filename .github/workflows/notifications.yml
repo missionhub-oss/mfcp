@@ -1,5 +1,7 @@
 name: Contributor notifications
 on:
+  issues:
+    types: [closed]
   push:
     branches: [main]
     paths:
