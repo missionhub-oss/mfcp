@@ -5,10 +5,10 @@ require 'open3'
 require 'optparse'
 require 'fileutils'
 
-REPO = 'processmission-intern/mission-forge'.freeze
+REPO = 'missionhub-oss/mfcp'.freeze
 REPO_ID = 1428030862
 TEMPLATES = %w[01-task.yml 02-bug.yml 03-improvement.yml 04-question.yml].freeze
-PROJECT_LABELS = {'Zephyr' => 'project/zephyr', 'Linux' => 'project/linux', 'Yocto Project' => 'project/yocto'}.freeze
+PROJECT_LABELS = {'Zephyr' => 'project/zephyr', 'Linux' => 'project/linux', 'Yocto Project' => 'project/yocto', 'Humanize' => 'project/humanize'}.freeze
 
 def api(path)
   output, error, status = Open3.capture3('gh', 'api', path)

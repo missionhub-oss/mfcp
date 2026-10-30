@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 # SPDX-License-Identifier: MIT
 name: mfcp-create-issue
-description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再按当前表单设置正文和标签，为实践任务设置原生 Task 类型。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
+description: 为 missionhub-oss/mfcp 创建或起草 GitHub Issue，先确认任务难度、年度及关键参数，再按当前表单设置正文和标签，为实践任务设置原生 Task 类型。用户要求向 MFCP 发布任务、报告问题或提出建议时使用。
 ---
 
 # MFCP Issue 创建
 
-目标仓库为 `processmission-intern/mission-forge`，仓库数字 ID 为 `1428030862`。使用远端默认分支的当前表单与规则；所有字段由真实资料支持。技能保存在本仓库，不安装全局副本。
+目标仓库为 `missionhub-oss/mfcp`，仓库数字 ID 为 `1428030862`。使用远端默认分支的当前表单与规则；所有字段由真实资料支持。技能保存在本仓库，不安装全局副本。
 
 ## 选择入口
 
@@ -30,7 +30,7 @@ description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issu
 
 | 信息 | 需要确认的内容 |
 | --- | --- |
-| 项目与问题 | Zephyr、Linux 或 Yocto；真实问题、上游链接及任务范围 |
+| 项目与问题 | Zephyr、Linux、Yocto 或 Humanize；真实问题、上游链接及任务范围 |
 | 难度 | L0–L4、难度依据，以及是否还需要导师评定 |
 | 年度 | 明确的四位数字年份；是否已有对应规则和标签 |
 | 交付与验收 | 预期成果、验证方法、是否要求上游合入，以及作者和导师使用本人真实姓名签署 DCO 的条件 |
@@ -49,6 +49,10 @@ description: 为 processmission-intern/mission-forge 创建或起草 GitHub Issu
 作者的签署姓名和邮箱须与 commit Author 一致。具体签署行以本人确认的
 真实姓名与邮箱，或年度 `governance.json` 中已登记的导师签署资料为依据。
 `github_login` 和命令中的账号参数填写 GitHub 用户名。
+
+涉及上游合入和经验结算时，核对所选年度生效规则的 `upstream_repositories`。
+Humanize 使用 `project/humanize` 标签；2026 年的 `2026.v3` 规则接受
+`humanfia/humanize` 的 PR。已有任务按首次验收时记录的规则版本核对上游仓库。
 
 ## 读取与准备
 
@@ -84,6 +88,6 @@ ruby <skill-dir>/scripts/prepare.rb --template 01-task.yml --answers <draft-dir>
 1. 审阅 `body.md`：字段顺序与表单一致，标题具体，事实有依据，公开内容不含凭据、私人联系方式或薪酬协议。脚本的格式校验不能代替事实核对。
 2. 发布前重新核对北京时间的当前年份，拒绝所选年度已经早于当前年份的草稿；检查当前默认分支的表单和标签目录与 `source.json` 记录的版本是否一致，并核对所选年度规则及远端标签仍存在。若内容改变，重新准备草稿并检查新增必填条件；其他无关文件的更新无需重新准备。
 3. 再次查询近期相关 Issue。存在等价记录时向用户返回该记录，保留当前草稿；用户明确要求独立事项时按其范围处理。
-4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `processmission-intern/mission-forge`，传入 `issue.json` 的标题、正文、标签及用户明确指定的 Assignee。使用 CLI 时执行 `gh api repos/processmission-intern/mission-forge/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
+4. 优先调用 GitHub 创建 Issue 工具，目标固定为 `missionhub-oss/mfcp`，传入 `issue.json` 的标题、正文、标签及用户明确指定的 Assignee。使用 CLI 时执行 `gh api repos/missionhub-oss/mfcp/issues --method POST --input <draft-dir>/prepared/issue.json`。API 不会替调用者执行网页表单必填检查，因此必须先通过准备脚本。
 5. 创建请求超时或返回结果不明时，先查询当前用户近期创建的 Issue，核对标题和完整正文。找到匹配项就读取并返回它；结果仍不明时停止自动重试，说明状态与草稿位置，避免重复发布。
 6. 创建成功后读取该 Issue，核对目标仓库、标题、正文、原生 `type.name`、项目、难度、年度标签和 Assignee，返回真实链接。实践任务须确认 `type.name` 为 `Task`；GitHub 可能忽略权限不足的类型设置，应由有权限的维护者补设，类型设置完成后自动构建页面。读取不一致时说明具体差异，再按原授权修正；无法设置的字段如实报告，不重复创建 Issue。验证本技能时使用只读查询和本地草稿，保持远端 Issue 列表不变。

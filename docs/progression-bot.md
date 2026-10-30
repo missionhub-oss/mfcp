@@ -14,7 +14,7 @@ repository and approve the organization's permission update.
 ## Mentor authorization
 
 Mentor eligibility comes from the active membership of
-[processmission-intern/mentors](https://github.com/orgs/processmission-intern/teams/mentors).
+[missionhub-oss/mentors](https://github.com/orgs/missionhub-oss/teams/mentors).
 The bot verifies organization ID `345787850`, Team ID `20231868`, the comment
 author's numeric GitHub ID, and active membership for every command. GitHub
 includes child-team members in this membership lookup. Pending invitations and
@@ -153,7 +153,11 @@ family name is also acceptable. The author's sign-off name and email
 must match the commit author.
 The mentor signature must belong to the mentor who accepted the
 latest validation stage. Each upstream PR receives credit once among active settlements.
-The 2026 rules currently accept GitHub PRs in `zephyrproject-rtos/zephyr`.
+The active 2026.v3 rules accept GitHub PRs from the repositories listed in the
+[annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
+`humanfia/humanize`. Humanize tasks use the `project/humanize` label. Task
+settlement verifies the repository against the immutable rule version recorded
+at first acceptance, along with the author and mentor DCO evidence.
 
 First reproduction acceptance records the native Assignee, mentor command
 proofs, difficulty and annual rule version in the contributor JSON. The

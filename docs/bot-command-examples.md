@@ -8,7 +8,7 @@
 将尖括号中的内容替换为真实 HTTPS 链接，并去掉尖括号；评估说明也需要
 替换成实际结论。以下模板说明格式，实际验收和通过评估后再发表。
 
-命令作者必须是 [Mentors Team](https://github.com/orgs/processmission-intern/teams/mentors)
+命令作者必须是 [Mentors Team](https://github.com/orgs/missionhub-oss/teams/mentors)
 的有效成员，并满足各项操作的职责要求。
 权限和运行方式见 [Bot 操作说明](progression-bot.md)。
 

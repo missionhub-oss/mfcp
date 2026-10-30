@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Register through a merged PR first: https://github.com/processmission/mission-forge/blob/main/participants/README.md
+        Register through a merged PR first: https://github.com/missionhub-oss/mfcp/blob/main/participants/README.md
         请先完成注册 PR 并等待合并，未注册账号的 Issue 会自动关闭。
         Please search existing issues first. Use the task proposal form for a new practice task.
         请先搜索已有 Issue。新的实践任务请使用任务提议表单。

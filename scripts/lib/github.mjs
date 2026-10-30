@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
 export const REPOSITORY_ID = 1428030862;
-export const DEFAULT_REPOSITORY = 'processmission-intern/mission-forge';
+export const DEFAULT_REPOSITORY = 'missionhub-oss/mfcp';
 
 export function createClient(token, repository = DEFAULT_REPOSITORY) {
   if (!/^[\w.-]+\/[\w.-]+$/.test(repository)) throw new Error('Invalid repository name.');

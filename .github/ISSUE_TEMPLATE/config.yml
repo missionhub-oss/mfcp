@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: Register through a PR / 通过 PR 注册
-    url: https://github.com/processmission/mission-forge/blob/main/participants/README.md
+    url: https://github.com/missionhub-oss/mfcp/blob/main/participants/README.md
     about: Fork and register before creating or commenting on issues / 创建 Issue 或评论前先 Fork 并注册
   - name: Participation guide / 参与规则
-    url: https://github.com/processmission/mission-forge/blob/main/docs/program.md
+    url: https://github.com/missionhub-oss/mfcp/blob/main/docs/program.md
     about: Learn how to join MFCP / 了解如何参与 MFCP
   - name: Claim a task / 申领任务
-    url: https://github.com/processmission/mission-forge/blob/main/CONTRIBUTING.md#申领任务
+    url: https://github.com/missionhub-oss/mfcp/blob/main/CONTRIBUTING.md#申领任务
     about: Apply in the existing task's comments / 在原任务评论中申请参与

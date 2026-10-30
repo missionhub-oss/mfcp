@@ -77,9 +77,9 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 
 ## 提出任务
 
-通过[新建 Issue](https://github.com/processmission-intern/mission-forge/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
+通过[新建 Issue](https://github.com/missionhub-oss/mfcp/issues/new/choose) 选择实践任务提议、问题报告、改进建议或参与求助表单。提出实践任务时填写以下信息：
 
-- 项目方向：Zephyr、Linux 或 Yocto。
+- 项目方向：Zephyr、Linux、Yocto 或 Humanize。
 - 问题背景：实际需求、已有问题链接和相关技术资料。
 - 任务目标：需要实现的行为、涉及的范围和交付内容。
 - 实践条件：所需知识、设备、开发环境和上游版本。
@@ -135,3 +135,5 @@ Mentor 没有设置 Assignee 的仓库权限时，可以发表
 ## 更新培养记录
 
 项目长期资料放入 `projects/<project>/`，每期安排与成果放入 `programs/<year>/`。每期记录引用项目资料，标注评估日期和贡献当时的状态。
+
+新增贡献项目时，按[项目接入清单](docs/project-setup.md)同步维护项目资料、页面入口、任务表单、标签、创建技能及年度上游仓库规则。

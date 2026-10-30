@@ -3,7 +3,7 @@
 
 # 参与规则
 
-Mission Forge Contributor Program（MFCP）面向希望参与真实开源项目的学习者与开发者，实践方向包括 Zephyr、Linux 和 Yocto。
+Mission Forge Contributor Program（MFCP）面向希望参与真实开源项目的学习者与开发者，实践方向包括 Zephyr、Linux、Yocto 和 Humanize。
 
 ## 参与流程
 

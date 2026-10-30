@@ -91,5 +91,5 @@ export const projects = [
   {id: 'zephyr', name: 'Zephyr'},
   {id: 'linux', name: 'Linux'},
   {id: 'yocto', name: 'Yocto Project'},
-  {id: 'humanize', name: 'Humanize', url: 'https://humanfia.ai/projects/humanize'},
+  {id: 'humanize', name: 'Humanize'},
 ];

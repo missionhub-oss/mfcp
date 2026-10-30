@@ -32,5 +32,5 @@ export async function isMentor(user) {
 }
 
 export async function requireMentor(user) {
-  if (!await isMentor(user)) throw new Error('Only active members of processmission-intern/mentors may execute bot commands.');
+  if (!await isMentor(user)) throw new Error('Only active members of missionhub-oss/mentors may execute bot commands.');
 }
