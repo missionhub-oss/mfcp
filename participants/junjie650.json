@@ -1,1 +1,38 @@
-{"github_id":211438045,"github_login":"Junjie650"}
+{
+  "github_id": 211438045,
+  "github_login": "Junjie650",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-136",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v5",
+        "sha": "952c6f3fc504f5743e7a03555893a4cb1c6ca9e8"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 136
+        },
+        "actor": 211438045,
+        "at": "2026-10-31T13:37:43Z",
+        "digest": "f4e8e778bd6aa4f3de64d7ea1ba54862c04cd33c3480a7cc1385dfba33fe696b",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/136\",\"merge_commit\":\"92f5be6a65d2b2fdb3fd8afeb176051bb1f96497\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 136
+  },
+  "updated_at": "2026-10-31T13:37:43Z"
+}
