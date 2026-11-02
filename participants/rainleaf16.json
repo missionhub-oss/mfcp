@@ -1,4 +1,38 @@
 {
   "github_id": 104379414,
-  "github_login": "RainLeaf16"
+  "github_login": "RainLeaf16",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-60",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v5",
+        "sha": "952c6f3fc504f5743e7a03555893a4cb1c6ca9e8"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 60
+        },
+        "actor": 104379414,
+        "at": "2026-11-02T05:54:28Z",
+        "digest": "fa6cde08fa9d62e894b6c1142c5b62766ecbcb687d3ab565b755c1bf99f3e989",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/60\",\"merge_commit\":\"13151c04167fe01822c88abbe46d0887208b1baf\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 60
+  },
+  "updated_at": "2026-11-02T05:54:28Z"
 }
