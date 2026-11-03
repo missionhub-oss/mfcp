@@ -1,1 +1,38 @@
-{"github_id":80694357,"github_login":"uperbilite"}
+{
+  "github_id": 80694357,
+  "github_login": "uperbilite",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-142",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v5",
+        "sha": "952c6f3fc504f5743e7a03555893a4cb1c6ca9e8"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 142
+        },
+        "actor": 80694357,
+        "at": "2026-11-03T02:46:42Z",
+        "digest": "247339d27a9d6aef00e2c086e968d3dc123f64555a1b1a382f206c5405d5a22f",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/142\",\"merge_commit\":\"2cffb9c11e208e39332864b766f45a64ec4eabd7\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 142
+  },
+  "updated_at": "2026-11-03T02:46:42Z"
+}
