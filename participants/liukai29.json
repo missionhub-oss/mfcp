@@ -1,4 +1,38 @@
 {
   "github_id": 178302521,
-  "github_login": "LiuKai29"
+  "github_login": "LiuKai29",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-144",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v5",
+        "sha": "952c6f3fc504f5743e7a03555893a4cb1c6ca9e8"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 144
+        },
+        "actor": 178302521,
+        "at": "2026-11-03T05:54:22Z",
+        "digest": "18488368fa57260400fba5acdc251deaca1adff765674642866b55bcbf627b25",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/144\",\"merge_commit\":\"a3369d2abbde5993aefcd79635e8a2f02124bb67\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 144
+  },
+  "updated_at": "2026-11-03T05:54:22Z"
 }
