@@ -1,4 +1,38 @@
 {
-	"github_id": 172496782,
-	"github_login": "SydX-pages"
+  "github_id": 172496782,
+  "github_login": "SydX-pages",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-145",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v5",
+        "sha": "952c6f3fc504f5743e7a03555893a4cb1c6ca9e8"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 145
+        },
+        "actor": 172496782,
+        "at": "2026-11-04T02:24:45Z",
+        "digest": "784691da3a45ce0be5683e8305d8e3cc9844aa7015adc08c3711257aec461efb",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/145\",\"merge_commit\":\"1b7eb9d41b7003808dec25bf1c1b152ab97a47eb\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 145
+  },
+  "updated_at": "2026-11-04T02:24:45Z"
 }
