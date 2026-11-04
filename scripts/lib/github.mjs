@@ -15,8 +15,14 @@ export function createClient(token, repository = DEFAULT_REPOSITORY) {
       body: body === undefined ? undefined : JSON.stringify(body), signal: AbortSignal.timeout(30_000),
     });
     if (!response.ok) {
-      const error = new Error(`GitHub ${method} ${path}: ${response.status}`);
+      const detail = await response.json().catch(() => null);
+      const message = typeof detail?.message === 'string' ? `: ${detail.message}` : '';
+      const error = new Error(`GitHub ${method} ${path}: ${response.status}${message}`);
       error.status = response.status;
+      error.requestId = response.headers.get('x-github-request-id');
+      error.rateLimitRemaining = response.headers.get('x-ratelimit-remaining');
+      error.rateLimitReset = response.headers.get('x-ratelimit-reset');
+      error.retryAfter = response.headers.get('retry-after');
       throw error;
     }
     return response.status === 204 ? null : response.json();
