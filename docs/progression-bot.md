@@ -192,7 +192,10 @@ participant. The bot enables auto-merge after these conditions pass.
   can advance. All three required check names run under GitHub Actions.
 - `Contributor progression`: serializes writes and reconciles every ten minutes.
 - `Contributor notifications`: serializes congratulations after record updates
-  and issue closure, and retries hourly. Task completion is announced before a
+  and issue closure, and retries hourly. Participant records come from the
+  checked-out default-branch commit, read through Git without per-file API
+  requests. The run reports that commit; later changes are processed by a
+  subsequent run. Task completion is announced before a
   related L2 promotion, with separate notification keys preventing duplicates.
 - `MFCP website`: validates records, tests, builds and deploys the bilingual
   GitHub Pages website after every push to `main`, including published level

@@ -3,7 +3,7 @@
 import { parseArgs } from 'node:util';
 import { createAppAuth } from '@octokit/auth-app';
 import { createClient, DEFAULT_REPOSITORY, REPOSITORY_ID } from './lib/github.mjs';
-import { readProfiles } from './lib/progression.mjs';
+import { readProfileSnapshot } from './lib/profile-snapshot.mjs';
 import { deliverNotifications } from './lib/notifications.mjs';
 
 const {values} = parseArgs({options: {write: {type: 'boolean', default: false}}});
@@ -33,8 +33,7 @@ if (values.write) {
 }
 const client = createClient(token, repository);
 try {
-  const ref = await client.head();
-  const profiles = await readProfiles(client, ref);
+  const {ref, profiles} = readProfileSnapshot();
   const results = await deliverNotifications(client, profiles, {appId, slug, write: values.write});
   console.log(JSON.stringify({commit: ref, contributors: profiles.length, notifications: results}, null, 2));
   if (results.some(result => result.status === 'failed')) process.exitCode = 1;

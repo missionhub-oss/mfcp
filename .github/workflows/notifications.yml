@@ -8,6 +8,7 @@ on:
       - 'participants/*.json'
       - 'scripts/notify.mjs'
       - 'scripts/lib/notifications.mjs'
+      - 'scripts/lib/profile-snapshot.mjs'
       - '.github/workflows/notifications.yml'
   schedule:
     - cron: '23 * * * *'
