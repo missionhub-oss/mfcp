@@ -30,3 +30,7 @@ Humanize 的项目标识为 `humanize`，标签为 `project/humanize`，2026 年
 年度仓库规则。openRuyi 归入 Linux，沿用 `project/linux`；`2026.v4` 接受
 `openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。
 Sashiko 同样归入 Linux，`2026.v5` 接受 `sashiko-dev/sashiko` 的 PR。
+
+QEMU 的项目标识为 `qemu`，标签为 `project/qemu`。`2026.v6` 接受
+`processmission/qemu` 默认分支的 PR。QEMU 上游补丁通过 `qemu-devel@nongnu.org`
+评审，任务中保存公开邮件线程与最终合入提交；自动结算输入为准入仓库的 GitHub PR 链接。

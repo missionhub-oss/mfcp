@@ -7,6 +7,7 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import nunjucks from 'nunjucks';
 import {loadProgram, repositoryUrl} from './lib/pages.mjs';
+import {loadCommunity} from './lib/community.mjs';
 import {copy, projects} from '../site/content.mjs';
 
 const siteDirectory = fileURLToPath(new URL('../site/', import.meta.url));
@@ -19,7 +20,8 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   const program = await loadProgram(directory, {sha, issues});
   const assetVersions = Object.fromEntries(await Promise.all(['site.css', 'app.mjs'].map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
-  const html = template.render('index.njk', {copy, projects, program, repositoryUrl, assetVersions,
+  const community = await loadCommunity();
+  const html = template.render('index.njk', {copy, projects, program, community, repositoryUrl, assetVersions,
     payload: {copy}, siteUrl: 'https://missionhub-oss.github.io/mfcp/'});
   await mkdir(output, {recursive: true});
   await writeFile(join(output, 'index.html'), html);

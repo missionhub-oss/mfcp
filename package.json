@@ -9,6 +9,7 @@
     "check": "node scripts/check.mjs",
     "test": "node --test tests/*.test.mjs",
     "build:pages": "node scripts/build-pages.mjs",
+    "refresh:community": "node scripts/refresh-community.mjs",
     "progress": "node scripts/progression.mjs"
   },
   "dependencies": {

@@ -24,6 +24,7 @@ body:
         - Linux
         - Yocto Project
         - Humanize
+        - QEMU
     validations:
       required: true
   - type: dropdown

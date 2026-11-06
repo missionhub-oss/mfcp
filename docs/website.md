@@ -24,6 +24,9 @@ English and Chinese interface copy, and `site/site.css` defines responsive
 layouts. `site/app.mjs` handles language, search and navigation.
 The main sections cover the program, one contributor leaderboard, partners
 and joining. Partners appear immediately after the leaderboard.
+The project section lists Zephyr, Linux, Yocto Project, Humanize and QEMU.
+It uses five columns on desktop, two between 701 and 1100 pixels, and one
+on screens up to 700 pixels.
 Detailed metrics, milestones and progression requirements expand within each
 ranked entry. The footer contains one line of copyright and a GitHub link.
 
@@ -64,14 +67,29 @@ Touch layouts show the background directly; reduced motion disables the transiti
 
 ## Published records and rankings
 
-The homepage shows Contributors, Total tasks, In progress and Completed.
+The homepage shows Community members, Contributors, Total tasks, In progress
+and Completed. Community members comes from the Feishu group's `user_count`.
+The page displays the observation time in Beijing time alongside this count.
+The trusted source file `site/community.json` contains only the count and its
+observation time. Refresh it using an authenticated local `lark-cli` session:
+
+```sh
+npm run refresh:community -- --chat-id <MFCP-chat-id>
+```
+
+The refresh command reads the group information API, validates the response
+and updates the snapshot after a successful request. Commit the snapshot to
+publish the refreshed count. Website builds use the most recent committed
+snapshot; Feishu credentials and member identities stay outside the website.
+
 Task statistics come from all pages of the repository's GitHub Issues API
 at build time, using the `type=Task` API filter. Total tasks counts every issue
 whose native GitHub Issue Type is `Task`. In progress counts
 open task issues with at least one Assignee. Completed counts task issues
 closed with the `completed` reason. Each issue counts once, including when
 it has multiple Assignees. Pull requests and other issue kinds are excluded.
-The desktop layout has four columns; screens up to 700 pixels use two columns.
+The desktop layout has five columns; screens up to 700 pixels use two columns,
+with the final statistic spanning the full row.
 
 Task issue creation, deletion, transfer, edits, assignment changes, closure,
 reopening and label changes trigger a rebuild. Assigning an Assignee or removing

@@ -30,7 +30,7 @@ description: 为 missionhub-oss/mfcp 创建或起草 GitHub Issue，先确认任
 
 | 信息 | 需要确认的内容 |
 | --- | --- |
-| 项目与问题 | Zephyr、Linux、Yocto 或 Humanize；真实问题、上游链接及任务范围 |
+| 项目与问题 | Zephyr、Linux、Yocto、Humanize 或 QEMU；真实问题、上游链接及任务范围 |
 | 难度 | L0–L4、难度依据，以及是否还需要导师评定 |
 | 年度 | 明确的四位数字年份；是否已有对应规则和标签 |
 | 交付与验收 | 预期成果、验证方法、是否要求上游合入，以及作者和导师使用本人真实姓名签署 DCO 的条件 |
@@ -57,6 +57,9 @@ openRuyi 任务选择 `Linux`，使用 `project/linux` 标签；`2026.v4` 接受
 Humanize 使用 `project/humanize` 标签；2026 年的 `2026.v3` 规则接受
 `humanfia/humanize` 的 PR。Sashiko 任务选择 `Linux`，`2026.v5` 接受
 `sashiko-dev/sashiko` 的 PR。新任务首次结算保存规则版本，已有任务使用已记录的版本。
+QEMU 使用 `project/qemu`，`2026.v6` 接受 `processmission/qemu` 默认分支 `devel` 的 PR。
+面向 QEMU 上游邮件列表的任务关联 `qemu-devel@nongnu.org` 和公开邮件线程，
+记录补丁版本及最终合入提交；自动结算使用已准入仓库的 GitHub PR 链接。
 成果合入后，维护者使用 `settle <上游 PR 链接>` 完成校验与结算，Bot 随后关闭 Issue。
 
 ## 读取与准备

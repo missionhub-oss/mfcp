@@ -3,10 +3,13 @@
 
 # 参与规则
 
-Mission Forge Contributor Program（MFCP）面向希望参与真实开源项目的学习者与开发者，实践方向包括 Zephyr、Linux、Yocto 和 Humanize。
+Mission Forge Contributor Program（MFCP）面向希望参与真实开源项目的学习者与开发者，实践方向包括 Zephyr、Linux、Yocto、Humanize 和 QEMU。
 
 Linux 方向包含 openRuyi 的软件包维护、系统验证与文档贡献，资料和上游入口见
 [Linux 项目说明](../projects/linux/README.md#openruyi-实践)。
+
+QEMU 方向支持向 `processmission/qemu` 提交 PR，以及参与 `qemu-devel` 邮件列表的
+上游补丁评审，资料与验证要求见[QEMU 项目说明](../projects/qemu/README.md)。
 
 ## 参与流程
 
