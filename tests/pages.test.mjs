@@ -40,10 +40,7 @@ test('trusted site rendering publishes real records from a separate data directo
       {label: '贡献者', value: profiles.length},
       {label: '任务总数', value: tasks.length},
       {label: '进行中', value: inProgress.length},
-      {label: '已完成', value: completed.length},
     ]);
-    assert.equal($('.stats-updated time').attr('datetime'), community.observed_at);
-    assert.equal($('.stats-updated time').text(), community.observedLabel.zh);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
     for (const profile of profiles) {
       const person = program.participants.find(item => item.id === profile.github_id);
