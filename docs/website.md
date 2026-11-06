@@ -45,7 +45,11 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their original PNG files and transparency. The independent partner section
+their original files, proportions and transparency. The ten partners form
+three rows: four in each of the first two rows, with Renesas and SiFli
+centered in the third row. Renesas uses the supplied white transparent PNG;
+SiFli uses the supplied blue transparent PNG. Both link to their official
+websites. The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
 Each logo keeps its original colors and transparent background directly
 within the dark section.

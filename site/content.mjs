@@ -78,6 +78,8 @@ const strings = {
   'partners.humanfia': ['Humanfia', 'Humanfia'],
   'partners.openruyi': ['openRuyi', 'openRuyi'],
   'partners.radxa': ['Radxa', 'Radxa'],
+  'partners.renesas': ['Renesas', 'Renesas'],
+  'partners.sifli': ['SiFli', 'SiFli'],
   'join.title': ['Make your first contribution.', '开始你的开源贡献。'],
   'join.body': ['Register, choose a project, and join the community.', '完成注册，选择实践方向，参与社区讨论。'],
   'join.register': ['Register with a PR', '提交注册 PR'],
