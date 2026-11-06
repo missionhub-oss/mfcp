@@ -13,7 +13,7 @@ const strings = {
   'hero.eyebrow': ['Mission Forge Contributor Program', 'MFCP 开源人才培养计划'],
   'hero.title1': ['Learn through', '参与真实贡献，'],
   'hero.title2': ['real contributions.', '积累工程能力。'],
-  'hero.description': ['Learn with mentors. Solve real problems in Zephyr, Linux, Yocto, Humanize and QEMU, and contribute your work upstream.', '在导师指导下解决 Zephyr、Linux、Yocto、Humanize 和 QEMU 中的实际问题，向上游贡献成果。'],
+  'hero.description': ['Solve real problems in open-source projects with mentor guidance, contribute upstream, and build your practical skills.', '在导师指导下解决开源项目中的实际问题，向上游贡献成果，锻炼个人实践能力。'],
   'hero.start': ['Get involved', '开始参与'],
   'hero.tasks': ['Explore tasks', '查看任务'],
   'hero.community': ['Join the community', '加入社群'],
