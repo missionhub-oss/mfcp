@@ -153,11 +153,15 @@ must match the commit author.
 All patch commits must share a DCO signature from a configured, independent,
 active mentor whose authorization predates the settlement command. The selected
 mentor ID is stored with the settlement. Each upstream PR receives credit once
-among active settlements. The active 2026.v5 rules accept GitHub PRs from the repositories listed in the
+among active settlements. The active 2026.v6 rules accept GitHub PRs from the repositories listed in the
 [annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
-`humanfia/humanize`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`
-and `sashiko-dev/sashiko`. Humanize tasks use `project/humanize`;
-openRuyi and Sashiko tasks use `project/linux`. Task
+`humanfia/humanize`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`,
+`sashiko-dev/sashiko` and `processmission/qemu`. Humanize tasks use `project/humanize`;
+openRuyi and Sashiko tasks use `project/linux`; QEMU tasks use `project/qemu`.
+QEMU PRs target the downstream repository's default branch, currently `devel`.
+Upstream QEMU patch reviews use `qemu-devel@nongnu.org`; public mailing-list
+threads and merged commits serve as task evidence. Automatic settlement accepts
+GitHub PR URLs from the annual repository list. Task
 settlement verifies the repository against the immutable rule version recorded
 in the task contract, along with the author and mentor DCO evidence.
 

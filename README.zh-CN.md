@@ -1,10 +1,10 @@
 <div align="center">
 
 <p><sub>进程使命 · 开源社区</sub></p>
-<h1>Mission Forge Contributor Program（MFCP）</h1>
+<h1>MFCP 开源人才培养计划</h1>
 <p>
   <strong>学习 · 实践 · 贡献 · 成长</strong><br>
-  进程使命开源贡献者成长计划，通过真实开源贡献积累工程经验。
+  MFCP 开源人才培养计划，通过真实开源贡献积累工程经验。
 </p>
 
 <p>
@@ -12,6 +12,7 @@
   <a href="projects/linux/README.md"><img src="https://img.shields.io/badge/Linux-315879?style=flat-square&amp;logo=linux&amp;logoColor=white" alt="探索 Linux"></a>
   <a href="projects/yocto/README.md"><img src="https://img.shields.io/badge/Yocto-168681?style=flat-square" alt="探索 Yocto"></a>
   <a href="projects/humanize/README.md"><img src="https://img.shields.io/badge/Humanize-4D7C0F?style=flat-square" alt="探索 Humanize"></a>
+  <a href="projects/qemu/README.md"><img src="https://img.shields.io/badge/QEMU-FF6600?style=flat-square" alt="探索 QEMU"></a>
   <a href="programs/2026/README.md"><img src="https://img.shields.io/badge/Program-2026-d29922?style=flat-square" alt="2026 年培养安排"></a>
 </p>
 
@@ -113,6 +114,17 @@ Signed-off-by: Your Real Full Name <your-email@example.com>
       <p><strong>参与编程 Agent 协作工具的开发。</strong></p>
       <p>围绕协作流程、命令行和桌面工具开展实践，改进 Agent 接入、测试与文档，并按上游流程验证和提交成果。</p>
       <p><a href="projects/humanize/README.md">探索 Humanize →</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/qemu/README.md">QEMU</a></h3>
+      <p><strong>开发并验证虚拟硬件。</strong></p>
+      <p>围绕板级与 SoC 模型、外设、启动流程和 qtest 开展实践，向 processmission/qemu 提交贡献，并通过 qemu-devel 参与上游补丁评审。</p>
+      <p><a href="projects/qemu/README.md">探索 QEMU →</a></p>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/qemu/README.md"><img src="images/qemu.png" width="100%" alt="QEMU：电脑屏幕中的虚拟开发板，以及处理器和外设组件插图"></a>
     </td>
   </tr>
 </table>

@@ -12,6 +12,7 @@
   <a href="projects/linux/README.md"><img src="https://img.shields.io/badge/Linux-315879?style=flat-square&amp;logo=linux&amp;logoColor=white" alt="Explore Linux"></a>
   <a href="projects/yocto/README.md"><img src="https://img.shields.io/badge/Yocto-168681?style=flat-square" alt="Explore Yocto"></a>
   <a href="projects/humanize/README.md"><img src="https://img.shields.io/badge/Humanize-4D7C0F?style=flat-square" alt="Explore Humanize"></a>
+  <a href="projects/qemu/README.md"><img src="https://img.shields.io/badge/QEMU-FF6600?style=flat-square" alt="Explore QEMU"></a>
   <a href="programs/2026/README.md"><img src="https://img.shields.io/badge/Program-2026-d29922?style=flat-square" alt="Program 2026"></a>
 </p>
 
@@ -93,6 +94,17 @@ Choose a project and build experience through practical contributions.
       <p><strong>Build reliable coding-agent workflows.</strong></p>
       <p>Contribute to agent workflows, CLI and desktop tools. Improve agent integrations, tests and documentation, and validate changes through upstream review.</p>
       <p><a href="projects/humanize/README.md">Explore Humanize →</a></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="middle">
+      <h3><a href="projects/qemu/README.md">QEMU</a></h3>
+      <p><strong>Develop and validate virtual hardware.</strong></p>
+      <p>Work on board and SoC models, peripherals, boot flows and qtest. Contribute to processmission/qemu and participate in upstream patch review through qemu-devel.</p>
+      <p><a href="projects/qemu/README.md">Explore QEMU →</a></p>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="projects/qemu/README.md"><img src="images/qemu.png" width="100%" alt="QEMU: an illustrated computer displaying a virtual development board with processor and peripheral components"></a>
     </td>
   </tr>
 </table>

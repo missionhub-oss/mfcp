@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
 const strings = {
-  'meta.title': ['Mission Forge Contributor Program', 'MFCP · Mission Forge 开源贡献者培养计划'],
-  'meta.description': ['Learn with mentors and contribute to Zephyr, Linux, Yocto and Humanize through the Mission Forge Contributor Program.', 'Mission Forge 开源贡献者培养计划，通过导师指导和真实任务，参与 Zephyr、Linux、Yocto 和 Humanize 的上游贡献。'],
+  'meta.title': ['Mission Forge Contributor Program', 'MFCP 开源人才培养计划'],
+  'meta.description': ['Learn with mentors and contribute to Zephyr, Linux, Yocto, Humanize and QEMU through the Mission Forge Contributor Program.', 'MFCP 开源人才培养计划，通过导师指导和真实任务，参与 Zephyr、Linux、Yocto、Humanize 和 QEMU 的上游贡献。'],
   'nav.skip': ['Skip to content', '跳转到正文'],
   'nav.label': ['Main navigation', '主导航'],
   'nav.home': ['Mission Forge home', 'Mission Forge 首页'],
@@ -10,13 +10,15 @@ const strings = {
   'nav.ranking': ['Leaderboard', '贡献者排行榜'],
   'nav.join': ['Join the community', '加入社群'],
   'nav.menu': ['Toggle navigation', '展开或收起导航'],
-  'hero.eyebrow': ['Mission Forge Contributor Program', 'Mission Forge 开源贡献者培养计划'],
+  'hero.eyebrow': ['Mission Forge Contributor Program', 'MFCP 开源人才培养计划'],
   'hero.title1': ['Learn through', '参与真实贡献，'],
   'hero.title2': ['real contributions.', '积累工程能力。'],
-  'hero.description': ['Learn with mentors. Solve real problems in Zephyr, Linux, Yocto and Humanize, and contribute your work upstream.', '在导师指导下解决 Zephyr、Linux、Yocto 和 Humanize 中的实际问题，向上游贡献成果。'],
+  'hero.description': ['Learn with mentors. Solve real problems in Zephyr, Linux, Yocto, Humanize and QEMU, and contribute your work upstream.', '在导师指导下解决 Zephyr、Linux、Yocto、Humanize 和 QEMU 中的实际问题，向上游贡献成果。'],
   'hero.start': ['Get involved', '开始参与'],
   'hero.tasks': ['Explore tasks', '查看任务'],
   'hero.community': ['Join the community', '加入社群'],
+  'stats.community': ['Community members', '社群人数'],
+  'stats.observed': ['As of (UTC+8)', '统计时间（北京时间）'],
   'stats.people': ['Contributors', '贡献者'],
   'stats.tasks': ['Total tasks', '任务总数'],
   'stats.inProgress': ['In progress', '进行中'],
@@ -28,6 +30,7 @@ const strings = {
   'tracks.linux': ['Kernel contributions, openRuyi packages and system testing.', '内核贡献、openRuyi 软件包与系统测试。'],
   'tracks.yocto': ['Recipes, layers and Linux system images.', '配方、分层与 Linux 系统镜像。'],
   'tracks.humanize': ['Coding-agent workflows, CLI tools, tests and documentation.', '编程 Agent 协作流程、命令行工具、测试与文档。'],
+  'tracks.qemu': ['Board and SoC models, peripherals, boot flows and qtest.', '板级与 SoC 模型、外设、启动流程和 qtest。'],
   'people.search': ['Search username', '搜索 GitHub 用户名'],
   'people.count': ['contributors', '位贡献者'],
   'people.empty': ['No matching contributors.', '没有符合搜索条件的贡献者。'],
@@ -96,4 +99,5 @@ export const projects = [
   {id: 'linux', name: 'Linux'},
   {id: 'yocto', name: 'Yocto Project'},
   {id: 'humanize', name: 'Humanize'},
+  {id: 'qemu', name: 'QEMU'},
 ];

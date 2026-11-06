@@ -9,6 +9,7 @@ import {load} from 'cheerio';
 import {buildPages} from '../scripts/build-pages.mjs';
 import {normalizeProfile, totals} from '../scripts/lib/profile.mjs';
 import {loadTaskIssues} from '../scripts/lib/task-stats.mjs';
+import {loadCommunity} from '../scripts/lib/community.mjs';
 
 test('trusted site rendering publishes real records from a separate data directory', async () => {
   await mkdir('.mfcp-runtime', {recursive: true});
@@ -31,14 +32,18 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(program.stats.tasks, tasks.length);
     assert.equal(program.stats.inProgressTasks, inProgress.length);
     assert.equal(program.stats.completedTasks, completed.length);
+    const community = await loadCommunity();
     assert.deepEqual($('.stats-grid>div').map((_, element) => ({
-      label: $(element).find('[data-i18n]').text(), value: Number($(element).find('strong').text()),
+      label: $(element).children('span').text(), value: Number($(element).find('strong').text()),
     })).get(), [
+      {label: '社群人数', value: community.members},
       {label: '贡献者', value: profiles.length},
       {label: '任务总数', value: tasks.length},
       {label: '进行中', value: inProgress.length},
       {label: '已完成', value: completed.length},
     ]);
+    assert.equal($('.stats-updated time').attr('datetime'), community.observed_at);
+    assert.equal($('.stats-updated time').text(), community.observedLabel.zh);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
     for (const profile of profiles) {
       const person = program.participants.find(item => item.id === profile.github_id);
