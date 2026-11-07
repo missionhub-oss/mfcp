@@ -1,4 +1,38 @@
 {
   "github_id": 92042631,
-  "github_login": "RobotYxy"
+  "github_login": "RobotYxy",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-180",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v6",
+        "sha": "8ed89411ea01b0d311dd3234a57bef90488c1f43"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 180
+        },
+        "actor": 92042631,
+        "at": "2026-11-07T09:39:13Z",
+        "digest": "7c2cebd8e8ebf9b79f43f2a1b65a20e641e9752f7165bc864a4cbbf265570d3c",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/180\",\"merge_commit\":\"1c156009a7b68cdcc1b00a13f3f98c7c389f5111\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 180
+  },
+  "updated_at": "2026-11-07T09:39:13Z"
 }
