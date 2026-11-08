@@ -17,13 +17,14 @@ Humanize（`hmz`）通过协作流程组织编程 Agent 完成实现、审查和
 上游 PR 的标题与提交说明使用其规定的 Conventional Commits 格式。
 
 参与 MFCP 计分的任务使用原生 Type `Task`、`project/humanize`、年度和难度标签，
-由已注册参与者担任 Assignee，并配置独立导师。作者和任务要求的导师按
+由已注册参与者担任 Assignee，并配置独立导师。作者按
 [本计划提交规范](../../CONTRIBUTING.md#提交格式与-dco)使用真实姓名签署 DCO；
 英文姓名使用全称，中文姓名使用完整拼音，通常将姓名各部分的首字母大写，也可以将姓氏全部大写。
+导师 DCO 为结算的可选签署，导师参与通过任务配置与评审记录核实。
 
 [2026.v3](../../programs/2026/rules/v3.json) 将 `humanfia/humanize` 列为可结算的上游仓库。
 参与者完成复现和验证验收，上游 PR 合入默认分支后，按[Bot 操作说明](../../docs/bot-command-examples.md)
-提交结算证据并以 Completed 关闭任务。Bot 核对 PR 作者、提交归属、作者与验收导师的 DCO，
+提交结算证据并以 Completed 关闭任务。Bot 核对 PR 作者、提交归属、作者 DCO、导师配置授权，
 以及任务记录中的规则版本。首次结算时保存的规则版本用于该任务的后续操作。
 
 任务发布方式见[贡献指南](../../CONTRIBUTING.md)，年度安排见[2026 年培养安排](../../programs/2026/README.md)。
