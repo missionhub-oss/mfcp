@@ -1,0 +1,41 @@
+{
+  "source": "https://github.com/processmission/qemu/pull/51",
+  "issue_source": "https://github.com/missionhub-oss/mfcp/issues/154",
+  "participant": {
+    "github_id": 191454483,
+    "github_login": "asymecat"
+  },
+  "commits": [
+    {
+      "sha": "929049c719f1cfea0749c8a4f76736e2efef1ee5",
+      "author": {
+        "id": 191454483,
+        "login": "asymecat"
+      },
+      "commit": {
+        "author": {
+          "name": "Zifeng Su",
+          "email": "2859049527@qq.com",
+          "date": "2026-11-08T08:46:07Z"
+        },
+        "message": "docs: document ROCK 5B peripheral mappings and validation recipes\n\nThe ROCK 5B page lists the devices the machine models, but not where\nthe RK3588 peripherals live, which header pins carry them, which buses\nare shared with on-board devices, or which windows are still\nunimplemented.  Anyone bringing up a guest has to re-derive that from\nhw/arm/rk3588.c, the Radxa pinout and the board device tree.\n\nAdd a \"Peripheral mapping\" section covering UART, GPIO, I2C, SPI, PWM,\nSARADC, RTC, watchdog and timers:\n\n- window and GIC interrupt for each controller, taken from\n  rk3588_memmap[], rk3588_unimpl_devices[] and the RK3588_*_SPI macros\n  and cross-checked against the RK3588 device tree;\n- the 40-pin header connection of each controller, with the pinout mux\n  names and the GPIO bank/offset numbering rule;\n- the on-board devices that share a header bus (RK8602/RK8603\n  regulators on I2C0 and I2C1, FUSB302 on I2C4, HYM8563 on I2C6,\n  ES8316 on I2C7, RK806 on SPI2) and the mutual exclusions that follow\n  from the pin groups;\n- the modeling status per controller, so it is visible which classes a\n  bring-up can exercise on rock-5b and which are still unfinished.\n\nIt also records how to check the map: modeled windows appear by name in\n\"info mtree\", unimplemented ones appear as rk3588.<name> stubs and are\nlogged with -d unimp, and the existing rock-5b qtest covers the modeled\nside.\n\nSigned-off-by: Zifeng Su <2859049527@qq.com>"
+      }
+    }
+  ],
+  "unsigned_commit": {
+    "source": "https://github.com/processmission/qemu/commit/c3f4c22028677e48c3c6058ce2b4216fa544f220",
+    "sha": "c3f4c22028677e48c3c6058ce2b4216fa544f220",
+    "author": {
+      "id": 62325246,
+      "login": "zevorn"
+    },
+    "commit": {
+      "author": {
+        "name": "Zevorn(Chao Liu)",
+        "email": "chao.liu@processmission.com",
+        "date": "2026-11-08T13:35:45Z"
+      },
+      "message": "Merge pull request #51 from asymecat/docs/rock5b-peripheral-map\n\ndocs: document ROCK 5B peripheral mappings and validation recipes"
+    }
+  }
+}

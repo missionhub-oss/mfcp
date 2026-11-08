@@ -131,7 +131,7 @@ export function signoffs(message) {
 }
 
 export function verifySettlementSignoffs(commits, participant, mentors) {
-  let eligibleMentors = mentors.filter(mentor => mentor.id !== participant.github_id);
+  const eligibleMentors = mentors.filter(mentor => mentor.id !== participant.github_id);
   if (!commits.length) throw new Error('Upstream PR has no patch commits.');
   for (const commit of commits) {
     const trailers = signoffs(commit.commit.message);
@@ -139,9 +139,8 @@ export function verifySettlementSignoffs(commits, participant, mentors) {
     if (commit.author?.id !== participant.github_id || !trailers.includes(author)) {
       throw new Error('Every patch commit needs an attributable author and the matching author DCO sign-off.');
     }
-    eligibleMentors = eligibleMentors.filter(mentor => mentor.signoffs.some(signoff => trailers.includes(signoff.toLowerCase())));
   }
-  if (!eligibleMentors.length) throw new Error('Every patch commit needs the DCO sign-off of a configured independent mentor.');
+  if (!eligibleMentors.length) throw new Error('Settlement requires a configured independent mentor.');
   return eligibleMentors;
 }
 

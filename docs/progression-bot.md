@@ -28,7 +28,8 @@ uses merged registration evidence and does not require Team membership.
 
 The `mentors` entries in annual `governance.json` record GitHub identities and
 authorized DCO signature strings using each mentor's real full name in English
-and personally confirmed sign-off email for patch verification. For a Chinese
+and personally confirmed sign-off email for the mentor section and optional
+patch signatures. For a Chinese
 name, use the full Pinyin spelling of the mentor's real name. Normally capitalize
 the first letter of each name part; an uppercase family name is also acceptable.
 They do not grant
@@ -144,15 +145,16 @@ bot closes the issue as Completed. A task already closed as Completed can
 use the same command. A close event can retry an existing authorized settlement
 command; PR evidence must be supplied through `settle`.
 Every upstream commit must be
-attributed to the participant and include the author's and authorized mentor's
-DCO sign-offs. Human authors and mentors must sign with their own real full
+attributed to the participant and include the author's DCO sign-off.
+Mentor patch sign-offs are optional for settlement. All signers use their own real full
 names in English. For a Chinese name, use the full Pinyin spelling of the real
 name. Normally capitalize the first letter of each name part; an uppercase
 family name is also acceptable. The author's sign-off name and email
 must match the commit author.
-All patch commits must share a DCO signature from a configured, independent,
-active mentor whose authorization predates the settlement command. The selected
-mentor ID is stored with the settlement. Each upstream PR receives credit once
+Settlement requires a configured, independent, active mentor whose authorization
+predates the settlement command. The first eligible mentor in configuration order
+is stored with the settlement, regardless of optional patch signatures.
+Each upstream PR receives credit once
 among active settlements. The active 2026.v6 rules accept GitHub PRs from the repositories listed in the
 [annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
 `humanfia/humanize`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`,
@@ -163,7 +165,7 @@ Upstream QEMU patch reviews use `qemu-devel@nongnu.org`; public mailing-list
 threads and merged commits serve as task evidence. Automatic settlement accepts
 GitHub PR URLs from the annual repository list. Task
 settlement verifies the repository against the immutable rule version recorded
-in the task contract, along with the author and mentor DCO evidence.
+in the task contract, along with author DCO evidence and mentor authorization.
 
 First settlement records the native Assignee, mentor command proofs,
 difficulty and the rule version effective at the command timestamp. The
