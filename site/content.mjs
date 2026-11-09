@@ -81,7 +81,7 @@ const strings = {
   'partners.radxa': ['Radxa', 'Radxa'],
   'partners.renesas': ['Renesas', 'Renesas'],
   'partners.sifli': ['SiFli', 'SiFli'],
-  'partners.reedpilot': ['ReedPilot', '一苇宇航'],
+  'partners.reedpilot': ['ReedPilot', 'ReedPilot'],
   'join.title': ['Make your first contribution.', '开始你的开源贡献。'],
   'join.body': ['Register, choose a project, and join the community.', '完成注册，选择实践方向，参与社区讨论。'],
   'join.register': ['Register with a PR', '提交注册 PR'],
