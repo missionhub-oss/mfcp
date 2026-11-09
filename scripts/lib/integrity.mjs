@@ -4,6 +4,24 @@ import { validatePullRequest, validatePullRequestJson } from '../membership.mjs'
 import { verifyReview } from './progression.mjs';
 import {validatePullRequestCommits} from './commit-policy.mjs';
 
+export async function verifyPullRequestAuthority(client, pr, files) {
+  const removals = files.length > 0 && files.every(file => file.status === 'removed' && /^participants\/[a-z0-9-]+\.json$/.test(file.filename));
+  const protectedPaths = /^(?:\.github\/(?:workflows|actions)\/|scripts\/|site\/|programs\/\d{4}\/(?:rules\/|governance\.json)|package(?:-lock)?\.json$)/;
+  if (!removals && !files.some(file => protectedPaths.test(file.filename) || protectedPaths.test(file.previous_filename ?? ''))) return;
+  const access = await client.request(`${client.root}/collaborators/${encodeURIComponent(pr.user.login)}/permission`);
+  if (removals && !['admin', 'maintain', 'write'].includes(access.permission)) throw new Error('Registration removal requires a repository maintainer.');
+  if (removals || ['admin', 'maintain'].includes(access.permission)) return;
+  const reviews = await client.list(`${client.root}/pulls/${pr.number}/reviews`);
+  const latest = new Map();
+  for (const review of reviews) if (['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)) latest.set(review.user.id, review);
+  for (const review of latest.values()) {
+    if (review.user.id === pr.user.id || review.state !== 'APPROVED' || review.commit_id !== pr.head.sha) continue;
+    const reviewer = await client.request(`${client.root}/collaborators/${encodeURIComponent(review.user.login)}/permission`);
+    if (['admin', 'maintain'].includes(reviewer.permission)) return;
+  }
+  throw new Error('Automation and policy changes require a maintainer approval of this revision.');
+}
+
 export async function verifyIntegrity(client, number) {
   await validatePullRequestCommits(client, number);
   const pr = await client.request(`${client.root}/pulls/${number}`);
@@ -18,22 +36,7 @@ export async function verifyIntegrity(client, number) {
         throw new Error('Published rule versions are immutable; add a new version.');
       }
     }
-    const protectedPaths = /^(?:\.github\/(?:workflows|actions)\/|scripts\/|site\/|programs\/\d{4}\/(?:rules\/|governance\.json)|package(?:-lock)?\.json$)/;
-    if (files.some(file => protectedPaths.test(file.filename) || protectedPaths.test(file.previous_filename ?? ''))) {
-      const access = await client.request(`${client.root}/collaborators/${encodeURIComponent(pr.user.login)}/permission`);
-      if (!['admin', 'maintain'].includes(access.permission)) {
-        const reviews = await client.list(`${client.root}/pulls/${number}/reviews`);
-        const latest = new Map();
-        for (const review of reviews) if (['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)) latest.set(review.user.id, review);
-        let authorized = false;
-        for (const review of latest.values()) {
-          if (review.user.id === pr.user.id || review.state !== 'APPROVED' || review.commit_id !== pr.head.sha) continue;
-          const reviewer = await client.request(`${client.root}/collaborators/${encodeURIComponent(review.user.login)}/permission`);
-          if (['admin', 'maintain'].includes(reviewer.permission)) authorized = true;
-        }
-        if (!authorized) throw new Error('Automation and policy changes require a maintainer approval of this revision.');
-      }
-    }
+    await verifyPullRequestAuthority(client, pr, files);
     await validatePullRequestJson(client, number);
     await validatePullRequest(client, number);
   }

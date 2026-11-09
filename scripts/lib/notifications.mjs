@@ -3,6 +3,15 @@
 import { activeSettlement, digest, participantPath, validateProfile } from './profile.mjs';
 import { isTrustedBotComment } from './bot-identity.mjs';
 import {isTaskIssue} from './issue-types.mjs';
+import {z} from 'zod';
+import {isRateLimited} from './processing-state.mjs';
+
+export const notificationStateSchema = z.strictObject({
+  version: z.literal(1).default(1),
+  delivered: z.record(z.string().regex(/^[a-f0-9]{64}$/), z.strictObject({
+    issue: z.number().int().positive(), url: z.url(), verified_at: z.iso.datetime(),
+  })).default({}),
+});
 
 export function notificationsFor(profile) {
   const p = validateProfile(profile, participantPath(profile.github_login));
@@ -39,17 +48,28 @@ export function notificationsFor(profile) {
 }
 
 const marker = message => `<!-- mfcp-notification:${message.key} -->`;
+export const notificationDelivered = (message, state) => state.delivered[message.key]?.issue === message.issue;
 
-export async function deliverNotifications(client, profiles, {appId, slug, write = false} = {}) {
+export async function deliverNotifications(client, profiles, {appId, slug, write = false,
+  state = notificationStateSchema.parse({}), checkpoint = async () => {}} = {}) {
   if (!Number.isSafeInteger(appId) || appId <= 0 || !/^[a-z0-9-]+$/.test(slug ?? '')) {
     throw new Error('A valid GitHub App ID and slug are required.');
   }
   const results = [];
   const commentsByIssue = new Map();
   const pendingCompletions = new Set();
+  let limited = false;
   for (const {profile} of profiles) {
     for (const message of notificationsFor(profile)) {
       try {
+        if (notificationDelivered(message, state)) {
+          results.push({kind: message.kind, issue: message.issue, status: 'already-notified', cached: true});
+          continue;
+        }
+        if (limited) {
+          results.push({kind: message.kind, issue: message.issue, status: 'deferred', reason: 'API rate limit; retry after reset.'});
+          continue;
+        }
         if (message.afterCompletion && pendingCompletions.has(message.issue)) {
           results.push({kind: message.kind, issue: message.issue, status: 'completion-notice-pending'});
           continue;
@@ -67,9 +87,12 @@ export async function deliverNotifications(client, profiles, {appId, slug, write
           comments = await client.list(`${client.root}/issues/${message.issue}/comments`);
           commentsByIssue.set(message.issue, comments);
         }
-        const exists = comments.some(comment =>
+        const exists = comments.find(comment =>
           isTrustedBotComment(comment, appId) && comment.body?.includes(marker(message)));
         if (exists) {
+          state.delivered[message.key] = {issue: message.issue, url: exists.html_url,
+            verified_at: new Date().toISOString()};
+          await checkpoint();
           results.push({kind: message.kind, issue: message.issue, status: 'already-notified'});
           continue;
         }
@@ -81,8 +104,13 @@ export async function deliverNotifications(client, profiles, {appId, slug, write
           body: `${message.body}\n\n${marker(message)}`,
         });
         comments.push(comment);
+        if (!isTrustedBotComment(comment, appId)) throw new Error('GitHub did not confirm the notification bot identity.');
+        state.delivered[message.key] = {issue: message.issue, url: comment.html_url,
+          verified_at: new Date().toISOString()};
+        await checkpoint();
         results.push({kind: message.kind, issue: message.issue, status: 'notified', url: comment.html_url});
       } catch (error) {
+        if (isRateLimited(error)) limited = true;
         if (message.kind === 'completion') pendingCompletions.add(message.issue);
         results.push({kind: message.kind, issue: message.issue, status: 'failed', reason: error.message});
       }
