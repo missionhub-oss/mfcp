@@ -43,6 +43,7 @@ composition are informed by the supplied Humanfia website reference.
 The hero mark floats while its rings rotate and the glow pulses. Mouse input
 adds a small perspective tilt. Motion pauses outside the viewport and while
 the tab is hidden; the system's reduced-motion preference keeps it static.
+The mobile hero frame contains its decorative rings within the viewport.
 Sections and ranked entries reveal once on entering the viewport. Buttons,
 project arrows and rows use small hover transitions with the same motion
 preference. All content stays visible without JavaScript.
@@ -50,11 +51,14 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their original files, proportions and transparency. The ten partners form
-three rows: four in each of the first two rows, with Renesas and SiFli
+their original files, proportions and transparency. The eleven partners form
+three rows: four in each of the first two rows, with Renesas, SiFli and ReedPilot
 centered in the third row. Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
-websites. The independent partner section
+websites. ReedPilot uses the supplied white transparent PNG, retaining its
+original pixels and alpha channel. Its image is centered within the logo frame
+to account for the transparent padding, and links to `https://www.reedpilot.com/`.
+The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
 Each logo keeps its original colors and transparent background directly
 within the dark section.
