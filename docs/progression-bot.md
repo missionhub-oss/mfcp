@@ -194,9 +194,11 @@ participant. The bot enables auto-merge after these conditions pass.
 - `Registration`: JSON and GitHub identity checks for participant PRs.
 - `Progression integrity`: validates source evidence, authorization and
   immutable annual rules using trusted default-branch code.
-- `Automatic progression checks`: validates candidate commits before main
-  can advance. All three required check names run under GitHub Actions.
-- `Contributor progression`: serializes writes and reconciles every ten minutes.
+- `Automatic progression checks`: validates each candidate once before main
+  can advance. The three required check names report the result of that shared
+  verification under GitHub Actions, including its failure or cancellation.
+- `Contributor progression`: serializes writes and reconciles updated records
+  and pending sources every ten minutes.
 - `Contributor notifications`: serializes congratulations after record updates
   and issue closure, and retries hourly. Participant records come from the
   checked-out default-branch commit, read through Git without per-file API
@@ -219,12 +221,48 @@ files or validation scripts. Runtime changes execute after reviewed merge to mai
 The public-repository approval setting still applies to any future workflow
 that uses `pull_request` to execute contributor-supplied code.
 
-After main changes and on a ten-minute schedule, `Refresh open PR checks` verifies every open PR again and
-publishes the three required results and repository check on its actual head commit. This trusted
+After main changes and on a ten-minute schedule, `Refresh open PR checks` reads
+open PR update times and their current checks. It reuses confirmed successful
+checks when the update time, head, base, title, author and trusted validator
+revision match. Missing, failed, replaced or pending checks remain eligible for
+validation. Maintainer permissions and applicable review approvals are checked
+again before reuse; bot-authored progression proposals receive full evidence
+verification. Required results are published on the actual head commit. This trusted
 workflow has Checks write permission to report results; it executes no PR code
 and receives no App private key. Existing PRs also receive current validation
 without contributors reopening or updating them. Review approvals are read by
 these default-branch scheduled workflows. GitHub may delay scheduled runs.
+
+## Incremental processing
+
+The notification, PR refresh and progression workflows each restore a separate
+processing state through GitHub Actions Cache. Serialized runs save confirmed
+progress even when a later operation fails. A cache miss reads the authoritative
+GitHub records to establish the state again.
+
+Notification receipts use the existing stable achievement key and the confirmed
+bot comment URL. Already delivered achievements skip comment queries, and a run
+with no pending notices exits before creating an App token. Unsent notices remain
+eligible on the next run. Task completion still precedes its related promotion.
+
+Progression reconciliation queries repository issues and PRs updated since its
+saved start time, with a one-minute overlap. Completed registration PRs come from
+the committed contributor records. Immutable command comments with a confirmed
+bot success reaction establish receipts on the first scan. Failed sources and
+sources waiting for review are stored separately and retried even when their
+update time falls outside the window. Changes to trusted scripts or program
+rules reset the scan and command receipts. `--full-scan` requests a complete scan.
+Every new write still validates the current source evidence and authorization.
+
+GitHub data addressed by a complete commit SHA is reused within a process.
+Mutable issue state, references, permissions and membership lookups remain live.
+When GitHub reports an API rate limit, processing stops and retains unfinished
+sources for a subsequent run.
+
+Run summaries include `api.total` and HTTP method counts for REST calls made by
+the repository client. PR refresh totals also include the proposed-input child
+process under `api.child_requests`. App token creation, Git transport and Actions
+cache storage requests are outside these application REST counters.
 
 Main requires `JSON format and fields`, `validate` and `Progression integrity`
 from GitHub Actions. PR authors do not need to update their branch after every

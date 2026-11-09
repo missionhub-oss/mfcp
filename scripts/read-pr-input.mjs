@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 import { appendFile, mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { createClient } from './lib/github.mjs';
+import { createClient, apiUsage } from './lib/github.mjs';
 
 const number = Number(process.env.PR_NUMBER);
 if (!Number.isSafeInteger(number) || number <= 0) throw new Error('A valid PR number is required.');
@@ -35,4 +35,4 @@ for (const file of files) {
 const latest = await client.request(`${client.root}/pulls/${number}`);
 if (latest.head.sha !== pr.head.sha || latest.base.sha !== pr.base.sha) throw new Error('PR changed while reading inputs; retry validation.');
 if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, `directory=${directory}\n`);
-console.log(JSON.stringify({pr: number, head: pr.head.sha, merge: pr.merge_commit_sha, files: files.length, directory}));
+console.log(JSON.stringify({pr: number, head: pr.head.sha, merge: pr.merge_commit_sha, files: files.length, directory, api: apiUsage()}));

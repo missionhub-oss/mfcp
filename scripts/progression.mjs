@@ -4,7 +4,7 @@ import { readFile, appendFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { createClient, REPOSITORY_ID } from './lib/github.mjs';
+import { createClient, REPOSITORY_ID, apiUsage } from './lib/github.mjs';
 import { buildProposal, verifyReview } from './lib/progression.mjs';
 import { isBotCommand } from './lib/commands.mjs';
 import { replyToCommand } from './lib/command-feedback.mjs';
@@ -13,8 +13,12 @@ import { digest, equal, validateProfile } from './lib/profile.mjs';
 import {updateMentorSection, readMentorCommands} from './lib/mentor-section.mjs';
 import {formatSignoff, validateCommitMessage} from './lib/commit-policy.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
-import {isTaskIssue, TASK_ISSUE_TYPE} from './lib/issue-types.mjs';
+import {isTaskIssue} from './lib/issue-types.mjs';
 import {completeSettledTask} from './lib/task-completion.mjs';
+import {readProcessingState, saveProcessingState, isRateLimited} from './lib/processing-state.mjs';
+import {collectReconciliationWork, processReconciliationWork, reconciliationScope,
+  reconciliationStateSchema, commandFingerprint, sourceKey, prepareReconciliationState} from './lib/reconciliation.mjs';
+import {readProfileSnapshot} from './lib/profile-snapshot.mjs';
 
 const CHECKS = ['JSON format and fields', 'validate', 'Progression integrity'];
 const botLogin = () => `${process.env.MFCP_APP_SLUG}[bot]`;
@@ -175,7 +179,7 @@ export async function processSource(client, source, {write = false} = {}) {
     if (write && source.kind === 'comment') await markCommandProcessing(client, source);
     result = await executeSource(client, source, {write});
   }
-  catch (error) {failure = error;}
+  catch (error) {if (isRateLimited(error)) throw error; failure = error;}
   const commandSource = source.kind === 'comment' ? source : result?.commandSource;
   if (write && !failure && commandSource && ['published', 'unchanged', 'already-merged'].includes(result.status)) {
     try {result.completion = await completeSettledTask(client, commandSource, process.env.MFCP_APP_SLUG);}
@@ -219,47 +223,18 @@ async function sourcesForEvent(client, event, name) {
   return [];
 }
 
-async function reconcile(client, write) {
-  const reports = [];
-  const prs = await client.list(`${client.root}/pulls?state=all`);
-  for (const pr of prs.filter(p => p.state === 'open' && p.user.login === botLogin() && p.head.ref.startsWith('progress/review/'))) {
-    const files = await client.list(`${client.root}/pulls/${pr.number}/files`);
-    if (files.length !== 1) continue;
-    const profile = (await client.file(files[0].filename, pr.head.sha)).value;
-    if (profile.last_event) {
-      try {reports.push(await processSource(client, profile.last_event, {write}));}
-      catch (error) {reports.push({status: 'pending', source: profile.last_event, reason: error.message});}
-    }
-  }
-  for (const pr of prs.filter(p => p.merged_at && !p.user.login.endsWith('[bot]'))) {
-    try {reports.push(await processSource(client, {kind: 'registration', pr: pr.number}, {write}));}
-    catch (error) {if (!error.message.startsWith('Not an initial') && !error.message.startsWith('Expected a merged registration')) reports.push({status: 'pending', pr: pr.number, reason: error.message});}
-  }
-  const issues = await client.list(`${client.root}/issues?state=all&type=${TASK_ISSUE_TYPE}`);
-  for (const issue of issues.filter(isTaskIssue)) {
-    const comments = await client.list(`${client.root}/issues/${issue.number}/comments`);
-    for (const comment of comments) {
-      try {
-        if (comment.user.type === 'User' && isBotCommand(comment.body, process.env.MFCP_APP_SLUG)) reports.push(await processSource(client,
-          {kind: 'comment', issue: issue.number, comment: comment.id}, {write}));
-      } catch (error) {reports.push({status: 'pending', comment: comment.id, reason: error.message});}
-    }
-    const kind = issue.state === 'open' ? 'reopened' : 'completed';
-    const source = await latestIssueEvent(client, issue.number, kind);
-    if (source) {
-      try {reports.push(await processSource(client, source, {write}));}
-      catch (error) {reports.push({status: 'pending', source, reason: error.message});}
-    }
-  }
-  return reports;
-}
-
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const {values} = parseArgs({options: {source: {type: 'string'}, write: {type: 'boolean', default: false},
     reconcile: {type: 'boolean', default: false}, cleanup: {type: 'boolean', default: false},
-    verify: {type: 'string'}, 'verify-pr': {type: 'string'}}});
+    verify: {type: 'string'}, 'verify-pr': {type: 'string'}, state: {type: 'string'},
+    'full-scan': {type: 'boolean', default: false}}});
   const client = createClient(process.env.GITHUB_TOKEN, process.env.GITHUB_REPOSITORY);
+  const statePath = values.state || process.env.MFCP_PROGRESSION_STATE;
+  const state = await readProcessingState(statePath, reconciliationStateSchema);
+  prepareReconciliationState(state, reconciliationScope());
+  const checkpoint = () => saveProcessingState(statePath, state, reconciliationStateSchema);
   let result;
+  try {
   if (values.cleanup) {
     result = await cleanupProgressionBranches(client, {write: values.write});
   } else if (values.verify) {
@@ -269,17 +244,30 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const {verifyIntegrity} = await import('./lib/integrity.mjs');
     result = await verifyIntegrity(client, Number(values['verify-pr']));
   } else if (values.reconcile || ['schedule', 'workflow_dispatch'].includes(process.env.GITHUB_EVENT_NAME)) {
-    result = await reconcile(client, values.write);
+    const batch = await collectReconciliationWork(client, state, {slug: process.env.MFCP_APP_SLUG,
+      botId: Number(process.env.MFCP_BOT_ID), full: state.revalidate || values['full-scan'], snapshot: readProfileSnapshot()});
+    for (const item of batch.work) state.pending[sourceKey(item.source)] = item;
+    state.since = batch.started;
+    state.revalidate = false;
+    result = await processReconciliationWork(client, batch.work, state, processSource, {write: values.write, checkpoint});
   } else {
-    const sources = values.source ? [JSON.parse(values.source)] : await sourcesForEvent(client,
-      JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8')), process.env.GITHUB_EVENT_NAME);
-    result = [];
-    for (const source of sources) result.push(await processSource(client, source, {write: values.write}));
+    const event = values.source ? null : JSON.parse(await readFile(process.env.GITHUB_EVENT_PATH, 'utf8'));
+    const sources = values.source ? [JSON.parse(values.source)] : await sourcesForEvent(client, event, process.env.GITHUB_EVENT_NAME);
+    const work = [];
+    for (const source of sources) {
+      const fingerprint = source.kind === 'comment'
+        ? commandFingerprint(event?.comment || await client.request(`${client.root}/issues/comments/${source.comment}`))
+        : digest(source);
+      if (state.completed[sourceKey(source)] !== fingerprint || state.pending[sourceKey(source)]) work.push({source, fingerprint});
+    }
+    result = await processReconciliationWork(client, work, state, processSource, {write: values.write, checkpoint});
   }
-  if (values.write && !values.cleanup) {
+  if (Array.isArray(result) && result.some(event => event.status === 'pending')) process.exitCode = 1;
+  if (values.write && !values.cleanup && Array.isArray(result) && result.some(event => event.status === 'published')) {
     result = {events: result, cleanup: await cleanupProgressionBranches(client, {write: true})};
   }
-  console.log(JSON.stringify(result, null, 2));
+  } finally {if (!values.verify && !values['verify-pr']) await checkpoint();}
+  console.log(JSON.stringify({result, api: apiUsage()}, null, 2));
   if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY,
     `## MFCP progression\n\n\`\`\`json\n${JSON.stringify(result, null, 2)}\n\`\`\`\n`);
 }

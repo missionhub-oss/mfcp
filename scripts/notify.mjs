@@ -2,14 +2,24 @@
 // SPDX-License-Identifier: MIT
 import { parseArgs } from 'node:util';
 import { createAppAuth } from '@octokit/auth-app';
-import { createClient, DEFAULT_REPOSITORY, REPOSITORY_ID } from './lib/github.mjs';
+import { createClient, DEFAULT_REPOSITORY, REPOSITORY_ID, apiUsage } from './lib/github.mjs';
 import { readProfileSnapshot } from './lib/profile-snapshot.mjs';
-import { deliverNotifications } from './lib/notifications.mjs';
+import { deliverNotifications, notificationStateSchema, notificationsFor, notificationDelivered } from './lib/notifications.mjs';
+import {readProcessingState, saveProcessingState} from './lib/processing-state.mjs';
 
-const {values} = parseArgs({options: {write: {type: 'boolean', default: false}}});
+const {values} = parseArgs({options: {write: {type: 'boolean', default: false}, state: {type: 'string'}}});
+const statePath = values.state || process.env.MFCP_NOTIFICATION_STATE;
+const state = await readProcessingState(statePath, notificationStateSchema);
 const appId = Number(process.env.MFCP_APP_ID);
 const slug = process.env.MFCP_APP_SLUG;
 const repository = process.env.GITHUB_REPOSITORY || DEFAULT_REPOSITORY;
+const snapshot = readProfileSnapshot();
+const messages = snapshot.profiles.flatMap(({profile}) => notificationsFor(profile));
+if (messages.every(message => notificationDelivered(message, state))) {
+  console.log(JSON.stringify({commit: snapshot.ref, contributors: snapshot.profiles.length,
+    cached_notifications: messages.length, api: apiUsage()}, null, 2));
+  process.exit(0);
+}
 let token = process.env.GITHUB_TOKEN;
 let auth;
 let installationId;
@@ -33,10 +43,11 @@ if (values.write) {
 }
 const client = createClient(token, repository);
 try {
-  const {ref, profiles} = readProfileSnapshot();
-  const results = await deliverNotifications(client, profiles, {appId, slug, write: values.write});
-  console.log(JSON.stringify({commit: ref, contributors: profiles.length, notifications: results}, null, 2));
-  if (results.some(result => result.status === 'failed')) process.exitCode = 1;
+  const {ref, profiles} = snapshot;
+  const results = await deliverNotifications(client, profiles, {appId, slug, write: values.write, state,
+    checkpoint: () => saveProcessingState(statePath, state, notificationStateSchema)});
+  console.log(JSON.stringify({commit: ref, contributors: profiles.length, notifications: results, api: apiUsage()}, null, 2));
+  if (results.some(result => ['failed', 'deferred'].includes(result.status))) process.exitCode = 1;
 } finally {
   if (auth && installationId) await client.request('installation/token', 'DELETE');
 }

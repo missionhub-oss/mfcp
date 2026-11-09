@@ -19,7 +19,8 @@ jobs:
     if: >-
       github.repository_id == '1428030862' && vars.MFCP_APP_ID != '' &&
       (github.event_name != 'issue_comment' ||
-       (!github.event.issue.pull_request && github.event.comment.user.type == 'User'))
+       (!github.event.issue.pull_request && github.event.comment.user.type == 'User' &&
+        contains(github.event.comment.body, format('@{0}', vars.MFCP_APP_SLUG))))
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -31,6 +32,13 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
+      - name: Restore processed events and update cursor
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        continue-on-error: true
+        with:
+          path: .mfcp-runtime/progression-state.json
+          key: mfcp-progression-v1-${{ github.repository_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: mfcp-progression-v1-${{ github.repository_id }}-
       - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
         id: app
         with:
@@ -58,3 +66,11 @@ jobs:
           MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
           MFCP_APP_ID: ${{ vars.MFCP_APP_ID }}
           MFCP_BOT_ID: ${{ vars.MFCP_BOT_ID }}
+          MFCP_PROGRESSION_STATE: .mfcp-runtime/progression-state.json
+      - name: Save processed events and pending retries
+        if: always() && hashFiles('.mfcp-runtime/progression-state.json') != ''
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        continue-on-error: true
+        with:
+          path: .mfcp-runtime/progression-state.json
+          key: mfcp-progression-v1-${{ github.repository_id }}-${{ github.run_id }}-${{ github.run_attempt }}

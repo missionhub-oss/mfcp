@@ -1,0 +1,51 @@
+{
+  "source": "https://github.com/missionhub-oss/mfcp/pull/184",
+  "trusted_ref": "813ef97629136a2c6eef14f57b3e19a2516a8ab5",
+  "pr": {
+    "number": 184,
+    "changed_files": 16,
+    "title": "bot: make mentor patch signatures optional for settlement",
+    "created_at": "2026-11-08T14:17:28Z",
+    "updated_at": "2026-11-08T14:18:54Z",
+    "user": {
+      "id": 62325246,
+      "login": "zevorn",
+      "type": "User"
+    },
+    "head": {
+      "sha": "a2a41ab455b255644dddda275b8b9523e9cb77cb"
+    },
+    "base": {
+      "sha": "813ef97629136a2c6eef14f57b3e19a2516a8ab5",
+      "ref": "main"
+    }
+  },
+  "check": {
+    "id": 128757258194,
+    "name": "check",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "a2a41ab455b255644dddda275b8b9523e9cb77cb",
+    "app": {
+      "id": 15368
+    }
+  },
+  "notification": {
+    "id": 6722633075,
+    "body": "🎉 Congratulations, @asymecat! You've completed this task and your contribution has been accepted!\n\nYou turned this task into an upstream contribution that others can build on. Excellent work seeing it through review and merge — thank you for the care and persistence you brought to it!\n\n**Experience earned: +10 XP** · **Task difficulty: L1**\n\nThis is how an open-source contributor grows: one real contribution at a time. Keep going — we look forward to what you build next!\n\n<!-- mfcp-notification:2360958796b0d772af71d8ecf3f0d72e12601f516a81445b5c4e52c77fa3f168 -->",
+    "html_url": "https://github.com/missionhub-oss/mfcp/issues/154#issuecomment-6722633075",
+    "created_at": "2026-11-08T14:20:58Z",
+    "user": {
+      "id": 345823948,
+      "type": "Bot"
+    },
+    "performed_via_github_app": {
+      "id": 5410846
+    }
+  },
+  "rate_limit": {
+    "source": "https://github.com/missionhub-oss/mfcp/actions/runs/42554231806/job/128956267652",
+    "status": 403,
+    "message": "GitHub GET repos/missionhub-oss/mfcp/issues/80/comments?per_page=100&page=1: 403: API rate limit exceeded for installation ID 173747727."
+  }
+}

@@ -8,12 +8,8 @@ permissions:
   pull-requests: read
 jobs:
   verify:
-    name: ${{ matrix.check }}
+    name: Verify progression evidence
     if: github.repository_id == '1428030862'
-    strategy:
-      fail-fast: false
-      matrix:
-        check: ['JSON format and fields', 'validate', 'Progression integrity']
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -36,3 +32,18 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           MFCP_MEMBERS_TOKEN: ${{ steps.members.outputs.token }}
           MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
+  result:
+    name: ${{ matrix.check }}
+    needs: verify
+    if: always() && github.repository_id == '1428030862'
+    strategy:
+      fail-fast: false
+      matrix:
+        check: ['JSON format and fields', 'validate', 'Progression integrity']
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Report evidence verification result
+        run: test "$VERIFICATION_RESULT" = success
+        env:
+          VERIFICATION_RESULT: ${{ needs.verify.result }}

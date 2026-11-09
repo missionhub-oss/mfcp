@@ -33,7 +33,16 @@ export async function currentRules(client, ref, time, year = programYearAt(time)
   return {...versions[0], governance};
 }
 
+const profileSnapshots = new WeakMap();
 export async function readProfiles(client, ref) {
+  if (!/^[a-f0-9]{40}$/.test(ref ?? '')) return fetchProfiles(client, ref);
+  if (!profileSnapshots.has(client)) profileSnapshots.set(client, new Map());
+  const snapshots = profileSnapshots.get(client);
+  if (!snapshots.has(ref)) snapshots.set(ref, fetchProfiles(client, ref).catch(error => {snapshots.delete(ref); throw error;}));
+  return structuredClone(await snapshots.get(ref));
+}
+
+async function fetchProfiles(client, ref) {
   const tree = await client.request(`${client.root}/git/trees/${ref}?recursive=1`);
   if (tree.truncated) throw new Error('Incomplete repository tree.');
   const profiles = [];
