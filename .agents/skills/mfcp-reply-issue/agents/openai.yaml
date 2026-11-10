@@ -1,0 +1,4 @@
+interface:
+  display_name: "MFCP Issue 回复"
+  short_description: "用 3 到 5 句自然语言回复任务 Issue，并单独发送导师、负责人、结算和晋级命令"
+  default_prompt: "使用 $mfcp-reply-issue，用简短自然语言回复任务进展或成果，并把 @mfcp-progress 命令单独发送。"

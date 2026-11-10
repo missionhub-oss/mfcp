@@ -106,14 +106,9 @@ Mentor 没有设置 Assignee 的仓库权限时，可以发表
 `@mfcp-progress configure assignee @参与者用户名`，由 Bot 分配已注册且
 参与过该 Issue 讨论的成员。命令作者需要属于 Mentors Team。
 
-```markdown
-### Participation request / 参与申请
-- Relevant experience / 相关经验：
-- Available time / 可参与时间：
-- Development environment / 开发条件：
-- Task understanding / 对任务的理解：
-- Guidance needed / 需要的指导：
-```
+参与申请用 3 到 5 句话说明相关经验、可参与时间、对任务的理解和需要的帮助。例如：
+
+> 我做嵌入式仿真一年多，熟悉 Rockchip 板级资料，每周能投入 10 小时。想先补文档的映射表，再跑 qtest。需要确认 TRM 版本和 rock-5b-plus 的范围。
 
 导师与维护者在评论中确认任务范围、验收条件、沟通安排和参与申请链接。
 负责人以 Assignee 为准，难度和年度以标签为准，Mentor 通过 `configure`
@@ -131,7 +126,7 @@ Mentor 没有设置 Assignee 的仓库权限时，可以发表
 
 提交公开记录前，检查其中的个人信息、访问凭据和内部资料。薪酬协议及个人联系方式通过组织者指定的私有渠道处理。
 
-进展更新、成果提交、导师评估与组织者复核均记录在原任务评论中，使用[任务评论模板](docs/task-comments.md)。维护者在任务正文维护最新进展和评估评论链接。成果审核并合入上游后，维护者发送 `@mfcp-progress settle <上游 PR 链接>`，Bot 校验、结算并自动关闭任务，再回复贡献者的完成祝贺；同时晋级时另发晋级祝贺。
+进展更新、成果提交、导师评估与组织者复核均记录在原任务评论中。默认用 3 到 5 句自然语言写，参考[任务评论示例](docs/task-comments.md)，不需要逐项填写。维护者在任务正文维护最新进展和评估评论链接。成果审核并合入上游后，维护者发送 `@mfcp-progress settle <上游 PR 链接>`，Bot 校验、结算并自动关闭任务，再回复贡献者的完成祝贺；同时晋级时另发晋级祝贺。
 
 ## 更新培养记录
 
