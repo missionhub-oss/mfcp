@@ -43,7 +43,8 @@ composition are informed by the supplied Humanfia website reference.
 The hero mark floats while its rings rotate and the glow pulses. Mouse input
 adds a small perspective tilt. Motion pauses outside the viewport and while
 the tab is hidden; the system's reduced-motion preference keeps it static.
-The mobile hero frame contains its decorative rings within the viewport.
+The mobile and tablet hero frames contain their decorative rings within the
+viewport.
 Sections and ranked entries reveal once on entering the viewport. Buttons,
 project arrows and rows use small hover transitions with the same motion
 preference. All content stays visible without JavaScript.
@@ -51,22 +52,28 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their original files, proportions and transparency. The eleven partners form
-three rows: four in each of the first two rows, with Renesas, SiFli and ReedPilot
-centered in the third row. Renesas uses the supplied white transparent PNG;
+their artwork and proportions. The thirteen partners wrap into rows of four;
+each incomplete row is centered with the same card widths and spacing.
+Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
 websites. ReedPilot uses the supplied white transparent PNG, retaining its
 original pixels and alpha channel. Its image is centered within the logo frame
 to account for the transparent padding, and links to `https://www.reedpilot.com/`.
+Kubuds Technology uses the supplied white SVG artwork on a transparent
+background with a viewBox fitted to the mark, and links to `https://kubuds.io/`.
+Jiachen Project uses the supplied transparent SVG, displayed in white within
+the logo frame, and links to `https://rv2036.org/`.
 The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
-Each logo keeps its original colors and transparent background directly
-within the dark section.
+The logos appear directly on the dark section with transparent backgrounds.
 The Gevico logo comes from the [QEMU Camp organization profile](https://github.com/qemu-camp)
 ([original image](https://raw.githubusercontent.com/qemu-camp/.github/main/profile/assets/gtoc-logo-horizontal.png));
 the HUST logo comes from the [QEMU Camp website](https://qemu.gevico.online/)
 ([original image](https://qemu.gevico.online/image/partners/hust.png)).
-Each logo links to its community and has a visible bilingual name.
+Each logo links to its community and has a visible name that follows the
+selected page language: official Chinese names on the Chinese page and
+English names on the English page. Brands without an official Chinese name
+keep their established spelling in both languages.
 Program, leaderboard and partner headings have a red background that expands
 from left to right when their section is hovered or contains keyboard focus.
 Touch layouts show the background directly; reduced motion disables the transition.
