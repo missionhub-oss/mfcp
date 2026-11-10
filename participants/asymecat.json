@@ -3,13 +3,29 @@
   "github_login": "asymecat",
   "schema_version": 1,
   "level": 1,
-  "experience": 10,
+  "experience": 40,
   "contributions": [
     {
       "id": "task-154",
       "issue": 154,
       "participant_id": 191454483,
       "mentor_id": 62325246,
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 154,
+              "comment": 6704936141
+            },
+            "actor": 62325246,
+            "at": "2026-11-07T09:14:59Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ],
       "difficulty": 1,
       "policy": {
         "id": "2026.v6",
@@ -42,7 +58,6 @@
             "digest": "bf72d71605a8114504525f8ae88b6e722124daf4569ef0108c20655e7b79192e",
             "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/51\"]}"
           },
-          "mentor_id": 62325246,
           "upstream": [
             {
               "repository": "processmission/qemu",
@@ -56,7 +71,68 @@
               "url": "https://github.com/processmission/qemu/pull/51"
             }
           ],
-          "points": 10
+          "points": 10,
+          "mentor_id": 62325246
+        }
+      ]
+    },
+    {
+      "id": "task-157",
+      "issue": 157,
+      "participant_id": 191454483,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v6",
+        "sha": "8ed89411ea01b0d311dd3234a57bef90488c1f43"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 157,
+          "comment": 6704937053
+        },
+        "actor": 62325246,
+        "at": "2026-11-07T09:15:05Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6768037283",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 157,
+              "comment": 6768037283
+            },
+            "actor": 62325246,
+            "at": "2026-11-10T13:02:58Z",
+            "digest": "fe8a4dee4c76658591616bc9936a7bc9459da3782891e0f20fabcd56aea6e678",
+            "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/52\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "processmission/qemu",
+              "number": 52,
+              "author": 191454483,
+              "merge_commit": "22431df35375cf18a55951775e46d1302a9a6778",
+              "merged_at": "2026-11-10T03:33:36Z",
+              "commits": [
+                "bc5f6a50d80729c6da071c50e06e05dbb6de61b2",
+                "04ec426fe20ad16d0147f5d73a011835fafaeb83",
+                "f061919b824c9c65794afca2a38ea9c4fff0b650",
+                "3dcfc3ed85f5a894ff0f2f12f110cff743df24c5",
+                "1de6e0bdf15b1c282e38ae12fc9e025412905b8a",
+                "af6e6631a8b6f66bd252d2ef975f47f9b0f05df8"
+              ],
+              "url": "https://github.com/processmission/qemu/pull/52"
+            }
+          ],
+          "points": 30
         }
       ],
       "mentors": [
@@ -65,11 +141,11 @@
           "configuration": {
             "source": {
               "kind": "comment",
-              "issue": 154,
-              "comment": 6704936141
+              "issue": 157,
+              "comment": 6704937053
             },
             "actor": 62325246,
-            "at": "2026-11-07T09:14:59Z",
+            "at": "2026-11-07T09:15:05Z",
             "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
             "details": "{\"mentor\":\"@zevorn\"}"
           }
@@ -104,8 +180,8 @@
   "adjustments": [],
   "last_event": {
     "kind": "comment",
-    "issue": 154,
-    "comment": 6722611680
+    "issue": 157,
+    "comment": 6768037283
   },
-  "updated_at": "2026-11-08T14:18:58Z"
+  "updated_at": "2026-11-10T13:02:58Z"
 }
