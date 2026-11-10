@@ -10,6 +10,7 @@
 | 项目标签 | `.github/labels.json` 与 GitHub 仓库的 Labels | 使用一致的 `project/<project>` 名称、颜色与说明；远端标签需要实际创建 |
 | 任务表单 | `.github/ISSUE_TEMPLATE/01-task.yml` | 项目选项可选，任务原生 Type 为 `Task` |
 | 创建任务技能 | `.agents/skills/mfcp-create-issue/SKILL.md` 与 `scripts/prepare.rb` | 项目名称映射到正确标签；核对年度和上游仓库准入 |
+| 回复任务技能 | `.agents/skills/mfcp-reply-issue/SKILL.md` | 评论保持 3 到 5 句自然语言；Bot 命令单独发送 |
 | 年度安排 | `programs/<year>/README.md`、`progression.md` | 项目资料入口、当前规则版本、上游仓库列表 |
 | 验收规则 | `programs/<year>/rules/vN.json` | `upstream_repositories` 包含明确的上游 `owner/repo`，版本和生效时间唯一 |
 | 参与和 Bot 说明 | `CONTRIBUTING.md`、`docs/program.md`、`docs/progression-bot.md` | 项目方向和结算要求与当前规则一致 |

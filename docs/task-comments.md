@@ -1,68 +1,42 @@
 <!-- SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission -->
 <!-- SPDX-License-Identifier: MIT -->
 
-# 任务评论模板
+# 任务评论示例
 
-在原任务 Issue 中复制对应模板填写。申领流程见[贡献指南](../CONTRIBUTING.md#申领任务)。填写实际成果和验证证据，不适用的条目说明原因。
+任务评论默认用 3 到 5 句自然语言写，像给同事发一条短消息，或发一条个人推文。先说结果，再说证据链接和下一步。示例只作参考，不要逐字套用，也不要保留字段名。
 
-这些评论用于记录实际成果和评估依据。成果审核并合入上游后，使用
-[结算命令](bot-command-examples.md#结算经验settle)关联上游 PR，Bot 校验、结算并关闭任务。
-晋级评估命令中的证据链接可以引用这些评论。
+评论用于让人快速了解进展。详细日志、命令、表格和长输出放在链接里。项目名、命令、代码和链接保留原文。回复和 Bot 命令分开写，命令单独发一条。
+
+## 参与申请
+
+说明相关经验、可参与时间、对任务的理解和需要的帮助。
+
+> 我做嵌入式仿真一年多，熟悉 Rockchip 板级资料，每周能投入 10 小时。想先补文档的映射表，再跑 qtest。需要确认 TRM 版本和 rock-5b-plus 的范围。
 
 ## 进展更新
 
-```markdown
-### Progress update / 进展更新
-- Completed work / 已完成内容：
-- Evidence and links / 验证证据与成果链接：
-- Current obstacles / 当前阻碍：
-- Next actions / 下一步操作：
-- Help needed / 需要的帮助：
-```
+说明已完成、验证结果、阻碍和下一步。
+
+> GPIO0–GPIO4 已接到 SoC，qtest 59 项全过。中断回归还差 EOI 用例，卡在 ...。PR: ... 需要导师确认 ...
 
 ## 成果提交
 
-提交前按[提交规范](../CONTRIBUTING.md#提交格式与-dco)核对作者 DCO，导师 DCO 为可选签署。
-签署者使用本人真实姓名的英文全称，中文姓名使用完整拼音。通常将姓名
-各部分的首字母大写，也可以将姓氏全部大写；
-作者姓名和邮箱与其提交身份一致。
+说明交付内容、验收结果、上游链接和范围边界。提交前按[提交规范](../CONTRIBUTING.md#提交格式与-dco)核对作者 DCO，导师 DCO 为可选签署。签署者使用本人真实姓名的英文全称，中文姓名使用完整拼音。
 
-复核申请引用需要复核的评估评论，并补充依据。
-
-```markdown
-### Contribution submission / 成果提交
-- Stage / 评估阶段（阶段评估、最终评估、复核申请）：
-- Deliverables / 实际成果及对应验收条件：
-- Validation / 版本、环境、命令、实际结果与限制：
-- Upstream status / 上游贡献链接、状态与记录日期：
-- Collaboration / 独立完成内容、导师指导与评审处理情况：
-- Review request / 需要评估的事项及相关评论链接：
-```
+> 任务完成：GPIO0–GPIO4 接入 SoC，qtest 59 项通过，PR #53 已合入。文档和边界说明已更新，范围未包含 pinmux。
 
 ## 导师评估
 
-导师引用本次成果提交评论，记录评估日期和结论。组织者据此复核，年度记录引用对应评论链接。
+说明结论、证据、剩余事项和下一步。
 
-```markdown
-### Mentor assessment / 导师评估
-- Submission / 成果提交评论链接：
-- Assessor and date / 评估人 GitHub 用户名与评估日期：
-- Acceptance review / 各项验收条件的结论与证据：
-- Remaining work / 仍需完成的事项：
-- Level recommendation / 等级建议与依据（如适用）：
-- Assessment result / 评估结论（阶段通过、最终验收通过、需要补充）：
-- Next actions / 下一步操作与负责人：
-```
+> 验收通过：GPIO0–GPIO4 的地址、IRQ 和 qtest 都符合验收条件，PR #53 已合入。剩余 pinmux 不在本任务范围。结论：最终验收通过。
 
 ## 组织者复核
 
-组织者确认评估依据并注明后续安排。参与者有异议时，在原任务中引用复核评论并补充证据。
+说明结论、依据和后续安排。
 
-```markdown
-### Organizer review / 组织者复核
-- Assessment / 导师评估评论链接：
-- Reviewer and date / 复核人 GitHub 用户名与复核日期：
-- Review result / 复核结论与依据：
-- Follow-up / 继续执行、补充证据或关闭任务的安排：
-- Annual record / 年度记录链接：
-```
+> 复核通过：导师评估和上游 PR 一致，年度记录已更新。任务关闭。
+
+## Bot 命令
+
+配置导师、分配负责人、结算等操作使用单独的命令评论，具体命令见 [Bot 命令示例](bot-command-examples.md)。命令第一行写 `@mfcp-progress ...`，不要和进展描述混在一条评论里。
