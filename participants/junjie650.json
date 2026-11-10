@@ -3,8 +3,95 @@
   "github_login": "Junjie650",
   "schema_version": 1,
   "level": 1,
-  "experience": 0,
-  "contributions": [],
+  "experience": 30,
+  "contributions": [
+    {
+      "id": "task-135",
+      "issue": 135,
+      "participant_id": 211438045,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v6",
+        "sha": "8ed89411ea01b0d311dd3234a57bef90488c1f43"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 135,
+          "comment": 6543794413
+        },
+        "actor": 62325246,
+        "at": "2026-10-31T13:11:04Z",
+        "digest": "9be2e670becc06c21c6d24612553d6d6a1c53fadb5e70068e713ad66aeb11819",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6757001785",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 135,
+              "comment": 6757001785
+            },
+            "actor": 62325246,
+            "at": "2026-11-10T02:12:05Z",
+            "digest": "ca3dffe0f596c7eab8ddafdbaaf7f50ab2df21c8971c6f793a9307b10c2f2f79",
+            "details": "{\"pull_requests\":[\"https://github.com/sashiko-dev/sashiko/pull/829\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "sashiko-dev/sashiko",
+              "number": 829,
+              "author": 211438045,
+              "merge_commit": "2d9a37273e1f47ee8cacd7ebcc5767ea8b9c2660",
+              "merged_at": "2026-11-09T16:26:32Z",
+              "commits": [
+                "731e5d3739f92541425fb0bee915e11811313a59",
+                "688cb1c12029ee8f735d23302317d334beb93b31",
+                "64fbc22a4c272e9cba2eac09af906aa7f360b7e4",
+                "47ca3b471a13c8b37cb825ad3a3b0d21c131e439",
+                "a3d93b17e10d94b57338bb3fe2530a9deac93003",
+                "97043cb2c0bcb650e888e391a1eea33e0c4cbdbd",
+                "ccd46f5f8684fcc677065917494f78f9a4b7f53c",
+                "408af1d3cb83a29784a38f5fe370973ca34081bf",
+                "2cb6d085ad13e43c2a4e42fc293167d9c78a0fc7",
+                "ba1ce483330f50f6732d41cf0d987239efc3efac",
+                "7b3782c266c9a5ce50f5e6579bac988dd272c598",
+                "e6090b0848e54865063548c1fc2e1cc3a54d7621",
+                "884f7875bef6b2a0fe5ea999428cbfd0e805efab",
+                "32e28c9c7cc8b2429f173d7b0d03907ce3be1fb9",
+                "f0425e8bca881f858d6f698b1f01e479f8b538ba",
+                "8ee26a4d90aa303cf3d928f1291f3f6ce68d2be4"
+              ],
+              "url": "https://github.com/sashiko-dev/sashiko/pull/829"
+            }
+          ],
+          "points": 30
+        }
+      ],
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 135,
+              "comment": 6543794413
+            },
+            "actor": 62325246,
+            "at": "2026-10-31T13:11:04Z",
+            "digest": "9be2e670becc06c21c6d24612553d6d6a1c53fadb5e70068e713ad66aeb11819",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ]
+    }
+  ],
   "promotions": [
     {
       "id": "registration-136",
@@ -31,8 +118,9 @@
   ],
   "adjustments": [],
   "last_event": {
-    "kind": "registration",
-    "pr": 136
+    "kind": "comment",
+    "issue": 135,
+    "comment": 6757001785
   },
-  "updated_at": "2026-10-31T13:37:43Z"
+  "updated_at": "2026-11-10T02:12:05Z"
 }
