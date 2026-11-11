@@ -1,4 +1,38 @@
 {
   "github_id": 237250879,
-  "github_login": "peisong0528-maker"
+  "github_login": "peisong0528-maker",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-194",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v6",
+        "sha": "8ed89411ea01b0d311dd3234a57bef90488c1f43"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 194
+        },
+        "actor": 237250879,
+        "at": "2026-11-11T05:24:21Z",
+        "digest": "138506b5954d26f35b73167d4e1e52ea359bc5d1aa08d44aaec34b37a1537656",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/194\",\"merge_commit\":\"68d9df5743a6861d87c33b88a0208b0ee357dd91\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 194
+  },
+  "updated_at": "2026-11-11T05:24:21Z"
 }
