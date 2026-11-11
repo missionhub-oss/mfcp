@@ -3,11 +3,23 @@
 Humanize（`hmz`）通过协作流程组织编程 Agent 完成实现、审查和迭代，提供命令行与桌面工具。
 本方向可提出 Agent 接入、流程执行、交互界面、缺陷修复、测试和文档相关任务。
 
+## 入门学习
+
+首次接触 Humanize，可以从 [Humanize Agent 工作流实践课程](learning-courses.md)开始。课程从工作流体验、Flame-Chase 到第一个 flow，配合官方文档完成安装、第一次运行和 flow 编写。
+
+## 官方文档
+
+- [文档首页](https://docs.humanfia.ai/humanize/)：功能概览、安装和用户指南入口。
+- [安装](https://docs.humanfia.ai/humanize/user/installation)：Desktop、CLI、`uv` 和 Agent CLI。
+- [第一次运行](https://docs.humanfia.ai/humanize/user/first-run)：在临时仓库运行第一个 flow。
+- [第一个 flow](https://docs.humanfia.ai/humanize/weaver/writing-a-flow)：`@flow`、角色、环境、参数和测试。
+- [Flow API](https://docs.humanfia.ai/humanize/reference/flows)：`hmz.flows` 接口和命令参数。
+- [Flow 目录](https://humanfia.ai/flows/)：官方内置 flow。
+
 ## 上游入口
 
 - [Humanize 项目介绍](https://humanfia.ai/projects/humanize)
 - [Humanize 源码](https://github.com/humanfia/humanize)
-- [使用与开发文档](https://docs.humanfia.ai/humanize/)
 - [上游贡献指南](https://github.com/humanfia/humanize/blob/main/CONTRIBUTING.md)
 
 ## 实践与验收
