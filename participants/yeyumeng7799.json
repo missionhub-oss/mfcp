@@ -3,8 +3,81 @@
   "github_login": "yeyumeng7799",
   "schema_version": 1,
   "level": 1,
-  "experience": 0,
-  "contributions": [],
+  "experience": 10,
+  "contributions": [
+    {
+      "id": "task-153",
+      "issue": 153,
+      "participant_id": 209349773,
+      "mentor_id": 62325246,
+      "difficulty": 1,
+      "policy": {
+        "id": "2026.v6",
+        "sha": "8ed89411ea01b0d311dd3234a57bef90488c1f43"
+      },
+      "points": 10,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 153,
+          "comment": 6704934785
+        },
+        "actor": 62325246,
+        "at": "2026-11-07T09:14:50Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6791014783",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 153,
+              "comment": 6791014783
+            },
+            "actor": 62325246,
+            "at": "2026-11-11T08:29:15Z",
+            "digest": "1817cd5690e1d53f85870eede3174ad0818b535b2f4b97426f9538d8ece9eb93",
+            "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/54\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "processmission/qemu",
+              "number": 54,
+              "author": 209349773,
+              "merge_commit": "4437f0c7ef333aa97ac5deb7b95aedf377a471a6",
+              "merged_at": "2026-11-11T07:55:07Z",
+              "commits": [
+                "df1eaefda74abbeaa35655f503427e24f0d76c80",
+                "18351141325813c48740574a50e5764d06fae991"
+              ],
+              "url": "https://github.com/processmission/qemu/pull/54"
+            }
+          ],
+          "points": 10
+        }
+      ],
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 153,
+              "comment": 6704934785
+            },
+            "actor": 62325246,
+            "at": "2026-11-07T09:14:50Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ]
+    }
+  ],
   "promotions": [
     {
       "id": "registration-82",
@@ -31,8 +104,9 @@
   ],
   "adjustments": [],
   "last_event": {
-    "kind": "registration",
-    "pr": 82
+    "kind": "comment",
+    "issue": 153,
+    "comment": 6791014783
   },
-  "updated_at": "2026-10-28T00:12:37Z"
+  "updated_at": "2026-11-11T08:29:15Z"
 }
