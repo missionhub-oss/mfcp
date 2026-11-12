@@ -11,6 +11,41 @@ const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
 
+const tabButtons = [...document.querySelectorAll('[role="tab"]')];
+
+function selectTab(name, {focus = false, updateHash = false} = {}) {
+  const index = tabButtons.findIndex(button => button.dataset.tab === name);
+  if (index < 0) return;
+  tabButtons.forEach((button, buttonIndex) => {
+    const selected = buttonIndex === index;
+    button.setAttribute('aria-selected', String(selected));
+    button.tabIndex = selected ? 0 : -1;
+    const panel = document.getElementById(button.getAttribute('aria-controls'));
+    if (panel) panel.hidden = !selected;
+  });
+  if (focus) tabButtons[index].focus();
+  if (updateHash) history.replaceState(null, '', index === 0 ? '#leaderboard' : '#events');
+}
+
+tabButtons.forEach((button, index) => {
+  button.addEventListener('click', () => selectTab(button.dataset.tab, {updateHash: true}));
+  button.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    let next = index;
+    if (event.key === 'ArrowLeft') next = (index - 1 + tabButtons.length) % tabButtons.length;
+    if (event.key === 'ArrowRight') next = (index + 1) % tabButtons.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = tabButtons.length - 1;
+    selectTab(tabButtons[next].dataset.tab, {focus: true, updateHash: true});
+  });
+});
+
+function selectTabFromHash() {
+  selectTab(location.hash === '#events' ? 'events' : 'ranking');
+}
+window.addEventListener('hashchange', selectTabFromHash);
+
 function setLanguage(next) {
   language = next === 'en' ? 'en' : 'zh';
   document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
@@ -86,6 +121,7 @@ menuButton.addEventListener('click', () => {
 document.querySelectorAll('#main-nav a').forEach(link => link.addEventListener('click', () => {
   menuButton.setAttribute('aria-expanded', 'false');
   document.documentElement.classList.remove('menu-open');
+  if (link.dataset.tab) selectTab(link.dataset.tab);
 }));
 document.querySelectorAll('.avatar img').forEach(img => img.addEventListener('error', () => {img.hidden = true;}));
 document.querySelectorAll('[data-ghfind-image]').forEach(img => {
@@ -106,6 +142,7 @@ document.addEventListener('keydown', event => {
 });
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
 setLanguage(language);
+selectTabFromHash();
 document.documentElement.dataset.enhanced = 'true';
 
 const art = document.querySelector('.forge-art');
