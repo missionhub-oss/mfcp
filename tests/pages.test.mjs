@@ -10,6 +10,7 @@ import {buildPages} from '../scripts/build-pages.mjs';
 import {normalizeProfile, totals} from '../scripts/lib/profile.mjs';
 import {loadTaskIssues} from '../scripts/lib/task-stats.mjs';
 import {loadCommunity} from '../scripts/lib/community.mjs';
+import {loadEvents} from '../scripts/lib/events.mjs';
 
 test('trusted site rendering publishes real records from a separate data directory', async () => {
   await mkdir('.mfcp-runtime', {recursive: true});
@@ -21,6 +22,10 @@ test('trusted site rendering publishes real records from a separate data directo
     const issues = await loadTaskIssues();
     const {html, program, output} = await buildPages(directory, {sha, issues});
     const $ = load(html);
+    const events = await loadEvents();
+    assert.equal($('#events .event-card').length, events.replays.length);
+    assert.deepEqual($('#events .event-card').map((_, element) => $(element).attr('href')).get(), events.replays.map(replay => replay.url));
+    assert.equal($('#tab-events').attr('aria-controls'), 'events');
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
     assert.equal($('.contributor-card').length, profiles.length);
