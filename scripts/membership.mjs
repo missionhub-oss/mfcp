@@ -127,10 +127,10 @@ async function verifyRecognitionProof(client, proof, maintainers) {
 async function recognitionUpdate(client, pr, registrations, files) {
   if (files.length !== registrations.length) return null;
   if (!registrations.every(file => file.status === 'modified' && /^participants\/[a-z0-9-]+\.json$/.test(file.filename))) return null;
-  const governance = JSON.parse((await client.file('programs/2026/governance.json', pr.base.sha)).value);
+  const governance = (await client.file('programs/2026/governance.json', pr.base.sha)).value;
   let proofs = [];
   for (const file of registrations) {
-    const before = normalizeProfile(JSON.parse((await client.file(file.filename, pr.base.sha)).value), file.filename);
+    const before = normalizeProfile((await client.file(file.filename, pr.base.sha)).value, file.filename);
     const after = normalizeProfile(await registrationBlob(client, file), file.filename);
     if (!recognitionOnlyChange(before, after)) return null;
     proofs = proofs.concat(after.recognitions.slice(before.recognitions.length).map(record => record.proof),
