@@ -28,9 +28,14 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal($('#tab-events').attr('aria-controls'), 'events');
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
-    assert.equal($('.contributor-card').length, profiles.length);
+    const rankedProfiles = profiles.filter(profile => profile.level < 4);
+    const recognizedProfiles = profiles.filter(profile => profile.level === 4);
+    assert.equal($('.ranking-list>.contributor-card').length, rankedProfiles.length);
+    assert.equal($('.recognized-card').length, recognizedProfiles.length);
     assert.deepEqual($('.ranking-list>.contributor-card').map((_, element) => $(element).attr('data-login')).get(),
       program.leaderboard.map(person => person.login.toLowerCase()));
+    assert.deepEqual($('.recognized-card').map((_, element) => $(element).attr('data-login')).get(),
+      program.recognized.map(person => person.login.toLowerCase()));
     const tasks = issues.filter(issue => !issue.pull_request && issue.type?.name === 'Task');
     const inProgress = tasks.filter(issue => issue.state === 'open' && issue.assignees.length > 0);
     const completed = tasks.filter(issue => issue.state === 'closed' && issue.state_reason === 'completed');
@@ -53,14 +58,22 @@ test('trusted site rendering publishes real records from a separate data directo
       const card = $(`#contributor-${profile.github_login.toLowerCase()}`);
       assert.equal(card.attr('data-level'), String(profile.level));
       assert.equal(card.attr('data-xp'), String(person.stats.experience));
+      if (profile.level === 4) {
+        assert.ok(card.hasClass('recognized-card'));
+        assert.equal(card.attr('data-tasks'), String(person.stats.tasks));
+        assert.deepEqual(card.find('.recognized-stats strong').map((_, element) => Number($(element).text())).get(),
+          [person.stats.tasks, person.stats.experience, person.stats.pull_requests]);
+        continue;
+      }
       assert.deepEqual(card.find('.person-stats dd').map((_, element) => Number($(element).text())).get(),
         [person.stats.experience, person.stats.tasks, person.stats.pull_requests]);
+      assert.equal(card.find('.rank-tasks strong').text(), String(person.stats.tasks));
       assert.deepEqual(card.find('.profile-links a[href]').map((_, element) => $(element).attr('href')).get(),
         [`https://ghfind.com/u/${person.login}`, person.githubUrl, person.recordUrl]);
       assert.ok(person.recordUrl.includes(`/blob/${sha}/participants/`));
       assert.equal(card.find('.rank-number').text(), String(person.rank));
       assert.equal(card.attr('value'), String(person.rank));
-      assert.equal(person.rank, 1 + program.participants.filter(other =>
+      assert.equal(person.rank, 1 + program.leaderboard.filter(other =>
         other.stats.experience > person.stats.experience).length);
       const threshold = profile.level === 1 ? program.rules.level2 : profile.level === 2 ? program.rules.level3 : null;
       assert.deepEqual(card.find('progress').map((_, element) => Number($(element).attr('max'))).get(),
