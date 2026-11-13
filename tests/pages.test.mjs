@@ -43,13 +43,19 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(program.stats.inProgressTasks, inProgress.length);
     assert.equal(program.stats.completedTasks, completed.length);
     const community = await loadCommunity();
-    assert.deepEqual($('.stats-grid>div').map((_, element) => ({
+    assert.deepEqual($('.stats-grid>a').map((_, element) => ({
       label: $(element).children('span').text(), value: Number($(element).find('strong').text()),
     })).get(), [
       {label: '社群人数', value: community.members},
       {label: '贡献者', value: profiles.length},
       {label: '任务总数', value: tasks.length},
       {label: '进行中', value: inProgress.length},
+    ]);
+    assert.deepEqual($('.stats-grid>a').map((_, element) => $(element).attr('href')).get(), [
+      '#join',
+      '#leaderboard',
+      'https://github.com/missionhub-oss/mfcp/issues?q=is%3Aissue+type%3ATask',
+      'https://github.com/missionhub-oss/mfcp/issues?q=is%3Aissue+type%3ATask+is%3Aopen+assignee%3A*',
     ]);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
     for (const profile of rankedProfiles) {

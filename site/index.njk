@@ -60,10 +60,10 @@
 
     <div class="stats-strip">
       <div class="container stats-grid">
-        <div><strong>{{ community.members }}</strong><span>{{ t('stats.community') }}</span></div>
-        <div><strong>{{ program.stats.participants }}</strong><span>{{ t('stats.people') }}</span></div>
-        <div><strong>{{ program.stats.tasks }}</strong><span>{{ t('stats.tasks') }}</span></div>
-        <div><strong>{{ program.stats.inProgressTasks }}</strong><span>{{ t('stats.inProgress') }}</span></div>
+        <a class="stat" href="#join"><strong>{{ community.members }}</strong><span>{{ t('stats.community') }}</span></a>
+        <a class="stat" href="#leaderboard"><strong>{{ program.stats.participants }}</strong><span>{{ t('stats.people') }}</span></a>
+        <a class="stat" href="{{ repositoryUrl }}/issues?q=is%3Aissue+type%3ATask" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.tasks }}</strong><span>{{ t('stats.tasks') }}</span></a>
+        <a class="stat" href="{{ repositoryUrl }}/issues?q=is%3Aissue+type%3ATask+is%3Aopen+assignee%3A*" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.inProgressTasks }}</strong><span>{{ t('stats.inProgress') }}</span></a>
       </div>
     </div>
 
