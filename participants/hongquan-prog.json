@@ -39,13 +39,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Program recognition: mentor work and public community contribution.",
       "evidence": [],
@@ -62,13 +62,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Program recognition: domain contributions and mentor leadership.",
       "evidence": [],
@@ -83,13 +83,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Recognised for mentor leadership and public community contribution."
     }
@@ -98,5 +98,5 @@
     "kind": "registration",
     "pr": 14
   },
-  "updated_at": "2026-11-13T08:02:24Z"
+  "updated_at": "2026-11-13T08:08:28Z"
 }
