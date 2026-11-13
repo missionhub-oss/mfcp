@@ -1,4 +1,39 @@
 {
   "github_id": 83800616,
-  "github_login": "Kingxukai"
+  "github_login": "Kingxukai",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-216",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 216
+        },
+        "actor": 83800616,
+        "at": "2026-11-13T08:15:47Z",
+        "digest": "ac5a0b7deeb168e5cbb5b3d93c22a942ca0aa7fb70f76020e4f6065c2016aad0",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/216\",\"merge_commit\":\"de30e44b563a634ec1399cbb0f96642326e676e4\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 216
+  },
+  "updated_at": "2026-11-13T08:15:47Z"
 }
