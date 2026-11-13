@@ -190,6 +190,13 @@ contributors already at L3/L4 use reviewed PRs. Reviews must approve the
 current PR revision, come from authorized people, and be independent of the
 participant. The bot enables auto-merge after these conditions pass.
 
+Maintainers may record a recognition without a command: a maintainer-authored
+participant PR appends `recognitions` and promotions, and every new proof points
+at a public maintainer comment stating the recognition decision. The integrity
+check verifies the comment author, timestamp and digest, and rejects any change
+to settlements, adjustments or the last event. Recognised points count towards
+experience, and later settlements preserve the recognition records.
+
 ## Workflow and branch controls
 
 - `Registration`: JSON and GitHub identity checks for participant PRs.

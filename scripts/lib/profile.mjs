@@ -30,11 +30,13 @@ const promotion = z.strictObject({id: z.string(), from: level, to: level, policy
   reason: z.string(), evidence: z.array(proof), review_pr: id.nullable()});
 const adjustment = z.strictObject({id: z.string(), contribution_id: z.string(), settlement_id: z.string(),
   points: z.number().int().nonnegative(), proof, review_pr: id.nullable()});
+const recognition = z.strictObject({id: z.string(), points: z.number().int().positive(), proof,
+  reason: z.string().min(1)});
 export const identitySchema = z.strictObject({github_id: id, github_login: login});
 export const profileSchema = identitySchema.extend({
   schema_version: z.literal(1), level, experience: z.number().int().nonnegative(),
   contributions: z.array(contribution), promotions: z.array(promotion), adjustments: z.array(adjustment),
-  last_event: source.nullable(), updated_at: date.nullable(),
+  recognitions: z.array(recognition).default([]), last_event: source.nullable(), updated_at: date.nullable(),
 });
 const threshold = z.strictObject({experience: z.number().int().nonnegative(), tasks: id,
   pull_requests: id, level2_tasks: z.number().int().nonnegative(), level3_tasks: z.number().int().nonnegative()});
@@ -58,7 +60,7 @@ export const equal = (a, b) => canonical(a) === canonical(b);
 export const participantPath = name => `participants/${login.parse(name).toLowerCase()}.json`;
 export function initialProfile(identity) {
   return {...identitySchema.parse(identity), schema_version: 1, level: 0, experience: 0,
-    contributions: [], promotions: [], adjustments: [], last_event: null, updated_at: null};
+    contributions: [], promotions: [], adjustments: [], recognitions: [], last_event: null, updated_at: null};
 }
 export function activeSettlement(profile, task) {
   return task.settlements.find(s => !profile.adjustments.some(a => a.settlement_id === s.id));
@@ -66,7 +68,8 @@ export function activeSettlement(profile, task) {
 export function totals(profile) {
   const completed = profile.contributions.filter(c => activeSettlement(profile, c));
   const prs = new Set(completed.flatMap(c => activeSettlement(profile, c).upstream.map(p => `${p.repository}#${p.number}`)));
-  return {experience: completed.reduce((n, c) => n + activeSettlement(profile, c).points, 0),
+  const recognised = profile.recognitions.reduce((n, record) => n + record.points, 0);
+  return {experience: completed.reduce((n, c) => n + activeSettlement(profile, c).points, 0) + recognised,
     tasks: completed.length, pull_requests: prs.size,
     level2_tasks: completed.filter(c => c.difficulty >= 2).length,
     level3_tasks: completed.filter(c => c.difficulty >= 3).length};
@@ -77,6 +80,7 @@ export function validateProfile(value, path) {
   const p = profileSchema.parse(value);
   if (participantPath(p.github_login) !== path) throw new Error('Participant filename does not match username.');
   const ids = [...p.contributions.map(c => c.id), ...p.promotions.map(c => c.id), ...p.adjustments.map(c => c.id),
+    ...p.recognitions.map(c => c.id),
     ...p.contributions.flatMap(c => c.settlements.map(s => s.id))];
   if (ids.length !== new Set(ids).size) throw new Error('Duplicate record IDs.');
   const issues = p.contributions.map(c => c.issue);
