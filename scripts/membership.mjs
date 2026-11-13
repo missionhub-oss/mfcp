@@ -136,8 +136,12 @@ async function recognitionUpdate(client, pr, registrations, files) {
     const before = normalizeProfile((await client.file(file.filename, pr.base.sha)).value, file.filename);
     const after = normalizeProfile(await registrationBlob(client, file), file.filename);
     if (!recognitionOnlyChange(before, after)) return null;
-    proofs = proofs.concat(after.recognitions.slice(before.recognitions.length).map(record => record.proof),
-      after.promotions.slice(before.promotions.length).map(record => record.proof));
+    for (const field of APPENDED_FIELDS) {
+      for (let index = 0; index < before[field].length; index++) {
+        if (!equal(before[field][index].proof, after[field][index].proof)) proofs.push(after[field][index].proof);
+      }
+      proofs.push(...after[field].slice(before[field].length).map(record => record.proof));
+    }
   }
   if (!proofs.length) return null;
   for (const proof of proofs) await verifyRecognitionProof(client, proof, governance.maintainers);
