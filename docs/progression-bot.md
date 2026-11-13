@@ -13,9 +13,10 @@ repository and approve the organization's permission update.
 
 ## Mentor authorization
 
-Mentor eligibility comes from the active membership of
-[missionhub-oss/mentors](https://github.com/orgs/missionhub-oss/teams/mentors).
-The bot verifies organization ID `345787850`, Team ID `20231868`, the comment
+Mentor eligibility starts at L3: annual maintainers add contributors recorded
+at L3 or above to the Mentors Team, and only active membership of
+[missionhub-oss/mentors](https://github.com/orgs/missionhub-oss/teams/mentors)
+authorizes mentor commands. The bot verifies organization ID `345787850`, Team ID `20231868`, the comment
 author's numeric GitHub ID, and active membership for every command. GitHub
 includes child-team members in this membership lookup. Pending invitations and
 non-members have no command authority. Lookup failures stop the operation.
