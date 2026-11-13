@@ -95,6 +95,7 @@ const strings = {
   'partners.reedpilot': ['ReedPilot', '一苇宇航'],
   'partners.kubuds': ['Kubuds Technology', '苦芽科技'],
   'partners.jiachen': ['Jiachen Project', '甲辰计划'],
+  'partners.canaan': ['Canaan Developer Community', '嘉楠开发者社区'],
   'join.title': ['Make your first contribution.', '开始你的开源贡献。'],
   'join.body': ['Register, choose a project, and join the community.', '完成注册，选择实践方向，参与社区讨论。'],
   'join.register': ['Register with a PR', '提交注册 PR'],

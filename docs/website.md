@@ -52,7 +52,7 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their artwork and proportions. The thirteen partners wrap into rows of four;
+their artwork and proportions. The fourteen partners wrap into rows of four;
 each incomplete row is centered with the same card widths and spacing.
 Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
@@ -63,6 +63,9 @@ Kubuds Technology uses the supplied white SVG artwork on a transparent
 background with a viewBox fitted to the mark, and links to `https://kubuds.io/`.
 Jiachen Project uses the supplied transparent SVG, displayed in white within
 the logo frame, and links to `https://rv2036.org/`.
+Canaan Developer Community uses the supplied transparent PNG, recolored from
+its navy ink to white so the artwork contrasts with the dark section, and links
+to `https://www.kendryte.com/`.
 The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
 The logos appear directly on the dark section with transparent backgrounds.

@@ -75,6 +75,7 @@ html[lang="zh-CN"] h1{font-size:clamp(2.7rem,4.8vw,4.4rem);letter-spacing:-.035e
 .partner-reedpilot .partner-logo{overflow:hidden}.partner-reedpilot img{width:132%;max-width:none;flex-shrink:0;transform:translate(.65%,2.12%)}
 .partner-kubuds img{width:176px;max-width:100%}
 .partner-jiachen .partner-logo{overflow:hidden}.partner-jiachen img{width:160%;max-width:none;flex-shrink:0;filter:brightness(0) invert(1)}
+.partner-canaan img{width:288px;max-width:100%}
 @media(max-width:700px){.partners-section h2{margin-bottom:32px}.partner-grid{--partner-gap:12px;row-gap:28px}.partner-link{gap:12px}.partner-logo{height:80px;padding-inline:0}.partner-gevico img{width:350px}.partner-hust img{width:220px;max-width:100%}.partner-ghfind img,.partner-cnb img{width:52px}.partner-humanfia img{width:48px}.partner-rustsbi img,.partner-openruyi img{width:80px}.partner-name{font-size:14px;line-height:1.55;overflow-wrap:anywhere}}
 @media(hover:none){.highlight-title>span::before{transform:scaleX(1)}}
 .forge-art{overflow:visible;transform:perspective(1000px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));transition:transform .45s cubic-bezier(.2,.7,.2,1)}
