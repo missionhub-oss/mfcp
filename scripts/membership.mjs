@@ -3,7 +3,7 @@
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { createClient as githubClient, REPOSITORY_ID, DEFAULT_REPOSITORY } from './lib/github.mjs';
-import { normalizeProfile, initialProfile, assertIdentityOnly, equal, validateProfile } from './lib/profile.mjs';
+import { normalizeProfile, initialProfile, assertIdentityOnly, equal, validateProfile, digest } from './lib/profile.mjs';
 import { isTrustedBotComment } from './lib/bot-identity.mjs';
 
 export function participantPath(login) {
@@ -95,6 +95,52 @@ export async function validatePullRequestJson(client, number) {
   return `JSON syntax, fields and filenames verified for ${registrations.length} participant files.`;
 }
 
+const RECOGNITION_MARKER = /recognition decision/i;
+const APPENDED_FIELDS = ['recognitions', 'promotions'];
+
+export function recognitionOnlyChange(before, after) {
+  if (before.github_id !== after.github_id || before.github_login !== after.github_login ||
+      before.schema_version !== after.schema_version) return false;
+  for (const field of ['contributions', 'adjustments', 'last_event']) {
+    if (!equal(before[field], after[field])) return false;
+  }
+  for (const field of APPENDED_FIELDS) {
+    if (before[field].length > after[field].length) return false;
+    if (!before[field].every((item, index) => equal(item, after[field][index]))) return false;
+  }
+  const added = after.recognitions.length - before.recognitions.length +
+    after.promotions.length - before.promotions.length;
+  if (!added) return false;
+  return after.recognitions.slice(before.recognitions.length).every(record => record.proof.source.kind === 'comment') &&
+    after.promotions.slice(before.promotions.length).every(record => record.proof.source.kind === 'comment');
+}
+
+async function verifyRecognitionProof(client, proof, maintainers) {
+  const comment = await client.request(`${client.root}/issues/comments/${proof.source.comment}`);
+  if (comment.user?.type !== 'User' || comment.user.id !== proof.actor) throw new Error('Recognition evidence author mismatch.');
+  if (comment.created_at !== proof.at) throw new Error('Recognition evidence timestamp mismatch.');
+  if (!maintainers.includes(proof.actor)) throw new Error('Recognition evidence must come from an annual maintainer.');
+  if (digest(comment.body) !== proof.digest) throw new Error('Recognition evidence changed after it was recorded.');
+  if (!RECOGNITION_MARKER.test(comment.body)) throw new Error('Recognition evidence must state a recognition decision.');
+}
+
+async function recognitionUpdate(client, pr, registrations, files) {
+  if (files.length !== registrations.length) return null;
+  if (!registrations.every(file => file.status === 'modified' && /^participants\/[a-z0-9-]+\.json$/.test(file.filename))) return null;
+  const governance = JSON.parse((await client.file('programs/2026/governance.json', pr.base.sha)).value);
+  let proofs = [];
+  for (const file of registrations) {
+    const before = normalizeProfile(JSON.parse((await client.file(file.filename, pr.base.sha)).value), file.filename);
+    const after = normalizeProfile(await registrationBlob(client, file), file.filename);
+    if (!recognitionOnlyChange(before, after)) return null;
+    proofs = proofs.concat(after.recognitions.slice(before.recognitions.length).map(record => record.proof),
+      after.promotions.slice(before.promotions.length).map(record => record.proof));
+  }
+  if (!proofs.length) return null;
+  for (const proof of proofs) await verifyRecognitionProof(client, proof, governance.maintainers);
+  return 'Recognition updates verified.';
+}
+
 export async function validatePullRequest(client, number) {
   const pr = await client.request(`${client.root}/pulls/${number}`);
   const repo = await client.request(client.root);
@@ -117,6 +163,11 @@ export async function validatePullRequest(client, number) {
     }
     if (pr.base.ref !== repo.default_branch) throw new Error('Removal must target the default branch.');
     return 'Maintainer registration removal; human review is required.';
+  }
+  const permission = await client.request(`${client.root}/collaborators/${encodeURIComponent(pr.user.login)}/permission`);
+  if (['admin', 'maintain'].includes(permission.permission)) {
+    const recognition = await recognitionUpdate(client, pr, registrations, files);
+    if (recognition) return recognition;
   }
   if (pr.base.ref !== repo.default_branch || !pr.head.repo?.fork || pr.head.repo.full_name === repo.full_name) {
     throw new Error('Registration must come from a fork and target the default branch.');
