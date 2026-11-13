@@ -102,6 +102,8 @@ PR 修改代码作为数据读取，校验程序来自默认分支。
 
 申领通过 Issue 评论与 Assignee 完成。实际代码或文档修改通过对应仓库的 Pull Request 或上游规定的补丁流程提交。
 
+任务创建后超过 30 天仍没有 Assignee 时，Bot 会自动关闭该任务；需要继续时，在原任务评论说明原因并重新分配。
+
 Mentor 没有设置 Assignee 的仓库权限时，可以发表
 `@mfcp-progress configure assignee @参与者用户名`，由 Bot 分配已注册且
 参与过该 Issue 讨论的成员。命令作者需要属于 Mentors Team。
