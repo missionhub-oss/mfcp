@@ -29,13 +29,13 @@ test('trusted site rendering publishes real records from a separate data directo
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
     const rankedProfiles = profiles.filter(profile => profile.level < 4);
-    const recognizedProfiles = profiles.filter(profile => profile.level === 4);
     assert.equal($('.ranking-list>.contributor-card').length, rankedProfiles.length);
-    assert.equal($('.recognized-card').length, recognizedProfiles.length);
+    assert.equal($('.recognized-card').length, 0);
     assert.deepEqual($('.ranking-list>.contributor-card').map((_, element) => $(element).attr('data-login')).get(),
       program.leaderboard.map(person => person.login.toLowerCase()));
-    assert.deepEqual($('.recognized-card').map((_, element) => $(element).attr('data-login')).get(),
-      program.recognized.map(person => person.login.toLowerCase()));
+    for (const profile of profiles.filter(profile => profile.level === 4)) {
+      assert.equal($(`#contributor-${profile.github_login.toLowerCase()}`).length, 0);
+    }
     const tasks = issues.filter(issue => !issue.pull_request && issue.type?.name === 'Task');
     const inProgress = tasks.filter(issue => issue.state === 'open' && issue.assignees.length > 0);
     const completed = tasks.filter(issue => issue.state === 'closed' && issue.state_reason === 'completed');
@@ -52,19 +52,12 @@ test('trusted site rendering publishes real records from a separate data directo
       {label: '进行中', value: inProgress.length},
     ]);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
-    for (const profile of profiles) {
+    for (const profile of rankedProfiles) {
       const person = program.participants.find(item => item.id === profile.github_id);
       assert.deepEqual(person.stats, totals(profile));
       const card = $(`#contributor-${profile.github_login.toLowerCase()}`);
       assert.equal(card.attr('data-level'), String(profile.level));
       assert.equal(card.attr('data-xp'), String(person.stats.experience));
-      if (profile.level === 4) {
-        assert.ok(card.hasClass('recognized-card'));
-        assert.equal(card.attr('data-tasks'), String(person.stats.tasks));
-        assert.deepEqual(card.find('.recognized-stats strong').map((_, element) => Number($(element).text())).get(),
-          [person.stats.tasks, person.stats.experience, person.stats.pull_requests]);
-        continue;
-      }
       assert.deepEqual(card.find('.person-stats dd').map((_, element) => Number($(element).text())).get(),
         [person.stats.experience, person.stats.tasks, person.stats.pull_requests]);
       assert.equal(card.find('.rank-tasks strong').text(), String(person.stats.tasks));

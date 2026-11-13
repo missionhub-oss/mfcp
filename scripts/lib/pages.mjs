@@ -75,11 +75,10 @@ export async function loadProgram(directory, {now = new Date(), sha, issues} = {
         ({key, required, current: stats[key], value: Math.min(stats[key], required)})) : []};
   }).sort((a, b) => b.level - a.level || b.stats.experience - a.stats.experience || usernameOrder(a, b));
   const leaderboard = rankParticipants(participants);
-  const recognized = participants.filter(person => person.level === 4);
   const rankById = new Map(leaderboard.map(person => [person.id, person.rank]));
   for (const person of participants) person.rank = rankById.get(person.id);
   const tasks = taskStats(issues ?? await loadTaskIssues());
-  return {sha, builtAt: now.toISOString(), rules, participants, leaderboard, recognized,
+  return {sha, builtAt: now.toISOString(), rules, participants, leaderboard,
     rulesUrl: `${repositoryUrl}/blob/main/programs/${rules.year}/progression.md`,
     stats: {participants: participants.length, ...tasks,
       experience: participants.reduce((sum, person) => sum + person.stats.experience, 0), pullRequests: upstream.size}};

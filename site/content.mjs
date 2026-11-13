@@ -62,8 +62,6 @@ const strings = {
   'ranking.description': ['Ranked by total XP. Equal scores share a rank. Open a record to explore the work.', '按累计 XP 排名，同分并列。点击条目查看贡献记录。'],
   'ranking.rank': ['Rank', '排名'],
   'ranking.note': ['Totals count active task settlements. Registration PRs are recorded separately.', '统计仅计入有效的任务结算，注册 PR 单独记录。'],
-  'ranking.recognized': ['Domain KOLs', '领域 KOL'],
-  'ranking.unranked': ['Not ranked.', '不参与排行榜。'],
   'tabs.label': ['Leaderboard and events', '排行榜与活动'],
   'tabs.ranking': ['Leaderboard', '排行榜'],
   'tabs.events': ['Events', '活动'],
