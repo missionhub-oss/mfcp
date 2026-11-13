@@ -2,8 +2,8 @@
   "github_id": 81150281,
   "github_login": "hongquan-prog",
   "schema_version": 1,
-  "level": 3,
-  "experience": 300,
+  "level": 4,
+  "experience": 600,
   "contributions": [],
   "promotions": [
     {
@@ -73,6 +73,29 @@
       "reason": "Program recognition: domain contributions and mentor leadership.",
       "evidence": [],
       "review_pr": null
+    },
+    {
+      "id": "recognition-hongquan-prog-l4",
+      "from": 3,
+      "to": 4,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 241,
+          "comment": 6848112809
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:35:50Z",
+        "digest": "0096f8157779030ef3c60bf227021ed00295f7cc64edff01a48c120cb9d37ba1",
+        "details": "{\"issue\":241,\"comment\":6848112809}"
+      },
+      "reason": "Program recognition: domain KOL in RISC-V and open hardware.",
+      "evidence": [],
+      "review_pr": null
     }
   ],
   "adjustments": [],
@@ -92,11 +115,27 @@
         "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Recognised for mentor leadership and public community contribution."
+    },
+    {
+      "id": "recognition-hongquan-prog-600",
+      "points": 300,
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 241,
+          "comment": 6848112809
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:35:50Z",
+        "digest": "0096f8157779030ef3c60bf227021ed00295f7cc64edff01a48c120cb9d37ba1",
+        "details": "{\"issue\":241,\"comment\":6848112809}"
+      },
+      "reason": "Recognised as a domain KOL for public impact and mentor leadership."
     }
   ],
   "last_event": {
     "kind": "registration",
     "pr": 14
   },
-  "updated_at": "2026-11-13T08:08:28Z"
+  "updated_at": "2026-11-13T08:35:50Z"
 }
