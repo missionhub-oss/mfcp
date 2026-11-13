@@ -1,4 +1,123 @@
 {
   "github_id": 62325246,
-  "github_login": "zevorn"
+  "github_login": "zevorn",
+  "schema_version": 1,
+  "level": 4,
+  "experience": 600,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "recognition-zevorn-l1",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Program recognition: MFCP program leadership.",
+      "evidence": [],
+      "review_pr": null
+    },
+    {
+      "id": "recognition-zevorn-l2",
+      "from": 1,
+      "to": 2,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Program recognition: sustained program and community work.",
+      "evidence": [],
+      "review_pr": null
+    },
+    {
+      "id": "recognition-zevorn-l3",
+      "from": 2,
+      "to": 3,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Program recognition: domain leadership in RISC-V and embedded Linux.",
+      "evidence": [],
+      "review_pr": null
+    },
+    {
+      "id": "recognition-zevorn-l4",
+      "from": 3,
+      "to": 4,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Program recognition: recognised KOL in RISC-V and embedded Linux.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [
+    {
+      "id": "recognition-zevorn-600",
+      "points": 600,
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Recognised as a domain KOL and mentor leader with public community impact."
+    }
+  ],
+  "last_event": null,
+  "updated_at": "2026-11-13T08:02:24Z"
 }
