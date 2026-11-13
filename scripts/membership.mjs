@@ -104,15 +104,18 @@ export function recognitionOnlyChange(before, after) {
   for (const field of ['contributions', 'adjustments', 'last_event']) {
     if (!equal(before[field], after[field])) return false;
   }
+  const withoutProof = ({proof, ...rest}) => rest;
+  const proofs = [];
   for (const field of APPENDED_FIELDS) {
     if (before[field].length > after[field].length) return false;
-    if (!before[field].every((item, index) => equal(item, after[field][index]))) return false;
+    for (let index = 0; index < before[field].length; index++) {
+      if (!equal(withoutProof(before[field][index]), withoutProof(after[field][index]))) return false;
+      if (!equal(before[field][index].proof, after[field][index].proof)) proofs.push(after[field][index].proof);
+    }
+    proofs.push(...after[field].slice(before[field].length).map(record => record.proof));
   }
-  const added = after.recognitions.length - before.recognitions.length +
-    after.promotions.length - before.promotions.length;
-  if (!added) return false;
-  return after.recognitions.slice(before.recognitions.length).every(record => record.proof.source.kind === 'comment') &&
-    after.promotions.slice(before.promotions.length).every(record => record.proof.source.kind === 'comment');
+  if (!proofs.length) return false;
+  return proofs.every(proof => proof.source.kind === 'comment');
 }
 
 async function verifyRecognitionProof(client, proof, maintainers) {

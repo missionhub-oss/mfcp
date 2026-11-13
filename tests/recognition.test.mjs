@@ -63,3 +63,15 @@ test('only appended recognitions and promotions are a recognition change', () =>
   registration.promotions[0].proof.source = { kind: 'registration', pr: 1 };
   assert.equal(recognitionOnlyChange(before, registration), false);
 });
+
+test('recognition evidence may move to another public comment', () => {
+  const before = recognised();
+  const after = structuredClone(before);
+  const moved = { source: { kind: 'comment', issue: 9, comment: 10 }, actor: 1,
+    at: '2026-11-14T00:00:00Z', digest: 'c'.repeat(64), details: '{"level":4}' };
+  after.recognitions[0].proof = moved;
+  assert.equal(recognitionOnlyChange(before, after), true);
+
+  after.recognitions[0].points = 500;
+  assert.equal(recognitionOnlyChange(before, after), false);
+});
