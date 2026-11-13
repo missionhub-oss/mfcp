@@ -2,8 +2,8 @@
   "github_id": 81150281,
   "github_login": "hongquan-prog",
   "schema_version": 1,
-  "level": 1,
-  "experience": 0,
+  "level": 3,
+  "experience": 300,
   "contributions": [],
   "promotions": [
     {
@@ -27,12 +27,76 @@
       "reason": "Identity registration PR merged.",
       "evidence": [],
       "review_pr": null
+    },
+    {
+      "id": "recognition-hongquan-prog-l2",
+      "from": 1,
+      "to": 2,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Program recognition: mentor work and public community contribution.",
+      "evidence": [],
+      "review_pr": null
+    },
+    {
+      "id": "recognition-hongquan-prog-l3",
+      "from": 2,
+      "to": 3,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Program recognition: domain contributions and mentor leadership.",
+      "evidence": [],
+      "review_pr": null
     }
   ],
   "adjustments": [],
+  "recognitions": [
+    {
+      "id": "recognition-hongquan-prog-300",
+      "points": 300,
+      "proof": {
+        "source": {
+          "kind": "comment",
+          "issue": 237,
+          "comment": 6847504414
+        },
+        "actor": 62325246,
+        "at": "2026-11-13T08:02:24Z",
+        "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
+        "details": "{\"issue\":237,\"comment\":6847504414}"
+      },
+      "reason": "Recognised for mentor leadership and public community contribution."
+    }
+  ],
   "last_event": {
     "kind": "registration",
     "pr": 14
   },
-  "updated_at": "2026-10-21T12:22:05Z"
+  "updated_at": "2026-11-13T08:02:24Z"
 }
