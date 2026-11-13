@@ -1,4 +1,39 @@
 {
   "github_id": 16401013,
-  "github_login": "HeliC829"
+  "github_login": "HeliC829",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-235",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 235
+        },
+        "actor": 16401013,
+        "at": "2026-11-13T08:09:51Z",
+        "digest": "5a81f9701578ff48c9aed3f50b08cf0c7aa029fe9522d46ebbf81c6d8db23e96",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/235\",\"merge_commit\":\"37b97dd50e35c486c5eae2c660cd926863f117a2\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 235
+  },
+  "updated_at": "2026-11-13T08:09:51Z"
 }
