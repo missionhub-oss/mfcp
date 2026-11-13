@@ -12,11 +12,12 @@
 
 参与流程见[参与规则](../../docs/program.md)，任务提议按[贡献指南](../../CONTRIBUTING.md)提交。
 
-贡献者晋级采用 [2026 年晋级规则](progression.md)，自动化使用 [v6 规则](rules/v6.json)。
+贡献者晋级采用 [2026 年晋级规则](progression.md)，自动化使用 [v7 规则](rules/v7.json)。
 openRuyi 任务使用 `project/linux` 标签，上游目标为 `openRuyi-Project/openRuyi`
 和 `openRuyi-Project/homepage`。Sashiko 使用 `project/linux`，上游目标为
 `sashiko-dev/sashiko`。Humanize 任务使用 `project/humanize` 标签，
-上游目标为 `humanfia/humanize`。QEMU 任务使用 `project/qemu` 标签，
+上游目标为 `humanfia/humanize`；工作负载 flow 的上游目标为
+`humanfia/flowverse` 的清单。QEMU 任务使用 `project/qemu` 标签，
 GitHub PR 目标为 [`processmission/qemu`](https://github.com/processmission/qemu)；
 上游补丁通过 [`qemu-devel@nongnu.org`](https://lists.nongnu.org/mailman/listinfo/qemu-devel)
 评审，并在任务中关联[公开邮件线程](https://lore.kernel.org/qemu-devel/)。

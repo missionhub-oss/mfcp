@@ -55,7 +55,8 @@ openRuyi 任务选择 `Linux`，使用 `project/linux` 标签；`2026.v4` 接受
 `openRuyi-Project/openRuyi` 的软件包 PR 和 `openRuyi-Project/homepage` 的文档 PR。
 核对具体软件版本、目标体系结构、真实构建与运行证据，以及上游的 Agent 使用规则。
 Humanize 使用 `project/humanize` 标签；2026 年的 `2026.v3` 规则接受
-`humanfia/humanize` 的 PR。Sashiko 任务选择 `Linux`，`2026.v5` 接受
+`humanfia/humanize` 的 PR，`2026.v7` 起同时接受 `humanfia/flowverse` 的 flow 清单 PR。
+Sashiko 任务选择 `Linux`，`2026.v5` 接受
 `sashiko-dev/sashiko` 的 PR。新任务首次结算保存规则版本，已有任务使用已记录的版本。
 QEMU 使用 `project/qemu`，`2026.v6` 接受 `processmission/qemu` 默认分支 `devel` 的 PR。
 面向 QEMU 上游邮件列表的任务关联 `qemu-devel@nongnu.org` 和公开邮件线程，
