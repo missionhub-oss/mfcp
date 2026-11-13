@@ -80,7 +80,7 @@ const strings = {
   'level.0': ['Learner', '学习者'],
   'level.1': ['Apprentice', '见习贡献者'],
   'level.2': ['Contributor', '贡献者'],
-  'level.3': ['Advanced Contributor', '高级贡献者'],
+  'level.3': ['Core Contributor', '核心贡献者'],
   'level.4': ['Domain KOL', '领域 KOL'],
   'levels.rules': ['Progression rules', '晋级规则'],
   'partners.title': ['Partners.', '合作伙伴。'],
