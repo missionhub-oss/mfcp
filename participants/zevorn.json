@@ -17,13 +17,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Program recognition: MFCP program leadership.",
       "evidence": [],
@@ -40,13 +40,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Program recognition: sustained program and community work.",
       "evidence": [],
@@ -63,13 +63,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Program recognition: domain leadership in RISC-V and embedded Linux.",
       "evidence": [],
@@ -86,13 +86,13 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Program recognition: recognised KOL in RISC-V and embedded Linux.",
       "evidence": [],
@@ -107,17 +107,17 @@
       "proof": {
         "source": {
           "kind": "comment",
-          "issue": 237,
-          "comment": 6847504414
+          "issue": 238,
+          "comment": 6847612646
         },
         "actor": 62325246,
-        "at": "2026-11-13T08:02:24Z",
+        "at": "2026-11-13T08:08:28Z",
         "digest": "fb9827b5301bbf95994c9f7d2a3cdbbaa9499a41f3847734c34fd3ed1438aaf7",
-        "details": "{\"issue\":237,\"comment\":6847504414}"
+        "details": "{\"issue\":238,\"comment\":6847612646}"
       },
       "reason": "Recognised as a domain KOL and mentor leader with public community impact."
     }
   ],
   "last_event": null,
-  "updated_at": "2026-11-13T08:02:24Z"
+  "updated_at": "2026-11-13T08:08:28Z"
 }
