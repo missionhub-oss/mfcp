@@ -3,8 +3,8 @@
 
 # 2026 年贡献者晋级规则
 
-当前规则版本为 `2026.v6`，机器读取的数量与积分条件保存在
-[rules/v6.json](rules/v6.json)。`2026.v1` 至 `2026.v5` 保留用于已记录的任务合同和晋级记录。
+当前规则版本为 `2026.v7`，机器读取的数量与积分条件保存在
+[rules/v7.json](rules/v7.json)。`2026.v1` 至 `2026.v6` 保留用于已记录的任务合同和晋级记录。
 每条晋级记录保存规则版本及文件 SHA。
 
 任务通过 `2026` 标签选择本年度规则，通过 `difficulty/level0` 至
@@ -13,7 +13,7 @@ Mentor 指定和经验结算使用 [Bot 简短命令](../../docs/bot-command-exa
 
 ## 实践项目与上游仓库
 
-2026.v6 支持 Zephyr、Linux、Yocto、Humanize 和 QEMU 五个实践方向。自动结算的任务成果需要合入
+2026.v7 支持 Zephyr、Linux、Yocto、Humanize 和 QEMU 五个实践方向。自动结算的任务成果需要合入
 下列 GitHub 仓库之一；结算时按任务记录中的规则版本核对仓库。
 
 | 项目 | 上游仓库 |
@@ -21,17 +21,18 @@ Mentor 指定和经验结算使用 [Bot 简短命令](../../docs/bot-command-exa
 | Zephyr | `zephyrproject-rtos/zephyr` |
 | Linux | `torvalds/linux`、`elisa-tech/wg-aerospace`、`elisa-tech/wg-lfscs`、`openRuyi-Project/openRuyi`、`openRuyi-Project/homepage`、`sashiko-dev/sashiko` |
 | Yocto | `yoctoproject/poky`、`openembedded/openembedded-core`、`openembedded/meta-openembedded` |
-| Humanize | `humanfia/humanize` |
+| Humanize | `humanfia/humanize`、`humanfia/flowverse` |
 | QEMU | `processmission/qemu` |
 
 openRuyi 的软件包维护、系统验证和文档任务归入 Linux，使用原生 Type `Task`、
 `project/linux`、`2026` 和已确认的难度标签。其上游目标分别为
 `openRuyi-Project/openRuyi` 和 `openRuyi-Project/homepage`。
-Humanize 任务使用 `project/humanize` 标签。
+Humanize 任务使用 `project/humanize` 标签。工作负载 flow 的成果通过
+`humanfia/flowverse` 的清单 PR 结算，清单固定 flow 仓库的提交；flow 仓库需要公开且包含可复现的测试与示例产物。
 Sashiko 的 Linux 内核评审资料与工具任务归入 Linux，使用 `project/linux`。
 QEMU 任务使用 `project/qemu`，GitHub PR 提交到 `processmission/qemu` 的默认分支 `devel`。
-新任务首次结算按命令发生时间选择生效规则；`2026.v6` 自北京时间 2026 年 11 月 6 日
-15:45:37 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
+新任务首次结算按命令发生时间选择生效规则；`2026.v7` 自北京时间 2026 年 11 月 13 日
+15:40:00 生效。已保存的任务继续使用其记录中的规则版本、文件 SHA 和积分条件。
 上游 PR 需要合入默认分支，每个补丁提交包含可核实的作者 DCO。
 导师 DCO 为可选签署，结算核对导师配置授权和当前成员资格。
 

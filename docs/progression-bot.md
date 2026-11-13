@@ -155,9 +155,9 @@ Settlement requires a configured, independent, active mentor whose authorization
 predates the settlement command. The first eligible mentor in configuration order
 is stored with the settlement, regardless of optional patch signatures.
 Each upstream PR receives credit once
-among active settlements. The active 2026.v6 rules accept GitHub PRs from the repositories listed in the
+among active settlements. The active 2026.v7 rules accept GitHub PRs from the repositories listed in the
 [annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including
-`humanfia/humanize`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`,
+`humanfia/humanize`, `humanfia/flowverse`, `openRuyi-Project/openRuyi`, `openRuyi-Project/homepage`,
 `sashiko-dev/sashiko` and `processmission/qemu`. Humanize tasks use `project/humanize`;
 openRuyi and Sashiko tasks use `project/linux`; QEMU tasks use `project/qemu`.
 QEMU PRs target the downstream repository's default branch, currently `devel`.
