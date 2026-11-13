@@ -197,6 +197,13 @@ check verifies the comment author, timestamp and digest, and rejects any change
 to settlements, adjustments or the last event. Recognised points count towards
 experience, and later settlements preserve the recognition records.
 
+## Stale tasks
+
+A task that has had no Assignee for more than thirty days after it was
+created is closed as not planned, with one comment naming its creation date
+and age. The check runs once a day. A task with an Assignee stays open, and a
+closed task can be reopened by commenting on it.
+
 ## Workflow and branch controls
 
 - `Registration`: JSON and GitHub identity checks for participant PRs.
@@ -207,6 +214,8 @@ experience, and later settlements preserve the recognition records.
   verification under GitHub Actions, including its failure or cancellation.
 - `Contributor progression`: serializes writes and reconciles updated records
   and pending sources every ten minutes.
+- `Close stale tasks`: closes unassigned Task issues older than thirty days,
+  once a day.
 - `Contributor notifications`: serializes congratulations after record updates
   and issue closure, and retries hourly. Participant records come from the
   checked-out default-branch commit, read through Git without per-file API

@@ -1,0 +1,36 @@
+name: Close stale tasks
+on:
+  schedule:
+    - cron: '23 0 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mfcp-stale-tasks
+  cancel-in-progress: false
+jobs:
+  close:
+    if: github.repository_id == '1428030862' && vars.MFCP_APP_ID != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        id: app
+        with:
+          app-id: ${{ vars.MFCP_APP_ID }}
+          private-key: ${{ secrets.MFCP_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-issues: write
+      - run: node scripts/stale-tasks.mjs --write
+        env:
+          GITHUB_TOKEN: ${{ steps.app.outputs.token }}
+          MFCP_APP_SLUG: ${{ vars.MFCP_APP_SLUG }}
