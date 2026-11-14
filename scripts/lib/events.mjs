@@ -9,6 +9,7 @@ const replaySchema = z.object({
   url: z.string().url(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   duration: z.string().regex(/^\d+:\d{2}$/),
+  slides: z.string().regex(/^\.\/slides\/[A-Za-z0-9._-]+$/).optional(),
 });
 
 export const eventsSchema = z.object({
@@ -31,7 +32,7 @@ export async function loadEvents() {
   if (!table) throw new Error('events.md needs a replay table.');
 
   const columns = table.header.map(cell => cell.text.trim());
-  const required = ['日期', '中文标题', 'English title', '时长'];
+  const required = ['日期', '中文标题', 'English title', '时长', 'Slides'];
   if (required.some(name => !columns.includes(name))) {
     throw new Error(`events.md table needs columns: ${required.join(', ')}.`);
   }
@@ -41,11 +42,13 @@ export async function loadEvents() {
     const titleCell = row[column('中文标题')];
     const link = findLinks(titleCell?.tokens)[0];
     if (!link) throw new Error('events.md replay titles need a markdown link.');
+    const slidesLink = findLinks(row[column('Slides')]?.tokens)[0];
     return {
       title: {en: row[column('English title')].text.trim(), zh: link.text.trim()},
       url: link.href,
       date: row[column('日期')].text.trim(),
       duration: row[column('时长')].text.trim(),
+      slides: slidesLink?.href,
     };
   });
 

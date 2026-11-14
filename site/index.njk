@@ -135,11 +135,14 @@
         <h3 class="event-list-title">{{ t('events.replays') }}</h3>
         <div class="event-grid">
           {% for replay in events.replays %}
-          <a class="event-card" href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">
+          <div class="event-card">
             <span class="event-meta"><time datetime="{{ replay.date }}" data-date="{{ replay.date }}">{{ replay.date | date }}</time><span>{{ replay.duration }}</span></span>
-            <h4>{{ localized(replay.title) }}<span aria-hidden="true">↗</span></h4>
-            <span class="event-action">{{ t('events.watch') }}</span>
-          </a>
+            <h4><a class="event-title-link" href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ localized(replay.title) }}<span aria-hidden="true">↗</span></a></h4>
+            <span class="event-action">
+              <a href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ t('events.watch') }}<span aria-hidden="true">↗</span></a>
+              {% if replay.slides %}<a class="event-slides" href="{{ replay.slides }}" target="_blank" rel="noopener noreferrer">{{ t('events.slides') }}<span aria-hidden="true">↗</span></a>{% endif %}
+            </span>
+          </div>
           {% endfor %}
         </div>
         <p class="small muted event-note"><a class="text-link" href="{{ events.collection_url }}" target="_blank" rel="noopener noreferrer">{{ t('events.collection') }} <span aria-hidden="true">↗</span></a></p>

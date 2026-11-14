@@ -24,7 +24,9 @@ test('trusted site rendering publishes real records from a separate data directo
     const $ = load(html);
     const events = await loadEvents();
     assert.equal($('#events .event-card').length, events.replays.length);
-    assert.deepEqual($('#events .event-card').map((_, element) => $(element).attr('href')).get(), events.replays.map(replay => replay.url));
+    assert.deepEqual($('#events .event-title-link').map((_, element) => $(element).attr('href')).get(), events.replays.map(replay => replay.url));
+    assert.deepEqual($('#events .event-slides').map((_, element) => $(element).attr('href')).get(),
+      events.replays.filter(replay => replay.slides).map(replay => replay.slides));
     assert.equal($('#tab-events').attr('aria-controls'), 'events');
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
@@ -96,6 +98,9 @@ test('trusted site rendering publishes real records from a separate data directo
     });
     for (const name of ['app.mjs', 'site.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
+    }
+    for (const replay of events.replays.filter(replay => replay.slides)) {
+      assert.deepEqual(await readFile(join(output, replay.slides)), await readFile(replay.slides));
     }
     assert.equal(await readFile(join(output, 'index.html'), 'utf8'), html);
   } finally {

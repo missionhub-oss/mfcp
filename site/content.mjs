@@ -71,6 +71,7 @@ const strings = {
   'events.schedule': ['Every Friday at 20:00 (UTC+8)', '每周五 20:00（UTC+8）'],
   'events.replays': ['Past replays', '往期回放'],
   'events.watch': ['Watch replay', '观看回放'],
+  'events.slides': ['Slides', '幻灯片'],
   'events.collection': ['Bilibili collection', 'B 站合集'],
   'pagination.label': ['Leaderboard pages', '排行榜翻页'],
   'pagination.previous': ['Previous', '上一页'],

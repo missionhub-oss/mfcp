@@ -12,6 +12,7 @@ import {loadEvents} from './lib/events.mjs';
 import {copy, projects} from '../site/content.mjs';
 
 const siteDirectory = fileURLToPath(new URL('../site/', import.meta.url));
+const slidesDirectory = fileURLToPath(new URL('../slides/', import.meta.url));
 const template = new nunjucks.Environment(new nunjucks.FileSystemLoader(siteDirectory), {autoescape: true, throwOnUndefined: true});
 template.addFilter('date', value => new Intl.DateTimeFormat('zh-CN', {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}).format(new Date(value)));
 template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.stringify(value).replaceAll('<', '\\u003c')));
@@ -30,6 +31,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await writeFile(join(output, '.nojekyll'), '');
   for (const name of ['site.css', 'app.mjs']) await copyFile(join(siteDirectory, name), join(output, name));
   await cp(join(siteDirectory, 'assets'), join(output, 'assets'), {recursive: true});
+  await cp(slidesDirectory, join(output, 'slides'), {recursive: true});
   console.log(`Built MFCP website for ${program.stats.participants} contributors at ${sha}.`);
   return {program, html, output};
 }
