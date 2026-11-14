@@ -1,4 +1,39 @@
 {
   "github_id": 22409585,
-  "github_login": "BattiestStone4"
+  "github_login": "BattiestStone4",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-258",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 258
+        },
+        "actor": 22409585,
+        "at": "2026-11-14T14:22:34Z",
+        "digest": "f88ce19134db1adc6a49478aa7362e2d5018e374b06e7a30e29e41c5d3f1e870",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/258\",\"merge_commit\":\"89512086a1a4c370fd3d40a5751bb772a4fb158c\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 258
+  },
+  "updated_at": "2026-11-14T14:22:34Z"
 }
