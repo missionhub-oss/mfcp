@@ -102,7 +102,11 @@ html[lang="zh-CN"] h1{font-size:clamp(2.7rem,4.8vw,4.4rem);letter-spacing:-.035e
 .event-card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .event-meta{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .event-card h4{display:flex;justify-content:space-between;gap:16px;margin:0;font-size:18px;line-height:1.45;font-weight:600}
-.event-action{font-size:14px;color:var(--accent)}
+.event-card h4 a{display:flex;justify-content:space-between;gap:16px;width:100%;color:inherit;text-decoration:none}
+.event-card h4 a:hover{color:var(--accent)}
+.event-action{display:flex;flex-wrap:wrap;gap:14px;font-size:14px}
+.event-action a{color:var(--accent);text-decoration:none}
+.event-action a:hover{text-decoration:underline}
 .event-note{margin-top:20px}
 @media(max-width:760px){.event-grid{grid-template-columns:1fr}.event-schedule{align-items:flex-start;flex-direction:column}.section-tabs{display:flex}.section-tabs [role=tab]{flex:1;padding:10px 12px}}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.forge-art,.button:hover{transform:none}.reveal{opacity:1;transform:none}}
