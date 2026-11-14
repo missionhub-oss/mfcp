@@ -93,6 +93,10 @@ immutable command as authorization evidence. Multiple mentors can be added
 through separate commands. Numeric GitHub IDs identify unique mentors, so
 repeated commands preserve the original evidence and other mentors while
 refreshing registered details. An identical body skips the issue update.
+A stored command link keeps the repository name it was written under. After a
+repository rename, `npm run relink:mentors -- --write` rewrites those hidden
+links to the current repository; a run without `--write` reports the affected
+issues without changing them.
 Settlement verifies every displayed mentor against their command,
 resolve the contributor from the single Assignee and require independent mentors.
 
