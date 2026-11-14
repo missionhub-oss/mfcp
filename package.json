@@ -10,6 +10,7 @@
     "test": "node --test tests/*.test.mjs",
     "build:pages": "node scripts/build-pages.mjs",
     "refresh:community": "node scripts/refresh-community.mjs",
+    "relink:mentors": "node scripts/relink-mentor-commands.mjs",
     "progress": "node scripts/progression.mjs"
   },
   "dependencies": {
