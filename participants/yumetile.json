@@ -1,4 +1,39 @@
 {
   "github_id": 69030673,
-  "github_login": "Yumetile"
+  "github_login": "Yumetile",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-257",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 257
+        },
+        "actor": 69030673,
+        "at": "2026-11-14T15:02:37Z",
+        "digest": "e5b836b635100cd53985477b39aa2d068fa29dc841a968ce61f0fdf01f353854",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/257\",\"merge_commit\":\"775c1622d7216e5b80bc5bc206f5e84d7c72541a\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 257
+  },
+  "updated_at": "2026-11-14T15:02:37Z"
 }
