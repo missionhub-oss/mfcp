@@ -3,8 +3,83 @@
   "github_login": "yydawx",
   "schema_version": 1,
   "level": 1,
-  "experience": 0,
-  "contributions": [],
+  "experience": 30,
+  "contributions": [
+    {
+      "id": "task-158",
+      "issue": 158,
+      "participant_id": 195621032,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 158,
+          "comment": 6704937351
+        },
+        "actor": 62325246,
+        "at": "2026-11-07T09:15:06Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6870424387",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 158,
+              "comment": 6870424387
+            },
+            "actor": 62325246,
+            "at": "2026-11-14T02:45:06Z",
+            "digest": "7a3e20578b35ef3d19112ce46dbe4a1548db0f8a90f985f9db075cf199655cc0",
+            "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/56\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "processmission/qemu",
+              "number": 56,
+              "author": 195621032,
+              "merge_commit": "6b019bf52a3194f24bf9f8f6568bf39f74ca08bb",
+              "merged_at": "2026-11-14T02:05:13Z",
+              "commits": [
+                "63e93cdd9bf4244935d36c7a2373d90d6e8aa75a",
+                "fc36f55952bbe9e460e1812f00f02d94f2776db5",
+                "518b9ed5ae02b3489dea18d67851d8ce85abb29a",
+                "df265c58a843fef6195162bb4d4ed259d97d3319"
+              ],
+              "url": "https://github.com/processmission/qemu/pull/56"
+            }
+          ],
+          "points": 30
+        }
+      ],
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 158,
+              "comment": 6704937351
+            },
+            "actor": 62325246,
+            "at": "2026-11-07T09:15:06Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ]
+    }
+  ],
   "promotions": [
     {
       "id": "registration-11",
@@ -30,9 +105,11 @@
     }
   ],
   "adjustments": [],
+  "recognitions": [],
   "last_event": {
-    "kind": "registration",
-    "pr": 11
+    "kind": "comment",
+    "issue": 158,
+    "comment": 6870424387
   },
-  "updated_at": "2026-10-21T13:50:13Z"
+  "updated_at": "2026-11-14T02:45:06Z"
 }
