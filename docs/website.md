@@ -52,7 +52,7 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their artwork and proportions. The fourteen partners wrap into rows of four;
+their artwork and proportions. The sixteen partners wrap into rows of four;
 each incomplete row is centered with the same card widths and spacing.
 Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
@@ -66,6 +66,11 @@ the logo frame, and links to `https://rv2036.org/`.
 Canaan Developer Community uses the supplied transparent PNG, recolored from
 its navy ink to white so the artwork contrasts with the dark section, and links
 to `https://www.kendryte.com/`.
+dsh-TUI uses the standard pixel-whale frame from its
+[README logo](https://github.com/ccch1mneyyy/dsh-TUI/blob/52b50464f9b9ca101033bfb3751f8d9178b25bf1/docs/assets/readme/logo-en.svg),
+with the original path geometry, colors and MIT license. It links to
+`https://dshtui.com/`. DSH Go uses the supplied pastel emblem as a clean
+transparent PNG and links to `https://go.dshtui.com/`.
 The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
 The logos appear directly on the dark section with transparent backgrounds.
