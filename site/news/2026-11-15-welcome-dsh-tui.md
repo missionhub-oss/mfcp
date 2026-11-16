@@ -16,5 +16,3 @@ source_commit: "7a271b93f03058a1d3614bf7731e13dd2ddc4846"
 dsh-TUI 是面向 DeepSeek Harness 的开源终端交互项目，以插件形式提供全屏操作界面，支持 Windows、macOS 和 Linux。项目主要围绕终端中的 Agent 会话交互与管理展开。
 
 其功能包括流式 Markdown、文件引用、工具执行状态展示、会话恢复与回溯。界面以像素鲸鱼为视觉元素，支持长会话状态显示和中英文切换，方便使用者在终端中跟进 Agent 的工作过程。
-
-参考：[dsh-TUI 项目介绍](https://dshtui.com/)。
