@@ -16,5 +16,3 @@ source_commit: "0eb3338576b28a4be8208ce9cf61ad42cf07f997"
 嘉楠开发者社区围绕 Kendryte 系列芯片、RISC-V 和端侧 AI 开展技术支持、学习交流与项目实践，服务于初学者和有经验的软硬件开发者。
 
 社区的开发实践涉及 K230、K230D、K210 等硬件，以及 CanMV、Linux、RT-Smart 等软件环境。相关应用覆盖图像分类、目标检测、语音处理和物联网开发，也包括机器人交互、工业质检等端侧 AI 场景。
-
-参考：[Kendryte 开发者社区介绍](https://www.kendryte.com/)。
