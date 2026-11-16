@@ -52,7 +52,7 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their artwork and proportions. The sixteen partners wrap into rows of four;
+their artwork and proportions. The partners wrap into rows of four;
 each incomplete row is centered with the same card widths and spacing.
 Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
@@ -71,6 +71,9 @@ dsh-TUI uses the standard pixel-whale frame from its
 with the original path geometry, colors and MIT license. It links to
 `https://dshtui.com/`. DSH Go uses the supplied pastel emblem as a clean
 transparent PNG and links to `https://go.dshtui.com/`.
+SpacemiT uses the supplied transparent SVG with green artwork and white
+lettering, preserving its original viewBox and colors. It links to
+`https://www.spacemit.com/` and is labeled 进迭时空 in Chinese.
 The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
 The logos appear directly on the dark section with transparent backgrounds.
