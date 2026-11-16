@@ -16,5 +16,3 @@ source_commit: "f4e5853b5aab292f7f3d12eff3a6dafc35b358ae"
 openRuyi 是专门面向 RISC-V 的 Linux 发行版，服务于软件开发和平台验证。项目采用跟随上游的滚动更新方式，及时引入 RISC-V 新功能与修复，减少需要长期维护的独立分支和补丁回移植工作。
 
 openRuyi 提供 Server、Container、Workstation 和 Zero 四个版本，分别面向裸机服务器、云环境、桌面使用，以及 SoC 启动和内核开发。Zero 版本也用于芯片制造前的系统验证。
-
-参考：[openRuyi 项目介绍](https://www.openruyi.cn/)。
