@@ -1,6 +1,5 @@
 {# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
 {# SPDX-License-Identifier: MIT #}
-{% set communityUrl = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=527me045-a711-4288-adf2-c3d677f04e4f' %}
 {% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
 {% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
 {% macro avatar(person, size=48) %}<span class="avatar" aria-hidden="true"><span>{{ person.initials }}</span><img src="{{ person.avatarUrl }}" alt="" width="{{ size }}" height="{{ size }}" loading="lazy"></span>{% endmacro %}
@@ -20,27 +19,11 @@
   <link rel="canonical" href="{{ siteUrl }}">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./site.css?v={{ assetVersions['site.css'] }}">
-  <noscript><style>.section-tabs{display:none}#panel-ranking,#events{display:block!important}</style></noscript>
   <title>{{ copy['meta.title'].zh }}</title>
 </head>
-<body id="top">
+<body id="top" data-page="home">
   <a class="skip-link" href="#main">{{ t('nav.skip') }}</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#top" aria-label="{{ copy['nav.home'].zh }}" data-i18n-aria-label="nav.home"><span class="brand-icon">M<span>F</span></span><span>Mission<span class="brand-second">Forge</span></span><span class="brand-tag">MFCP</span></a>
-      <button class="menu-toggle js-only" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="{{ copy['nav.menu'].zh }}" data-i18n-aria-label="nav.menu"><span></span><span></span></button>
-      <nav id="main-nav" aria-label="{{ copy['nav.label'].zh }}" data-i18n-aria-label="nav.label">
-        <a href="#program">{{ t('nav.program') }}</a>
-        <a href="#leaderboard" data-tab="ranking">{{ t('nav.ranking') }}</a>
-        <a href="#events" data-tab="events">{{ t('nav.events') }}</a>
-        <a href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer">{{ t('nav.join') }}</a>
-      </nav>
-      <div class="header-actions">
-        <button class="language-button js-only" id="language" type="button" aria-label="{{ copy['a11y.language'].zh }}" data-i18n-aria-label="a11y.language">English</button>
-        <a class="github-link" href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.5 21.63c.55.1.76-.24.76-.53v-2.07c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.24-1.62-1.24-1.62-1.02-.7.08-.69.08-.69 1.12.08 1.71 1.15 1.71 1.15.99 1.7 2.6 1.2 3.23.92.1-.72.39-1.2.7-1.48-2.47-.28-5.07-1.24-5.07-5.5 0-1.22.44-2.21 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.54.23 2.68.11 2.96.72.79 1.15 1.78 1.15 3 0 4.27-2.6 5.22-5.09 5.5.4.35.75 1.02.75 2.06V22c0 .3.2.64.77.53A11.1 11.1 0 0 0 12 .9Z"/></svg></a>
-      </div>
-    </div>
-  </header>
+  {% include 'header.njk' %}
 
   <main id="main">
     <section class="hero container" aria-labelledby="hero-title">
@@ -72,12 +55,7 @@
       <div class="project-grid">{% for project in projects %}<a class="project-card project-{{ project.id }}" href="{{ project.url or (repositoryUrl ~ '/blob/main/projects/' ~ project.id ~ '/README.md') }}" target="_blank" rel="noopener noreferrer"><h3 class="project-wordmark">{{ project.name }}<span aria-hidden="true">↗</span></h3><p>{{ t('tracks.' ~ project.id) }}</p></a>{% endfor %}</div>
     </section>
 
-    <section class="section container" id="leaderboard" aria-label="{{ copy['tabs.label'].zh }}" data-i18n-aria-label="tabs.label">
-      <div class="section-tabs" role="tablist" aria-label="{{ copy['tabs.label'].zh }}" data-i18n-aria-label="tabs.label">
-        <button type="button" role="tab" id="tab-ranking" aria-selected="true" aria-controls="panel-ranking" tabindex="0" data-tab="ranking">{{ t('tabs.ranking') }}</button>
-        <button type="button" role="tab" id="tab-events" aria-selected="false" aria-controls="events" tabindex="-1" data-tab="events">{{ t('tabs.events') }}</button>
-      </div>
-      <div id="panel-ranking" role="tabpanel" aria-labelledby="tab-ranking" tabindex="0">
+    <section class="section container" id="leaderboard" aria-labelledby="ranking-title">
       <div class="ranking-heading"><div><h2 class="highlight-title" id="ranking-title" tabindex="-1">{{ t('ranking.title') }}</h2><p class="section-description">{{ t('ranking.description') }}</p></div>
         <label class="search-field js-only"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span class="sr-only">{{ t('people.search') }}</span><input id="search" type="search" autocomplete="off" placeholder="{{ copy['people.search'].zh }}" data-i18n-placeholder="people.search"></label>
       </div>
@@ -125,28 +103,6 @@
       </nav>
       <div class="empty-state" id="people-empty" hidden><p>{{ t('people.empty') }}</p><button type="button" class="button secondary" id="clear-filters">{{ t('people.clear') }}</button></div>
       <p class="small muted ranking-note">{{ t('ranking.note') }} {{ t('ghfind.note') }}</p>
-      </div>
-      <div class="events-panel" id="events" role="tabpanel" aria-labelledby="tab-events" tabindex="0" hidden>
-        <div class="events-heading"><h2 class="highlight-title" id="events-title">{{ t('events.title') }}</h2><p class="section-description">{{ t('events.description') }}</p></div>
-        <div class="event-schedule">
-          <div><span class="event-kicker">{{ t('events.schedule_label') }}</span><strong>{{ t('events.schedule') }}</strong></div>
-          <a class="button primary" href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer">{{ t('nav.join') }}<span aria-hidden="true">↗</span></a>
-        </div>
-        <h3 class="event-list-title">{{ t('events.replays') }}</h3>
-        <div class="event-grid">
-          {% for replay in events.replays %}
-          <div class="event-card">
-            <span class="event-meta"><time datetime="{{ replay.date }}" data-date="{{ replay.date }}">{{ replay.date | date }}</time><span>{{ replay.duration }}</span></span>
-            <h4><a class="event-title-link" href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ localized(replay.title) }}<span aria-hidden="true">↗</span></a></h4>
-            <span class="event-action">
-              <a href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ t('events.watch') }}<span aria-hidden="true">↗</span></a>
-              {% if replay.slides %}<a class="event-slides" href="{{ replay.slides }}" target="_blank" rel="noopener noreferrer">{{ t('events.slides') }}<span aria-hidden="true">↗</span></a>{% endif %}
-            </span>
-          </div>
-          {% endfor %}
-        </div>
-        <p class="small muted event-note"><a class="text-link" href="{{ events.collection_url }}" target="_blank" rel="noopener noreferrer">{{ t('events.collection') }} <span aria-hidden="true">↗</span></a></p>
-      </div>
     </section>
 
     <section class="section container partners-section" id="partners" aria-labelledby="partners-title">

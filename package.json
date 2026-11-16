@@ -18,8 +18,11 @@
     "@octokit/auth-app": "^8.0.0",
     "email-addresses": "^5.0.0",
     "escape-html": "^1.0.3",
+    "gray-matter": "^4.0.3",
+    "image-size": "^2.1.0",
     "marked": "^17.0.0",
     "nunjucks": "^3.2.4",
+    "sanitize-html": "^2.18.2",
     "string-argv": "^0.4.0",
     "zod": "^4.0.0"
   },
