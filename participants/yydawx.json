@@ -3,13 +3,29 @@
   "github_login": "yydawx",
   "schema_version": 1,
   "level": 1,
-  "experience": 30,
+  "experience": 60,
   "contributions": [
     {
       "id": "task-158",
       "issue": 158,
       "participant_id": 195621032,
       "mentor_id": 62325246,
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 158,
+              "comment": 6704937351
+            },
+            "actor": 62325246,
+            "at": "2026-11-07T09:15:06Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ],
       "difficulty": 2,
       "policy": {
         "id": "2026.v7",
@@ -42,7 +58,6 @@
             "digest": "7a3e20578b35ef3d19112ce46dbe4a1548db0f8a90f985f9db075cf199655cc0",
             "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/56\"]}"
           },
-          "mentor_id": 62325246,
           "upstream": [
             {
               "repository": "processmission/qemu",
@@ -59,6 +74,64 @@
               "url": "https://github.com/processmission/qemu/pull/56"
             }
           ],
+          "points": 30,
+          "mentor_id": 62325246
+        }
+      ]
+    },
+    {
+      "id": "task-155",
+      "issue": 155,
+      "participant_id": 195621032,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 155,
+          "comment": 6704936461
+        },
+        "actor": 62325246,
+        "at": "2026-11-07T09:15:01Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6904966115",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 155,
+              "comment": 6904966115
+            },
+            "actor": 62325246,
+            "at": "2026-11-16T01:40:23Z",
+            "digest": "3343edcf451b2aeccc274f7f490dd8123171ff4cf8e9afe5461fd5feb27aa2f1",
+            "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/53\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "processmission/qemu",
+              "number": 53,
+              "author": 195621032,
+              "merge_commit": "38ce5f3c4278072e4dafe35380d2ee932d654011",
+              "merged_at": "2026-11-10T13:13:29Z",
+              "commits": [
+                "bdf34fce461432f1a9b4365131c3e26fd883f02e",
+                "b14c259eeb3537ba740b7738491f0bf17b138d0b",
+                "52458739be93087d7da1898c61d33ad7d2054c4c"
+              ],
+              "url": "https://github.com/processmission/qemu/pull/53"
+            }
+          ],
           "points": 30
         }
       ],
@@ -68,11 +141,11 @@
           "configuration": {
             "source": {
               "kind": "comment",
-              "issue": 158,
-              "comment": 6704937351
+              "issue": 155,
+              "comment": 6704936461
             },
             "actor": 62325246,
-            "at": "2026-11-07T09:15:06Z",
+            "at": "2026-11-07T09:15:01Z",
             "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
             "details": "{\"mentor\":\"@zevorn\"}"
           }
@@ -108,8 +181,8 @@
   "recognitions": [],
   "last_event": {
     "kind": "comment",
-    "issue": 158,
-    "comment": 6870424387
+    "issue": 155,
+    "comment": 6904966115
   },
-  "updated_at": "2026-11-14T02:45:06Z"
+  "updated_at": "2026-11-16T01:40:23Z"
 }
