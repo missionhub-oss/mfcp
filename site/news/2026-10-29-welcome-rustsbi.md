@@ -16,5 +16,3 @@ source_commit: "0f60350ce14fb994b879d996211faace467a42d5"
 RustSBI 起源于 rCore Summer of Code 2020，是使用 Rust 编写的 RISC-V Supervisor Binary Interface（SBI）开源实现。它遵循 RISC-V SBI 标准，以库的形式用于平台固件、虚拟机监控器和模拟器，能够运行在 M-mode 或 HS-mode。
 
 项目还包含 RustSBI Prototyper 固件，支持针对具体 RISC-V 平台构建和测试底层运行环境，其开发涉及平台适配、固件实现及操作系统启动。
-
-参考：[RustSBI 项目介绍](https://github.com/rustsbi/rustsbi/blob/main/README.md)。
