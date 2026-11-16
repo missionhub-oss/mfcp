@@ -16,5 +16,3 @@ source_commit: "5b9c8ca22ce40a2c3f6757f53c5f6ce332b57d31"
 进迭时空（SpacemiT）成立于 2021 年 11 月，是一家研发 RISC-V 架构 AI CPU 芯片的企业。公司自主研发核心技术，产品包括终端 AI CPU、云端 AI CPU、云端 AI 推理芯片及计算系统。
 
 公司围绕 RISC-V、AI、Triton 和 Tilelang 开展技术与软件协作，服务 AI 计算机、AI 机器人等应用。
-
-参考：[进迭时空公司介绍](https://www.spacemit.com/about)。
