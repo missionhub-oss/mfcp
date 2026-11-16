@@ -3,7 +3,7 @@
   "github_login": "asymecat",
   "schema_version": 1,
   "level": 1,
-  "experience": 40,
+  "experience": 70,
   "contributions": [
     {
       "id": "task-154",
@@ -81,6 +81,22 @@
       "issue": 157,
       "participant_id": 191454483,
       "mentor_id": 62325246,
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 157,
+              "comment": 6704937053
+            },
+            "actor": 62325246,
+            "at": "2026-11-07T09:15:05Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ],
       "difficulty": 2,
       "policy": {
         "id": "2026.v6",
@@ -113,7 +129,6 @@
             "digest": "fe8a4dee4c76658591616bc9936a7bc9459da3782891e0f20fabcd56aea6e678",
             "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/52\"]}"
           },
-          "mentor_id": 62325246,
           "upstream": [
             {
               "repository": "processmission/qemu",
@@ -132,6 +147,63 @@
               "url": "https://github.com/processmission/qemu/pull/52"
             }
           ],
+          "points": 30,
+          "mentor_id": 62325246
+        }
+      ]
+    },
+    {
+      "id": "task-45",
+      "issue": 45,
+      "participant_id": 191454483,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 45,
+          "comment": 6920831106
+        },
+        "actor": 62325246,
+        "at": "2026-11-16T15:30:14Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-6920877823",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 45,
+              "comment": 6920877823
+            },
+            "actor": 62325246,
+            "at": "2026-11-16T15:32:05Z",
+            "digest": "ed7524427925b7d44d08054b31deb09ab82cd6309e90dbf277707264e6787281",
+            "details": "{\"pull_requests\":[\"https://github.com/zephyrproject-rtos/zephyr/pull/124545\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "zephyrproject-rtos/zephyr",
+              "number": 124545,
+              "author": 191454483,
+              "merge_commit": "52db9977cb896a958e91196dbbf716d015bd86ea",
+              "merged_at": "2026-11-16T13:52:01Z",
+              "commits": [
+                "22a2cad69449ea0eb28e91df1639308c37b35265",
+                "7f771b88f6d60d49671a755034a6bce8f0156f0d"
+              ],
+              "url": "https://github.com/zephyrproject-rtos/zephyr/pull/124545"
+            }
+          ],
           "points": 30
         }
       ],
@@ -141,11 +213,11 @@
           "configuration": {
             "source": {
               "kind": "comment",
-              "issue": 157,
-              "comment": 6704937053
+              "issue": 45,
+              "comment": 6920831106
             },
             "actor": 62325246,
-            "at": "2026-11-07T09:15:05Z",
+            "at": "2026-11-16T15:30:14Z",
             "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
             "details": "{\"mentor\":\"@zevorn\"}"
           }
@@ -178,10 +250,11 @@
     }
   ],
   "adjustments": [],
+  "recognitions": [],
   "last_event": {
     "kind": "comment",
-    "issue": 157,
-    "comment": 6768037283
+    "issue": 45,
+    "comment": 6920877823
   },
-  "updated_at": "2026-11-10T13:02:58Z"
+  "updated_at": "2026-11-16T15:32:05Z"
 }
