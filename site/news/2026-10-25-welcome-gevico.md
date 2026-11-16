@@ -16,5 +16,3 @@ source_commit: "165475e7d71b4245ae7734ba4df18c4fa6aa0a27"
 格维开源社区（Gevico Tech Open Community，简称 GTOC）围绕基础系统软件开展开源开发与维护。社区汇集对模拟器、虚拟化和 GPU 研究感兴趣的开发者，通过技术交流、共同学习与项目实践参与开源。
 
 社区开展 QEMU 训练营，组织开发者学习模拟器与系统软件；cosim-gpu 项目则围绕 QEMU 与 gem5 的协作，探索 GPU 联合仿真。
-
-参考：[格维开源社区介绍](https://github.com/gevico)。
