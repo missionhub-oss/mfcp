@@ -9,6 +9,9 @@ const strings = {
   'nav.program': ['The program', '计划介绍'],
   'nav.ranking': ['Leaderboard', '排行榜'],
   'nav.events': ['Events', '活动'],
+  'nav.eventsNewTab': ['Events (opens in a new tab)', '活动（在新标签页打开）'],
+  'nav.news': ['News', '新闻'],
+  'nav.newsNewTab': ['News (opens in a new tab)', '新闻（在新标签页打开）'],
   'nav.join': ['Join the community', '加入社群'],
   'nav.menu': ['Toggle navigation', '展开或收起导航'],
   'hero.eyebrow': ['Mission Forge Contributor Program', 'MFCP 开源人才培养计划'],
@@ -62,9 +65,6 @@ const strings = {
   'ranking.description': ['Ranked by total XP. Equal scores share a rank. Open a record to explore the work.', '按累计 XP 排名，同分并列。点击条目查看贡献记录。'],
   'ranking.rank': ['Rank', '排名'],
   'ranking.note': ['Totals count active task settlements. Registration PRs are recorded separately.', '统计仅计入有效的任务结算，注册 PR 单独记录。'],
-  'tabs.label': ['Leaderboard and events', '排行榜与活动'],
-  'tabs.ranking': ['Leaderboard', '排行榜'],
-  'tabs.events': ['Events', '活动'],
   'events.title': ['Events.', '活动。'],
   'events.description': ['Online sharing sessions every Friday at 20:00 (UTC+8), with replays published on Bilibili.', '每周五 20:00（UTC+8）的在线交流分享会，回放发布在 B 站合集。'],
   'events.schedule_label': ['Schedule', '活动安排'],
@@ -73,6 +73,18 @@ const strings = {
   'events.watch': ['Watch replay', '观看回放'],
   'events.slides': ['Slides', '幻灯片'],
   'events.collection': ['Bilibili collection', 'B 站合集'],
+  'news.title': ['Community news.', '社区新闻。'],
+  'news.description': ['Community gatherings and partner updates from the MFCP program.', '记录 MFCP 计划的社区活动与合作伙伴动态。'],
+  'news.category.community': ['Community', '社区活动'],
+  'news.category.partner': ['Partners', '合作伙伴'],
+  'news.more': ['More news', '更多新闻'],
+  'news.read': ['Read article', '阅读全文'],
+  'news.home': ['Home', '首页'],
+  'news.breadcrumb': ['Current location', '当前位置'],
+  'news.joined': ['Joined (UTC+8)', '加入时间（北京时间）'],
+  'news.eventDate': ['Event date', '活动日期'],
+  'news.published': ['Published', '发布日期'],
+  'news.back': ['Back to news', '返回新闻列表'],
   'pagination.label': ['Leaderboard pages', '排行榜翻页'],
   'pagination.previous': ['Previous', '上一页'],
   'pagination.next': ['Next', '下一页'],
@@ -110,6 +122,7 @@ const strings = {
 };
 
 export const copy = Object.fromEntries(Object.entries(strings).map(([key, [en, zh]]) => [key, {en, zh}]));
+export const communityUrl = 'https://applink.feishu.cn/client/chat/chatter/add_by_link?link_token=527me045-a711-4288-adf2-c3d677f04e4f';
 export const projects = [
   {id: 'zephyr', name: 'Zephyr'},
   {id: 'linux', name: 'Linux'},

@@ -11,40 +11,12 @@ const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
 
-const tabButtons = [...document.querySelectorAll('[role="tab"]')];
-
-function selectTab(name, {focus = false, updateHash = false} = {}) {
-  const index = tabButtons.findIndex(button => button.dataset.tab === name);
-  if (index < 0) return;
-  tabButtons.forEach((button, buttonIndex) => {
-    const selected = buttonIndex === index;
-    button.setAttribute('aria-selected', String(selected));
-    button.tabIndex = selected ? 0 : -1;
-    const panel = document.getElementById(button.getAttribute('aria-controls'));
-    if (panel) panel.hidden = !selected;
-  });
-  if (focus) tabButtons[index].focus();
-  if (updateHash) history.replaceState(null, '', index === 0 ? '#leaderboard' : '#events');
+function openEventsFromHash() {
+  if (document.body.dataset.page === 'home' && location.hash === '#events') {
+    location.replace(new URL('events/', location.href));
+  }
 }
-
-tabButtons.forEach((button, index) => {
-  button.addEventListener('click', () => selectTab(button.dataset.tab, {updateHash: true}));
-  button.addEventListener('keydown', event => {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-    event.preventDefault();
-    let next = index;
-    if (event.key === 'ArrowLeft') next = (index - 1 + tabButtons.length) % tabButtons.length;
-    if (event.key === 'ArrowRight') next = (index + 1) % tabButtons.length;
-    if (event.key === 'Home') next = 0;
-    if (event.key === 'End') next = tabButtons.length - 1;
-    selectTab(tabButtons[next].dataset.tab, {focus: true, updateHash: true});
-  });
-});
-
-function selectTabFromHash() {
-  selectTab(location.hash === '#events' ? 'events' : 'ranking');
-}
-window.addEventListener('hashchange', selectTabFromHash);
+window.addEventListener('hashchange', openEventsFromHash);
 
 function setLanguage(next) {
   language = next === 'en' ? 'en' : 'zh';
@@ -78,6 +50,7 @@ function setLanguage(next) {
 }
 
 function renderContributors() {
+  if (!search) return;
   const query = search.value.trim().toLowerCase();
   const matches = cards.filter(card => card.dataset.login.includes(query));
   const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
@@ -101,13 +74,13 @@ function changePage(delta) {
 }
 
 languageButton.addEventListener('click', () => setLanguage(language === 'en' ? 'zh' : 'en'));
-search.addEventListener('input', () => {
+search?.addEventListener('input', () => {
   currentPage = 1;
   renderContributors();
 });
-previousPage.addEventListener('click', () => changePage(-1));
-nextPage.addEventListener('click', () => changePage(1));
-document.getElementById('clear-filters').addEventListener('click', () => {
+previousPage?.addEventListener('click', () => changePage(-1));
+nextPage?.addEventListener('click', () => changePage(1));
+document.getElementById('clear-filters')?.addEventListener('click', () => {
   search.value = '';
   currentPage = 1;
   renderContributors();
@@ -121,7 +94,6 @@ menuButton.addEventListener('click', () => {
 document.querySelectorAll('#main-nav a').forEach(link => link.addEventListener('click', () => {
   menuButton.setAttribute('aria-expanded', 'false');
   document.documentElement.classList.remove('menu-open');
-  if (link.dataset.tab) selectTab(link.dataset.tab);
 }));
 document.querySelectorAll('.avatar img').forEach(img => img.addEventListener('error', () => {img.hidden = true;}));
 document.querySelectorAll('[data-ghfind-image]').forEach(img => {
@@ -142,49 +114,51 @@ document.addEventListener('keydown', event => {
 });
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
 setLanguage(language);
-selectTabFromHash();
+openEventsFromHash();
 document.documentElement.dataset.enhanced = 'true';
 
 const art = document.querySelector('.forge-art');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-let artVisible = true;
-let pointerFrame = null;
-let pointerX = 0;
-let pointerY = 0;
-function resetTilt() {
-  if (pointerFrame !== null) cancelAnimationFrame(pointerFrame);
-  pointerFrame = null;
-  art.style.removeProperty('--tilt-x');
-  art.style.removeProperty('--tilt-y');
-}
-function updateMotion() {
-  const paused = document.hidden || !artVisible || reducedMotion.matches;
-  art.classList.toggle('motion-paused', paused);
-  if (paused) resetTilt();
-}
-new IntersectionObserver(([entry]) => {
-  artVisible = entry.isIntersecting;
-  updateMotion();
-}).observe(art);
-document.addEventListener('visibilitychange', updateMotion);
-reducedMotion.addEventListener('change', updateMotion);
-art.addEventListener('pointermove', event => {
-  if (event.pointerType !== 'mouse' || reducedMotion.matches || !artVisible) return;
-  pointerX = event.clientX;
-  pointerY = event.clientY;
-  if (pointerFrame !== null) return;
-  pointerFrame = requestAnimationFrame(() => {
+if (art) {
+  let artVisible = true;
+  let pointerFrame = null;
+  let pointerX = 0;
+  let pointerY = 0;
+  function resetTilt() {
+    if (pointerFrame !== null) cancelAnimationFrame(pointerFrame);
     pointerFrame = null;
-    const bounds = art.getBoundingClientRect();
-    const x = Math.max(-1, Math.min(1, (pointerX - bounds.left) / bounds.width * 2 - 1));
-    const y = Math.max(-1, Math.min(1, (pointerY - bounds.top) / bounds.height * 2 - 1));
-    art.style.setProperty('--tilt-x', `${(-y * 4).toFixed(2)}deg`);
-    art.style.setProperty('--tilt-y', `${(x * 4).toFixed(2)}deg`);
+    art.style.removeProperty('--tilt-x');
+    art.style.removeProperty('--tilt-y');
+  }
+  function updateMotion() {
+    const paused = document.hidden || !artVisible || reducedMotion.matches;
+    art.classList.toggle('motion-paused', paused);
+    if (paused) resetTilt();
+  }
+  new IntersectionObserver(([entry]) => {
+    artVisible = entry.isIntersecting;
+    updateMotion();
+  }).observe(art);
+  document.addEventListener('visibilitychange', updateMotion);
+  reducedMotion.addEventListener('change', updateMotion);
+  art.addEventListener('pointermove', event => {
+    if (event.pointerType !== 'mouse' || reducedMotion.matches || !artVisible) return;
+    pointerX = event.clientX;
+    pointerY = event.clientY;
+    if (pointerFrame !== null) return;
+    pointerFrame = requestAnimationFrame(() => {
+      pointerFrame = null;
+      const bounds = art.getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, (pointerX - bounds.left) / bounds.width * 2 - 1));
+      const y = Math.max(-1, Math.min(1, (pointerY - bounds.top) / bounds.height * 2 - 1));
+      art.style.setProperty('--tilt-x', `${(-y * 4).toFixed(2)}deg`);
+      art.style.setProperty('--tilt-y', `${(x * 4).toFixed(2)}deg`);
+    });
   });
-});
-art.addEventListener('pointerleave', resetTilt);
-art.addEventListener('pointercancel', resetTilt);
-updateMotion();
+  art.addEventListener('pointerleave', resetTilt);
+  art.addEventListener('pointercancel', resetTilt);
+  updateMotion();
+}
 
 if (!reducedMotion.matches) {
   const revealObserver = new IntersectionObserver(entries => {

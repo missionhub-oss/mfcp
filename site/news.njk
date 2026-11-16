@@ -1,0 +1,67 @@
+{# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
+{# SPDX-License-Identifier: MIT #}
+{% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
+{% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
+{% macro category(value) %}{{ t('news.category.' ~ value) }}{% endmacro %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="mfcp-source-commit" content="{{ program.sha }}">
+  <meta name="mfcp-built-at" content="{{ program.builtAt }}">
+  <meta name="description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:title" content="{{ copy['meta.title'].zh }}">
+  <meta property="og:description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:type" content="{{ 'article' if article else 'website' }}">
+  <meta property="og:url" content="{{ pageUrl }}">
+  {% if article %}<meta property="og:image" content="{{ siteUrl }}{{ article.cover.src }}"><meta property="article:published_time" content="{{ article.published_at }}T00:00:00+08:00">{% endif %}
+  <link rel="canonical" href="{{ pageUrl }}">
+  <link rel="icon" href="{{ homePath }}assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ homePath }}site.css?v={{ assetVersions['site.css'] }}">
+  <link rel="stylesheet" href="{{ homePath }}news.css?v={{ assetVersions['news.css'] }}">
+  <title>{{ copy['meta.title'].zh }}</title>
+</head>
+<body id="top" class="news-page">
+  <a class="skip-link" href="#main">{{ t('nav.skip') }}</a>
+  {% include 'header.njk' %}
+  <main id="main" class="container news-main">
+    {% if article %}
+    <nav class="news-breadcrumb" aria-label="{{ copy['news.breadcrumb'].zh }}" data-i18n-aria-label="news.breadcrumb"><a href="{{ homePath }}">{{ t('news.home') }}</a><span aria-hidden="true">/</span><a href="{{ homePath }}news/">{{ t('nav.news') }}</a></nav>
+    <article class="news-post">
+      <header class="news-post-heading">
+        <p class="news-kicker">{{ category(article.category) }}</p>
+        <h1 lang="zh-CN">{{ article.title }}</h1>
+        <dl class="news-post-meta">
+          <div><dt>{{ t('news.joined') if article.category == 'partner' else t('news.eventDate') }}</dt><dd>{% if article.joined_at %}<time datetime="{{ article.joined_at }}">{{ localized(article.joinedLabel) }}</time>{% else %}<time datetime="{{ article.date }}" data-date="{{ article.date }}">{{ article.date | date }}</time>{% endif %}</dd></div>
+          <div><dt>{{ t('news.published') }}</dt><dd><time datetime="{{ article.published_at }}" data-date="{{ article.published_at }}">{{ article.published_at | date }}</time></dd></div>
+        </dl>
+      </header>
+      {% if article.category == 'partner' %}<div class="news-post-brand partner-{{ article.partner }}"><span class="partner-logo"><img src="{{ homePath }}{{ article.cover.src }}" alt="{{ article.cover.alt }}" width="{{ article.cover.width }}" height="{{ article.cover.height }}" decoding="async"></span></div>{% endif %}
+      <div class="news-body" lang="zh-CN">{{ article.html | safe }}</div>
+      <footer class="news-post-footer"><a class="text-link" href="{{ homePath }}news/">← {{ t('news.back') }}</a></footer>
+    </article>
+    {% else %}
+    <header class="news-heading"><p class="eyebrow"><span class="red-rule"></span>MissionHub · MFCP</p><h1>{{ t('news.title') }}</h1><p class="section-description">{{ t('news.description') }}</p></header>
+    {% if featured %}
+    <article class="news-feature" lang="zh-CN">
+      <a class="news-feature-image" href="{{ featured.slug }}/" tabindex="-1" aria-hidden="true"><img src="{{ homePath }}{{ featured.cover.src }}" alt="" width="{{ featured.cover.width }}" height="{{ featured.cover.height }}" decoding="async"></a>
+      <div class="news-feature-copy"><p class="news-kicker">{{ category(featured.category) }}<span aria-hidden="true">·</span><time datetime="{{ featured.date }}" data-date="{{ featured.date }}">{{ featured.date | date }}</time></p><h2><a href="{{ featured.slug }}/">{{ featured.title }}</a></h2><p>{{ featured.summary }}</p><a class="text-link" href="{{ featured.slug }}/">{{ t('news.read') }} <span aria-hidden="true">↗</span></a></div>
+    </article>
+    {% endif %}
+    <section class="news-list" aria-labelledby="news-list-title"><h2 id="news-list-title">{{ t('news.more') }}</h2><div class="news-grid">
+      {% for post in news %}{% if not featured or post.slug != featured.slug %}
+      <article class="news-card" lang="zh-CN">
+        <a class="news-card-cover {% if post.category == 'partner' %}news-card-logo partner-{{ post.partner }}{% endif %}" href="{{ post.slug }}/" tabindex="-1" aria-hidden="true">{% if post.category == 'partner' %}<span class="partner-logo">{% endif %}<img src="{{ homePath }}{{ post.cover.src }}" alt="" width="{{ post.cover.width }}" height="{{ post.cover.height }}" loading="lazy" decoding="async">{% if post.category == 'partner' %}</span>{% endif %}</a>
+        <div class="news-card-copy"><p class="news-kicker">{{ category(post.category) }}<span aria-hidden="true">·</span><time datetime="{{ post.date }}" data-date="{{ post.date }}">{{ post.date | date }}</time></p><h3><a href="{{ post.slug }}/">{{ post.title }}</a></h3><p>{{ post.summary }}</p><a class="news-card-action" href="{{ post.slug }}/">{{ t('news.read') }} <span aria-hidden="true">↗</span></a></div>
+      </article>
+      {% endif %}{% endfor %}
+    </div></section>
+    {% endif %}
+  </main>
+  <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
+  <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
+  <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+</body>
+</html>

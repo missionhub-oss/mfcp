@@ -23,11 +23,19 @@ test('trusted site rendering publishes real records from a separate data directo
     const {html, program, output} = await buildPages(directory, {sha, issues});
     const $ = load(html);
     const events = await loadEvents();
-    assert.equal($('#events .event-card').length, events.replays.length);
-    assert.deepEqual($('#events .event-title-link').map((_, element) => $(element).attr('href')).get(), events.replays.map(replay => replay.url));
-    assert.deepEqual($('#events .event-slides').map((_, element) => $(element).attr('href')).get(),
-      events.replays.filter(replay => replay.slides).map(replay => replay.slides));
-    assert.equal($('#tab-events').attr('aria-controls'), 'events');
+    const eventPage = load(await readFile(join(output, 'events/index.html'), 'utf8'));
+    assert.equal(eventPage('.event-card').length, events.replays.length);
+    assert.deepEqual(eventPage('.event-title-link').map((_, element) => eventPage(element).attr('href')).get(), events.replays.map(replay => replay.url));
+    assert.deepEqual(eventPage('.event-slides').map((_, element) => eventPage(element).attr('href')).get(),
+      events.replays.filter(replay => replay.slides).map(replay => `../${replay.slides}`));
+    assert.equal(eventPage('h1').length, 1);
+    assert.equal(eventPage('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/events/');
+    assert.equal(eventPage('#main-nav a[aria-current="page"]').attr('href'), '../events/');
+    assert.equal(eventPage('#main-nav a[href="../news/"]').attr('target'), '_blank');
+    assert.equal($('#main-nav a[href="events/"]').attr('target'), '_blank');
+    assert.equal($('#main-nav a[href="events/"]').attr('rel'), 'noopener noreferrer');
+    assert.equal($('#leaderboard').attr('aria-labelledby'), 'ranking-title');
+    assert.equal($('#events, [role="tablist"], [role="tabpanel"]').length, 0);
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
     const rankedProfiles = profiles.filter(profile => profile.level < 4);
@@ -91,6 +99,16 @@ test('trusted site rendering publishes real records from a separate data directo
         const rendered = attribute === 'data-i18n' ? $(element).text() : $(element).attr(attribute.slice('data-i18n-'.length));
         assert.equal(rendered, copy[key].zh, `Incorrect initial language: ${key}`);
       });
+    }
+    const eventCopy = JSON.parse(eventPage('#page-data').text()).copy;
+    for (const element of eventPage('[data-i18n]').toArray()) {
+      const key = eventPage(element).attr('data-i18n');
+      assert.ok(eventCopy[key]?.en && eventCopy[key]?.zh, `Missing event translation: ${key}`);
+      assert.equal(eventPage(element).text(), eventCopy[key].zh);
+    }
+    for (const element of eventPage('.event-slides, script[src], link[rel="stylesheet"]').toArray()) {
+      const path = eventPage(element).attr('href') ?? eventPage(element).attr('src');
+      await access(join(output, 'events', path.split('?')[0]));
     }
     $('a[href^="#"]').each((_, element) => {
       const target = $(element).attr('href').slice(1);

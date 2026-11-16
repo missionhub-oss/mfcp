@@ -86,6 +86,64 @@ Program, leaderboard and partner headings have a red background that expands
 from left to right when their section is hovered or contains keyboard focus.
 Touch layouts show the background directly; reduced motion disables the transition.
 
+## Events
+
+The header's Events link opens the independent `events/` page in a new
+browser tab. It includes the weekly schedule, all replay links, slides
+and the Bilibili collection from `site/events.md`. The page shares the
+website header, language control and mobile navigation. Local slide links
+resolve from the new page to the existing `slides/` directory. The homepage
+displays the contributor leaderboard directly; visits to its `#events`
+fragment navigate to the events page.
+
+## News articles
+
+The header's News link opens the independent `news/` page in a new browser
+tab. The news index and each article share the website header, language
+control and mobile navigation. Article text is authored in Chinese and
+keeps its language when the surrounding interface is switched to English.
+
+Write each article as `site/news/<slug>.md` with YAML front matter and a
+Markdown body. The filename uses lowercase letters, digits and hyphens.
+`gray-matter` reads the metadata, `marked` renders the body, and
+`sanitize-html` limits the published HTML to article content. Images use
+local paths under `site/assets/`; `image-size` supplies their dimensions.
+JavaScript front matter is rejected.
+
+| Field | Meaning |
+| --- | --- |
+| `title`, `summary` | Article title and index description |
+| `category` | `community` or `partner` |
+| `date` | Event or joining date, quoted as `YYYY-MM-DD` |
+| `published_at` | Publication date, quoted as `YYYY-MM-DD` |
+| `cover`, `cover_alt` | Local image path relative to the Markdown file and its alternative text |
+| `featured` | Select an article for the index's featured position |
+| `partner` | Partner CSS identifier for a partner article |
+| `joined_at` | Partner joining timestamp with an explicit timezone |
+| `source_commit` | Full commit SHA of the partner's first directory entry |
+
+Partner joining times use the committer timestamp of the first commit on
+the default branch that added the partner to `site/index.njk`. The article
+date is calculated in `Asia/Shanghai`. Commit references remain in the
+Markdown metadata for editorial verification.
+Publication dates record when the news text is published. This keeps the
+joining record distinct from the publication of a retrospective article.
+
+The build produces `site-dist/news/index.html` and
+`site-dist/news/<slug>/index.html`, sorting entries by event or joining
+time. It recreates the generated news directory on each build.
+Use relative image links such as
+`../assets/news/beijing-meetup-2026-11-14-1.webp`; the builder resolves them
+for the article URL. Place the title in front matter and use paragraphs
+or level-two headings in the body.
+
+The Beijing meetup article records the 2026-11-14 event, its expected
+attendance of 20 and actual attendance of 16, and the supplied photographs.
+Its visible participation note states that attendees joined as individual
+community members and their participation and remarks do not represent
+their employers or schools. Organization names describe personal work or
+study backgrounds.
+
 ## Published records and rankings
 
 The homepage shows Community members, Contributors, Total tasks and In progress.
