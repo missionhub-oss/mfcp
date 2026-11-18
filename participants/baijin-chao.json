@@ -1,4 +1,39 @@
 {
   "github_id": 173347877,
-  "github_login": "baijin-chao"
+  "github_login": "baijin-chao",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-269",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 269
+        },
+        "actor": 173347877,
+        "at": "2026-11-18T01:38:27Z",
+        "digest": "30dccad178b37dce0b99750c0f6504a6f7d7daa6a3a9714a92ba423b0fee3c33",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/269\",\"merge_commit\":\"359b309736f89674f83b43604aa8efc2b8d36645\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 269
+  },
+  "updated_at": "2026-11-18T01:38:27Z"
 }
