@@ -64,7 +64,7 @@ Bot 直接调用 GitHub 设置 Assignee，GitHub 时间线会记录这次分配�
 
 ## 指定 Mentor：configure
 
-由年度维护者发表。目前年度维护者名单包含 `zevorn`。
+由 Mentors Team 成员发表。
 
 ```text
 @mfcp-progress configure mentor @zevorn
@@ -103,7 +103,7 @@ Bot 更新 Issue 正文现有的 `### Mentor / 导师` 区域，显示 Mentor
 导师身份验证。已展示的 DCO 须与 JSON 一致，结算会检查该内容。
 
 结算时，Bot 检查唯一且已注册的 Assignee、独立的导师、难度和年度标签。
-维护者审核成果后发送 `settle`，任务负责人不能结算自己的任务。
+导师审核成果后发送 `settle`，任务负责人不能结算自己的任务。
 首次结算将导师名单、配置证据、难度和年度规则版本保存到负责人的 JSON。
 每个上游补丁提交须包含作者 DCO，导师 DCO 为可选签署。结算仍要求已配置且
 属于 Mentors Team 的独立导师，其配置命令须早于结算命令。
@@ -117,7 +117,7 @@ Bot 更新 Issue 正文现有的 `### Mentor / 导师` 区域，显示 Mentor
 
 ## 结算经验：settle
 
-审核任务成果、验证记录和上游 PR 合入情况后，由年度维护者发表：
+审核任务成果、验证记录和上游 PR 合入情况后，由 Mentors Team 成员发表：
 
 ```text
 @mfcp-progress settle <已合入的上游PR链接>

@@ -22,10 +22,11 @@ includes child-team members in this membership lookup. Pending invitations and
 non-members have no command authority. Lookup failures stop the operation.
 Removing a member revokes authorization for future commands and approvals.
 
-Team membership grants Mentor eligibility. Task assignment and independent
-review rules still apply; annual maintainer, interviewer and reviewer roles
-remain additional requirements for their respective operations. L0 → L1
-uses merged registration evidence and does not require Team membership.
+Team membership grants Mentor eligibility and authorizes task mentor
+configuration and settlement. Assignment and independent review rules still
+apply; annual maintainer, interviewer and reviewer roles remain additional
+requirements for their respective operations. L0 → L1 uses merged registration
+evidence and does not require Team membership.
 
 The `mentors` entries in annual `governance.json` record GitHub identities and
 authorized DCO signature strings using each mentor's real full name in English
@@ -34,8 +35,8 @@ patch signatures. For a Chinese
 name, use the full Pinyin spelling of the mentor's real name. Normally capitalize
 the first letter of each name part; an uppercase family name is also acceptable.
 They do not grant
-Mentor eligibility. Mentor configuration and settlement require the mentor's
-DCO metadata. A Team member can validate their assigned task and endorse
+Mentor eligibility. Mentor configuration and settlement require the configured
+mentor's DCO metadata. A Team member can validate their assigned task and endorse
 another contributor under the task and annual authorization rules.
 
 ## Registration
@@ -76,8 +77,8 @@ replaying an old command after a later manual assignment or unassignment.
 Post a new plain-text comment starting with a command on its first line.
 For example, `@mfcp-progress configure mentor @zevorn` adds that mentor.
 A bare numeric GitHub ID is also accepted: `configure mentor 62325246`.
-Mentor configuration requires a task issue, an authorized maintainer and a
-registered active Mentor Team member with one mentor entry in the command year's
+Mentor configuration requires a task issue and a registered active Mentor Team
+member with one mentor entry in the command year's
 `programs/<year>/governance.json`. The bot matches `mentors[].github_id` to the
 verified GitHub ID and reads `signoffs` from the current default-branch commit.
 Each entry contains `Mentor Real Full Name <email>`, confirmed by that mentor;
@@ -110,8 +111,8 @@ and preserves edits to other issue fields made while validation runs.
 | Command after `@mfcp-progress` | Authorization |
 | --- | --- |
 | `configure assignee @username` | Active Mentor Team member; target must be registered and participating in this issue |
-| `configure mentor @username` | Annual maintainer and active Mentor Team member |
-| `settle upstream-pr-url ...` | Annual maintainer and active Mentor Team member |
+| `configure mentor @username` | Active Mentor Team member; target must be a registered active Mentor Team member |
+| `settle upstream-pr-url ...` | Active Mentor Team member; the contributor cannot settle their own task |
 | `endorse @candidate L3` or `endorse @candidate L4` | Independent Mentor Team member |
 | `interview @candidate L3 evidence-url` | Independent annual interviewer and Mentor Team member |
 | `recommend @candidate L4 evidence-url ...` | Independent L3/L4 contributor and Mentor Team member |
@@ -143,7 +144,7 @@ Moderation identifies trusted feedback by App ID, or by the configured numeric
 bot user ID when GitHub omits App metadata. An explicitly different App ID is
 rejected. Other bots remain subject to registration checks.
 
-After reviewing the deliverables and upstream merge, a maintainer posts
+After reviewing the deliverables and upstream merge, a mentor posts
 `settle` with the upstream PR URLs. This command validates the evidence and
 records experience directly. After the validated record is published, the
 bot closes the issue as Completed. A task already closed as Completed can
@@ -157,8 +158,10 @@ name. Normally capitalize the first letter of each name part; an uppercase
 family name is also acceptable. The author's sign-off name and email
 must match the commit author.
 Settlement requires a configured, independent, active mentor whose authorization
-predates the settlement command. The first eligible mentor in configuration order
-is stored with the settlement, regardless of optional patch signatures.
+predates the settlement command. The command author must be an active Mentor
+Team member and cannot be the contributor. The first eligible mentor in
+configuration order is stored with the settlement, regardless of optional patch
+signatures.
 Each upstream PR receives credit once
 among active settlements. The active 2026.v7 rules accept GitHub PRs from the repositories listed in the
 [annual project rules](../programs/2026/progression.md#实践项目与上游仓库), including

@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {selectTaskMentor} from '../scripts/lib/progression.mjs';
+import {selectTaskMentor, settlementCommandCandidates} from '../scripts/lib/progression.mjs';
 import {taskMentors} from '../scripts/lib/profile.mjs';
 
 const configurations = JSON.parse(await readFile(new URL('./fixtures/mentor-commands.json', import.meta.url), 'utf8'));
@@ -28,4 +28,17 @@ test('unconfigured contributors and commands issued after a stage cannot authori
     const before = new Date(Date.parse(configuration.proof.at) - 1).toISOString();
     assert.throws(() => selectTaskMentor(configurations, configuration.mentor.id, before, original), /previously configured/);
   }
+});
+
+test('settlement candidates accept immutable commands from any active mentor', () => {
+  const at = '2026-11-18T12:50:32Z';
+  const command = '@mfcp-progress settle https://github.com/zephyrproject-rtos/zephyr/pull/126213';
+  const comments = [
+    {id: 1, user: {type: 'User', id: 81150281, login: 'hongquan-prog'}, created_at: at, updated_at: at, body: command},
+    {id: 2, user: {type: 'User', id: 81150281, login: 'hongquan-prog'}, created_at: at, updated_at: '2026-11-18T12:51:32Z', body: command},
+    {id: 3, user: {type: 'Bot', id: 41898282, login: 'github-actions[bot]'}, created_at: at, updated_at: at, body: command},
+    {id: 4, user: {type: 'User', id: 81150281, login: 'hongquan-prog'}, created_at: at, updated_at: at, body: '@mfcp-progress configure mentor @hongquan-prog'},
+    {id: 5, user: {type: 'User', id: 81150281, login: 'hongquan-prog'}, created_at: at, updated_at: at, body: '> @mfcp-progress settle https://github.com/zephyrproject-rtos/zephyr/pull/126213'},
+  ];
+  assert.deepEqual(settlementCommandCandidates(comments, 'mfcp-progress').map(comment => comment.id), [1]);
 });
