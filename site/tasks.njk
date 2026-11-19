@@ -1,0 +1,252 @@
+{# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
+{# SPDX-License-Identifier: MIT #}
+{% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
+{% macro projectLabel(id) %}{% for p in projects %}{% if p.id == id %}{{ p.name }}{% endif %}{% endfor %}{% endmacro %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="mfcp-source-commit" content="{{ program.sha }}">
+  <meta name="mfcp-built-at" content="{{ program.builtAt }}">
+  <meta name="description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:title" content="{{ copy['meta.title'].zh }}">
+  <meta property="og:description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ pageUrl }}">
+  <link rel="canonical" href="{{ pageUrl }}">
+  <link rel="icon" href="{{ homePath }}assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ homePath }}site.css?v={{ assetVersions['site.css'] }}">
+  <link rel="stylesheet" href="{{ homePath }}tasks.css?v={{ assetVersions['tasks.css'] }}">
+  <title>{{ copy['meta.title'].zh }}</title>
+</head>
+<body id="top" class="tasks-page" data-page="tasks">
+  <a class="skip-link" href="#main">{{ t('nav.skip') }}</a>
+  {% include 'header.njk' %}
+
+  <main id="main" class="container tasks-main">
+    <header class="tasks-hero">
+      <div class="tasks-hero-copy">
+        <p class="eyebrow"><span class="red-rule"></span>MissionHub · MFCP</p>
+        <h1 id="tasks-title" tabindex="-1">{{ t('tasks.title') }}</h1>
+        <p class="section-description">{{ t('tasks.description') }}</p>
+      </div>
+      <div class="tasks-hero-actions">
+        <div class="tasks-sync-bar">
+          <span class="tasks-sync-indicator" id="tasks-sync-status">
+            <span class="sync-dot" aria-hidden="true"></span>
+            <span id="tasks-sync-text">{{ t('tasks.synced') }}</span>
+            <time id="tasks-sync-time" datetime="{{ program.builtAt }}" data-date="{{ program.builtAt }}">{{ program.builtAt | date }}</time>
+          </span>
+          <div class="tasks-hero-buttons">
+            <button class="button secondary tasks-sync-button js-only" id="tasks-sync-button" type="button">{{ t('tasks.sync') }}</button>
+            <a class="button primary" href="{{ repositoryUrl }}/issues/new?template=01-task.yml" target="_blank" rel="noopener noreferrer">{{ t('tasks.propose') }}<span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="tasks-kpi-grid" aria-label="{{ copy['tasks.filter.status'].zh }}" data-i18n-aria-label="tasks.filter.status">
+      <button class="tasks-kpi is-active" type="button" data-kpi-status="all" aria-pressed="true">
+        <strong id="kpi-total">{{ tasks.stats.total }}</strong>
+        <span>{{ t('tasks.kpi.all') }}</span>
+      </button>
+      <button class="tasks-kpi kpi-available" type="button" data-kpi-status="available" aria-pressed="false">
+        <strong id="kpi-available">{{ tasks.stats.available }}</strong>
+        <span>{{ t('tasks.kpi.available') }}</span>
+      </button>
+      <button class="tasks-kpi kpi-claimed" type="button" data-kpi-status="claimed" aria-pressed="false">
+        <strong id="kpi-claimed">{{ tasks.stats.claimed }}</strong>
+        <span>{{ t('tasks.kpi.claimed') }}</span>
+      </button>
+      <button class="tasks-kpi kpi-completed" type="button" data-kpi-status="completed" aria-pressed="false">
+        <strong id="kpi-completed">{{ tasks.stats.completed }}</strong>
+        <span>{{ t('tasks.kpi.completed') }}</span>
+      </button>
+    </section>
+
+    <div class="guild-divider" aria-hidden="true"><span>◆</span></div>
+
+    <section class="tasks-account-banner js-only" id="tasks-account-banner" aria-live="polite">
+      <div class="tasks-account-logged-out" id="tasks-account-logged-out">
+        <p>{{ t('tasks.accountBanner.prompt') }}</p>
+        <button class="button secondary tasks-banner-btn" id="tasks-banner-login" type="button">{{ t('tasks.accountBanner.action') }}</button>
+      </div>
+      <div class="tasks-account-logged-in" id="tasks-account-logged-in" hidden>
+        <div class="tasks-account-summary" id="tasks-account-summary"></div>
+        <div class="tasks-mine-chips" role="group" aria-label="{{ copy['tasks.mine.label'].zh }}" data-i18n-aria-label="tasks.mine.label">
+          <button class="filter-chip is-active" type="button" data-mine="all" aria-pressed="true">{{ t('tasks.mine.all') }}</button>
+          <button class="filter-chip" type="button" data-mine="claimed" aria-pressed="false">{{ t('tasks.mine.claimed') }} <span class="chip-count" id="mine-claimed-count">0</span></button>
+          <button class="filter-chip" type="button" data-mine="completed" aria-pressed="false">{{ t('tasks.mine.completed') }} <span class="chip-count" id="mine-completed-count">0</span></button>
+          <button class="filter-chip" type="button" data-mine="mentored" aria-pressed="false">{{ t('tasks.mine.mentored') }} <span class="chip-count" id="mine-mentored-count">0</span></button>
+          <a class="tasks-profile-open" id="tasks-open-profile" href="{{ homePath }}profile/">{{ t('tasks.accountBanner.profile') }} <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tasks-filters js-only" aria-label="{{ copy['tasks.filter.search'].zh }}" data-i18n-aria-label="tasks.filter.search">
+      <div class="tasks-filter-top">
+        <label class="search-field tasks-search-field">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+          <span class="sr-only">{{ t('tasks.filter.search') }}</span>
+          <input id="task-search" type="search" autocomplete="off" placeholder="{{ copy['tasks.filter.search'].zh }}" data-i18n-placeholder="tasks.filter.search">
+        </label>
+        <div class="tasks-select-group">
+          <label class="tasks-select-wrap">
+            <span>{{ t('tasks.filter.year') }}</span>
+            <select id="task-year-filter">
+              <option value="all" data-i18n="tasks.filter.allYears">{{ copy['tasks.filter.allYears'].zh }}</option>
+              {% for year in tasks.facets.years %}
+              <option value="{{ year }}">{{ year }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="tasks-select-wrap">
+            <span>{{ t('tasks.filter.sort') }}</span>
+            <select id="task-sort">
+              <option value="newest" data-i18n="tasks.sort.newest">{{ copy['tasks.sort.newest'].zh }}</option>
+              <option value="updated" data-i18n="tasks.sort.updated">{{ copy['tasks.sort.updated'].zh }}</option>
+              <option value="level-asc" data-i18n="tasks.sort.levelAsc">{{ copy['tasks.sort.levelAsc'].zh }}</option>
+              <option value="level-desc" data-i18n="tasks.sort.levelDesc">{{ copy['tasks.sort.levelDesc'].zh }}</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="tasks-filter-row">
+        <span class="tasks-filter-label">{{ t('tasks.filter.project') }}</span>
+        <div class="filter-chip-group" id="project-filter-group">
+          <button class="filter-chip is-active" type="button" data-project="all" aria-pressed="true">{{ t('tasks.filter.allProjects') }}</button>
+          {% for proj in tasks.facets.projects %}
+          <button class="filter-chip" type="button" data-project="{{ proj.id }}" aria-pressed="false">{{ proj.name }} <span class="chip-count" data-project-count="{{ proj.id }}">{{ proj.count }}</span></button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tasks-filter-row">
+        <span class="tasks-filter-label">{{ t('tasks.filter.level') }}</span>
+        <div class="filter-chip-group" id="level-filter-group">
+          <button class="filter-chip is-active" type="button" data-level="all" aria-pressed="true">{{ t('tasks.filter.allLevels') }}</button>
+          {% for lv in tasks.facets.levels %}
+          <button class="filter-chip" type="button" data-level="{{ lv }}" aria-pressed="false">L{{ lv }}</button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tasks-filter-meta">
+        <p role="status" aria-live="polite">
+          {{ t('tasks.filter.showing') }}
+          <strong id="tasks-visible-count">{{ tasks.stats.total }}</strong>
+          {{ t('tasks.filter.of') }}
+          <span id="tasks-total-count">{{ tasks.stats.total }}</span>
+          {{ t('tasks.filter.unit') }}
+        </p>
+        <button class="text-link tasks-reset-link" id="tasks-reset-filters" type="button" hidden>{{ t('tasks.filter.reset') }}</button>
+      </div>
+    </section>
+
+    <section class="tasks-board" aria-labelledby="tasks-title">
+      <div class="tasks-grid" id="tasks-grid">
+        {% for task in tasks.items %}
+        <article class="task-card status-{{ task.status }}"
+          data-number="{{ task.number }}"
+          data-status="{{ task.status }}"
+          data-level="{{ task.level if task.level !== null else '' }}"
+          data-year="{{ task.year if task.year !== null else '' }}"
+          data-projects="{{ task.projects | join(',') }}"
+          data-assignees="{% for person in task.assignees %}{{ person.login | lower }}{% if not loop.last %},{% endif %}{% endfor %}"
+          data-mentors="{{ task.mentors | join(',') | lower }}"
+          data-updated="{{ task.updatedAt or '' }}">
+          <div class="task-card-top">
+            <span class="task-status-badge badge-{{ task.status }}">{{ t('tasks.status.' ~ task.status) }}</span>
+            <span class="task-number">#{{ task.number }}</span>
+            {% if task.level !== null %}<span class="task-pill pill-level level-{{ task.level }}">L{{ task.level }}</span>{% else %}<span class="task-pill pill-level">{{ t('tasks.filter.pendingLevel') }}</span>{% endif %}
+            {% if task.year %}<span class="task-pill pill-year">{{ task.year }}</span>{% endif %}
+            {% for pid in task.projects %}<span class="task-pill pill-project">{{ projectLabel(pid) }}</span>{% endfor %}
+          </div>
+
+          <h2 class="task-card-title"><a href="{{ task.url }}" target="_blank" rel="noopener noreferrer" data-open-task="{{ task.number }}">{{ task.displayTitle }}</a></h2>
+
+          <div class="task-card-meta">
+            <div class="task-people">
+              {% if task.assignees.length %}
+                <span class="task-meta-item">
+                  <span class="task-meta-label">{{ t('tasks.card.assignee') }}</span>
+                  {% for person in task.assignees %}
+                  <a class="task-person-chip" href="{{ person.url }}" target="_blank" rel="noopener noreferrer">
+                    <img src="{{ person.avatarUrl }}" alt="" width="20" height="20" loading="lazy">
+                    <span>@{{ person.login }}</span>
+                  </a>
+                  {% endfor %}
+                </span>
+              {% else %}
+                <span class="task-open-hint">{{ t('tasks.card.unassigned') }}</span>
+              {% endif %}
+              {% if task.mentorDetails.length %}
+                <span class="task-meta-item">
+                  <span class="task-meta-label">{{ t('tasks.card.mentor') }}</span>
+                  {% for mentor in task.mentorDetails %}
+                  <a class="task-person-chip is-mentor" href="{{ mentor.url }}" target="_blank" rel="noopener noreferrer">
+                    <img src="{{ mentor.avatarUrl }}" alt="" width="20" height="20" loading="lazy">
+                    <span>@{{ mentor.login }}</span>
+                  </a>
+                  {% endfor %}
+                </span>
+              {% endif %}
+            </div>
+            <div class="task-stats-meta">
+              {% if task.updatedAt %}<span>{{ t('tasks.card.updated') }} <time datetime="{{ task.updatedAt }}" data-date="{{ task.updatedAt }}">{{ task.updatedAt | date }}</time></span>{% endif %}
+              <span>{{ task.comments }} {{ t('tasks.card.comments') }}</span>
+            </div>
+          </div>
+
+          <div class="task-card-actions">
+            <button class="task-action-detail js-only" type="button" data-open-task="{{ task.number }}">{{ t('tasks.card.details') }}</button>
+            <a class="task-action-github{% if task.status == 'available' %} is-claim-cta{% endif %}" href="{{ task.url }}" target="_blank" rel="noopener noreferrer">{% if task.status == 'available' %}{{ t('tasks.card.claim') }}{% else %}{{ t('tasks.card.openGithub') }}{% endif %} <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      <div class="empty-state" id="tasks-empty" hidden>
+        <p>{{ t('tasks.empty') }}</p>
+        <button class="button secondary" id="tasks-empty-reset" type="button">{{ t('tasks.filter.reset') }}</button>
+      </div>
+
+      <nav class="pagination js-only" id="tasks-pagination" aria-label="{{ copy['tasks.pagination.label'].zh }}" data-i18n-aria-label="tasks.pagination.label">
+        <button type="button" id="tasks-prev-page" aria-controls="tasks-grid" disabled>{{ t('pagination.previous') }}</button>
+        <span id="tasks-pagination-status" role="status" aria-live="polite"></span>
+        <button type="button" id="tasks-next-page" aria-controls="tasks-grid">{{ t('pagination.next') }}</button>
+      </nav>
+    </section>
+  </main>
+
+  <dialog class="mfcp-dialog task-detail-dialog" id="task-detail-dialog" aria-labelledby="task-detail-title">
+    <div class="dialog-shell">
+      <div class="dialog-header">
+        <div class="dialog-title-group">
+          <div class="task-detail-badges" id="task-detail-badges"></div>
+          <h2 id="task-detail-title"></h2>
+        </div>
+        <button class="dialog-close" id="task-detail-close" type="button" aria-label="{{ copy['tasks.detail.close'].zh }}" data-i18n-aria-label="tasks.detail.close">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="task-detail-meta-bar" id="task-detail-meta"></div>
+        <div class="task-detail-claim-hint" id="task-detail-claim-hint" hidden>
+          <p>{{ t('tasks.detail.claimHint') }}</p>
+        </div>
+        <div class="task-detail-body" id="task-detail-body"></div>
+      </div>
+      <div class="dialog-footer">
+        <a class="button primary" id="task-detail-github-link" href="{{ repositoryUrl }}/issues" target="_blank" rel="noopener noreferrer"><span id="task-detail-github-label">{{ t('tasks.card.openGithub') }}</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
+  <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
+  <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+  <script type="module" src="{{ homePath }}tasks.mjs?v={{ assetVersions['tasks.mjs'] }}"></script>
+</body>
+</html>

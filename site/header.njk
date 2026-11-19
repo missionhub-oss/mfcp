@@ -8,7 +8,7 @@
       <a href="{{ homePath }}leaderboard/" {% if isLeaderboard %}aria-current="page"{% else %}target="_blank" rel="noopener noreferrer" aria-label="{{ copy['nav.rankingNewTab'].zh }}" data-i18n-aria-label="nav.rankingNewTab"{% endif %}>{{ t('nav.ranking') }}</a>
       <a href="{{ homePath }}events/" {% if isEvents %}aria-current="page"{% else %}target="_blank" rel="noopener noreferrer" aria-label="{{ copy['nav.eventsNewTab'].zh }}" data-i18n-aria-label="nav.eventsNewTab"{% endif %}>{{ t('nav.events') }}</a>
       <a href="{{ homePath }}news/" {% if isNews %}aria-current="page"{% else %}target="_blank" rel="noopener noreferrer" aria-label="{{ copy['nav.newsNewTab'].zh }}" data-i18n-aria-label="nav.newsNewTab"{% endif %}>{{ t('nav.news') }}</a>
-      <a href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer">{{ t('nav.join') }}</a>
+      <a class="nav-tasks-cta" href="{{ homePath }}tasks/" {% if isTasks %}aria-current="page"{% else %}target="_blank" rel="noopener noreferrer" aria-label="{{ copy['nav.tasksNewTab'].zh }}" data-i18n-aria-label="nav.tasksNewTab"{% endif %}><span class="nav-tasks-dot" aria-hidden="true"></span><span>{{ t('nav.tasks') }}</span><span class="nav-tasks-count" aria-hidden="true">{{ program.taskCatalog.stats.available }}</span></a>
     </nav>
     <div class="header-actions">
       <button class="language-button js-only" id="language" type="button" aria-label="{{ copy['a11y.language'].zh }}" data-i18n-aria-label="a11y.language">English</button>

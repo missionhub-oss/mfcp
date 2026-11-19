@@ -21,15 +21,26 @@ template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.s
 export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const assetNames = ['site.css', 'app.mjs', 'news.css'];
+  const assetNames = ['site.css', 'app.mjs', 'news.css', 'tasks.css', 'tasks.mjs'];
   const assetVersions = Object.fromEntries(await Promise.all(assetNames.map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
   const events = await loadEvents();
   const news = await loadNews();
   const siteUrl = 'https://missionhub-oss.github.io/mfcp/';
-  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false, isLeaderboard: false};
-  const html = template.render('index.njk', {...common, copy, payload: {copy, homePath: ''}, homePath: '', isNews: false});
+  const repositorySlug = 'missionhub-oss/mfcp';
+  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false, isTasks: false, isLeaderboard: false};
+  const pagePayload = (pageCopy, homePath, extra = {}) => ({
+    copy: pageCopy,
+    homePath,
+    repositoryUrl,
+    repositorySlug,
+    builtAt: program.builtAt,
+    rulesPoints: program.rules.points,
+    projects,
+    ...extra,
+  });
+  const html = template.render('index.njk', {...common, copy, payload: pagePayload(copy, ''), homePath: '', isNews: false});
   await mkdir(output, {recursive: true});
   await writeFile(join(output, 'index.html'), html);
   await writeFile(join(output, '.nojekyll'), '');
@@ -57,6 +68,31 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   });
   await mkdir(join(output, 'leaderboard'), {recursive: true});
   await writeFile(join(output, 'leaderboard/index.html'), leaderboardPage);
+  const taskCopy = {...copy,
+    'meta.title': {en: 'Task Plaza · Mission Forge Contributor Program', zh: '任务广场 · MFCP 开源人才培养计划'},
+    'meta.description': copy['tasks.description'],
+  };
+  const taskPage = template.render('tasks.njk', {
+    ...common,
+    copy: taskCopy,
+    payload: pagePayload(taskCopy, '../'),
+    tasks: program.taskCatalog,
+    homePath: '../',
+    isTasks: true,
+    pageUrl: new URL('tasks/', siteUrl).href,
+  });
+  await mkdir(join(output, 'tasks'), {recursive: true});
+  await writeFile(join(output, 'tasks/index.html'), taskPage);
+  await writeFile(join(output, 'tasks/tasks-data.json'), JSON.stringify({
+    sha: program.sha,
+    builtAt: program.builtAt,
+    repositoryUrl,
+    repositorySlug,
+    rulesPoints: program.rules.points,
+    stats: program.taskCatalog.stats,
+    facets: program.taskCatalog.facets,
+    items: program.taskCatalog.items,
+  }));
   async function writeNewsPage(article) {
     const path = article ? `news/${article.slug}/` : 'news/';
     const pageCopy = {...copy,
