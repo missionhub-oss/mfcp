@@ -27,7 +27,9 @@ The contributor leaderboard lives on its own `leaderboard/` page opened
 in a new browser tab from the header and the homepage Contributors stat,
 with `#leaderboard` and `#contributor-<login>` fragments on the homepage
 redirecting to `leaderboard/`.
-The project section lists Zephyr, Linux, Yocto Project, Humanize and QEMU.
+The project section opens with a visual L0–L4 contributor growth roadmap
+map (winding trail on desktop, vertical timeline on mobile) followed by
+Zephyr, Linux, Yocto Project, Humanize and QEMU.
 On screens wider than 700 pixels, the first row contains Zephyr, Linux and
 Yocto Project, and the centered second row contains Humanize and QEMU. All
 project cards have the same width and spacing. Screens up to
