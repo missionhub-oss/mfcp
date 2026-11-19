@@ -754,12 +754,13 @@ async function signInByUsername(rawInput, {forceRefresh = false, navigateToSlug 
   updateHeaderTrigger();
   emitAccountChange();
 
+  const targetUrl = new URL(getProfileUrl(resolved.githubUser.login, Boolean(resolved.mfcpProfile)), location.href).href;
+  if (navigateToSlug && location.href.split('#')[0] !== targetUrl) {
+    location.assign(targetUrl);
+    return;
+  }
+
   if (isProfilePage) {
-    const targetUrl = new URL(getProfileUrl(resolved.githubUser.login, Boolean(resolved.mfcpProfile)), location.href).href;
-    if (navigateToSlug && location.href.split('#')[0] !== targetUrl) {
-      location.assign(targetUrl);
-      return;
-    }
     uiState = {taskTab: null, taskPage: 1, mentorTab: 'all', mentorPage: 1, contribPage: 1};
     viewState = {
       githubUser: resolved.githubUser,
@@ -833,7 +834,7 @@ function bindUsernameForm({formEl, inputEl, errEl, btnEl, closeAfter = false}) {
     const originalLabel = btnEl.textContent;
     btnEl.textContent = text('account.verifying');
     try {
-      await signInByUsername(raw, {forceRefresh: true, navigateToSlug: isProfilePage});
+      await signInByUsername(raw, {forceRefresh: true, navigateToSlug: true});
       if (closeAfter && dialog?.open) dialog.close();
     } catch (error) {
       if (errEl) {
