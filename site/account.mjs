@@ -73,6 +73,12 @@ function text(key) {
   return copy[key]?.[lang] ?? copy[key]?.zh ?? key;
 }
 
+function localized(value) {
+  if (typeof value === 'string') return value;
+  const lang = currentLang();
+  return value?.[lang] ?? value?.zh ?? value?.en ?? '';
+}
+
 function escapeHtml(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -343,7 +349,28 @@ function renderProfilePage() {
   const mentoredCompleted = Math.max(p?.mentoring?.completed ?? 0, liveMentoredCompleted);
   const mentoredProjectCount = p?.mentoring?.projectCount ?? new Set(mentored.flatMap(t => t.projects ?? [])).size;
 
-  const projectItems = p?.projects ?? [];
+  const projectItems = (p?.declaredProjects ?? []).map(item => ({...item, declared: true,
+    name: localized(item.name), ownedTotal: 0, ownedCompleted: 0, mentoredTotal: 0,
+    mentoredCompleted: 0, upstreamPrs: 0, repositories: []}));
+  for (const derived of p?.projects ?? []) {
+    const item = projectItems.find(project => project.id === derived.id);
+    if (!item) {
+      projectItems.push({...derived});
+      continue;
+    }
+    Object.assign(item, {
+      ownedTotal: derived.ownedTotal,
+      ownedCompleted: derived.ownedCompleted,
+      mentoredTotal: derived.mentoredTotal,
+      mentoredCompleted: derived.mentoredCompleted,
+      upstreamPrs: derived.upstreamPrs,
+      repositories: derived.repositories,
+    });
+  }
+  const momentCounts = new Map();
+  for (const moment of p?.moments ?? []) {
+    momentCounts.set(moment.project, (momentCounts.get(moment.project) ?? 0) + 1);
+  }
 
   // Inline compact metrics inside top Hero left column
   const heroMetricsHtml = p ? `
@@ -374,19 +401,29 @@ function renderProfilePage() {
   } else if (projectItems.length) {
     const rows = projectItems.map(proj => {
       const badges = [];
+      if (proj.declared && proj.role) badges.push(`<span class="is-role">${escapeHtml(localized(proj.role))}</span>`);
       if (proj.ownedTotal) badges.push(`<span>${escapeHtml(text('account.projects.owned'))} <strong>${proj.ownedCompleted}/${proj.ownedTotal}</strong></span>`);
       if (proj.mentoredTotal) badges.push(`<span class="is-mentor">${escapeHtml(text('account.projects.mentored'))} <strong>${proj.mentoredCompleted}/${proj.mentoredTotal}</strong></span>`);
       if (proj.upstreamPrs) badges.push(`<span class="is-pr">${escapeHtml(text('account.projects.prs'))} <strong>${proj.upstreamPrs}</strong></span>`);
+      const moments = momentCounts.get(proj.id) ?? 0;
+      if (moments) badges.push(`<span class="is-moment">${moments} ${escapeHtml(text(moments === 1 ? 'account.projects.moment' : 'account.projects.moments'))}</span>`);
       const reposHtml = proj.repositories?.length
         ? `<div class="resume-project-repos">${proj.repositories.map(repo =>
           `<a href="https://github.com/${escapeHtml(repo)}" target="_blank" rel="noopener noreferrer">${escapeHtml(repo)} ↗</a>`).join('')}</div>`
         : '';
+      const summaryHtml = proj.summary
+        ? `<p class="resume-project-summary">${escapeHtml(localized(proj.summary))}</p>`
+        : '';
+      const name = escapeHtml(localized(proj.name));
+      const nameHref = proj.url ?? `${homePath}tasks/?project=${encodeURIComponent(proj.id)}`;
+      const nameAttrs = proj.url ? 'target="_blank" rel="noopener noreferrer"' : '';
       return `
         <li class="resume-project-item">
           <div class="resume-project-top">
-            <a class="resume-project-name" href="${escapeHtml(homePath)}tasks/?project=${encodeURIComponent(proj.id)}" target="_blank" rel="noopener noreferrer">${escapeHtml(proj.name)}</a>
+            <a class="resume-project-name" href="${escapeHtml(nameHref)}" ${nameAttrs}>${name}</a>
             <div class="resume-project-stats">${badges.join('')}</div>
           </div>
+          ${summaryHtml}
           ${reposHtml}
         </li>
       `;
@@ -431,8 +468,9 @@ function renderProfilePage() {
     </section>
   `;
 
-  // Card 3: Concrete Open-Source Contributions (Merged Upstream PRs + Recognitions + Registration)
-  const rawContributions = [...(p?.contributionsList ?? [])];
+  // Card 3: Open-Source Moments (declared milestones + merged upstream PRs + recognitions)
+  const rawContributions = [...(p?.moments ?? []), ...(p?.contributionsList ?? [])]
+    .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
   if (!rawContributions.length && p?.history?.length) {
     for (const ev of p.history) {
       rawContributions.push({
@@ -448,6 +486,19 @@ function renderProfilePage() {
   const contribSlice = rawContributions.slice((uiState.contribPage - 1) * CONTRIB_PAGE_SIZE, uiState.contribPage * CONTRIB_PAGE_SIZE);
   const card3Inner = contribSlice.length
     ? `<div class="profile-panel-body"><ul class="resume-contrib-list">${contribSlice.map(item => {
+        if (item.kind === 'maintainer' || item.kind === 'reviewer' || item.kind === 'contributor') {
+          const project = projectItems.find(entry => entry.id === item.project);
+          return `
+            <li class="resume-contrib-item is-moment">
+              <div class="resume-contrib-main">
+                <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localized(item.title))} <span aria-hidden="true">↗</span></a>
+                <span class="contrib-meta">${escapeHtml(project ? localized(project.name) : item.project)} · ${escapeHtml(text(`account.moment.${item.kind}`))}</span>
+                <p class="contrib-summary">${escapeHtml(localized(item.summary))}</p>
+              </div>
+              <time datetime="${escapeHtml(item.at)}">${escapeHtml(formatDate(item.at))}</time>
+            </li>
+          `;
+        }
         if (item.kind === 'upstream_pr') {
           return `
             <li class="resume-contrib-item is-pr">

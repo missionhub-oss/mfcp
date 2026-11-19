@@ -3,6 +3,7 @@
 import {readFile, readdir} from 'node:fs/promises';
 import {join} from 'node:path';
 import {normalizeProfile, totals, activeSettlement, taskMentors, rulesSchema, governanceSchema} from './profile.mjs';
+import {loadHighlights} from './highlights.mjs';
 import {loadRepositoryStats, loadTaskIssues, taskStats} from './task-stats.mjs';
 import {buildTaskCatalog} from './tasks.mjs';
 import {projects as knownProjects} from '../../site/content.mjs';
@@ -119,6 +120,13 @@ export async function loadProgram(directory, {now = new Date(), sha, issues, rep
       criteria: target ? Object.entries(target).filter(([, required]) => required > 0).map(([key, required]) =>
         ({key, required, current: stats[key], value: Math.min(stats[key], required)})) : []};
   }).sort((a, b) => b.level - a.level || b.stats.experience - a.stats.experience || usernameOrder(a, b));
+  const highlights = await loadHighlights(directory, participants);
+  for (const person of participants) {
+    const record = highlights.get(person.id);
+    if (!record) continue;
+    person.declaredProjects = record.projects;
+    person.moments = [...record.moments].sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  }
   const leaderboard = rankParticipants(participants);
   const rankById = new Map(leaderboard.map(person => [person.id, person.rank]));
   for (const person of participants) person.rank = rankById.get(person.id) ?? null;
