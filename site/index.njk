@@ -50,6 +50,130 @@
 
     <section class="section container" id="program" aria-labelledby="program-title">
       <div class="section-intro"><h2 class="highlight-title" id="program-title">{{ t('program.title') }}</h2><div><p class="section-description">{{ t('program.description') }}</p><div class="guide-links"><a class="text-link" href="{{ repositoryUrl }}/blob/main/docs/program.md" target="_blank" rel="noopener noreferrer">{{ t('program.guide') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ program.rulesUrl }}" target="_blank" rel="noopener noreferrer">{{ t('levels.rules') }} <span aria-hidden="true">↗</span></a></div></div></div>
+      <div class="roadmap-map" role="region" aria-label="{{ copy['roadmap.aria'].zh }}" data-i18n-aria-label="roadmap.aria">
+        <svg class="roadmap-svg" viewBox="0 0 1200 520" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="roadmap-ribbon-grad" x1="0%" y1="60%" x2="100%" y2="25%">
+              <stop offset="0%" stop-color="#3a516d" stop-opacity=".42"/>
+              <stop offset="35%" stop-color="#b96342" stop-opacity=".45"/>
+              <stop offset="68%" stop-color="#d84d22" stop-opacity=".5"/>
+              <stop offset="100%" stop-color="#e84c22" stop-opacity=".68"/>
+            </linearGradient>
+            <linearGradient id="roadmap-dash-grad" x1="0%" y1="60%" x2="100%" y2="25%">
+              <stop offset="0%" stop-color="#7fa4ce"/>
+              <stop offset="38%" stop-color="#e39c73"/>
+              <stop offset="70%" stop-color="#ff7a4d"/>
+              <stop offset="100%" stop-color="#f1d396"/>
+            </linearGradient>
+          </defs>
+          <path class="roadmap-contour" d="M 0 110 Q 260 55 560 95 T 1200 68"/>
+          <path class="roadmap-contour" d="M 0 285 Q 320 220 620 278 T 1200 225"/>
+          <path class="roadmap-contour" d="M 0 460 Q 340 410 700 455 T 1200 412"/>
+          <g class="roadmap-landmarks">
+            <path d="M 74 378 L 88 364 L 102 378 M 78 378 V 394 H 98 V 378"/>
+            <path d="M 114 394 V 381 M 108 386 L 114 375 L 120 386"/>
+            <path d="M 332 134 L 344 108 L 356 134 Z M 344 108 V 134"/>
+            <path d="M 368 134 V 119 M 362 125 L 368 113 L 374 125 M 382 134 V 122 M 377 127 L 382 117 L 387 127"/>
+            <path d="M 618 424 L 642 382 L 666 424 M 652 424 L 668 398 L 684 424 M 642 382 V 366 L 654 371 L 642 376"/>
+            <path d="M 918 124 V 96 H 926 V 102 H 934 V 94 H 944 V 102 H 952 V 96 H 960 V 124 Z M 934 124 V 110 H 944 V 124"/>
+            <path class="roadmap-spark" d="M 1146 68 L 1149 75 L 1156 78 L 1149 81 L 1146 88 L 1143 81 L 1136 78 L 1143 75 Z"/>
+            <path class="roadmap-spark" d="M 1172 136 L 1174 141 L 1179 143 L 1174 145 L 1172 150 L 1170 145 L 1165 143 L 1170 141 Z"/>
+          </g>
+          <path class="roadmap-road-glow" d="M 28 418 Q 92 406 150 390 C 255 362 310 140 450 140 C 590 140 610 390 750 390 C 890 390 910 140 1050 140 Q 1112 140 1162 100"/>
+          <path class="roadmap-road-dash" d="M 28 418 Q 92 406 150 390 C 255 362 310 140 450 140 C 590 140 610 390 750 390 C 890 390 910 140 1050 140 Q 1112 140 1162 100"/>
+          <path class="roadmap-arrow-head" d="M 1146 95 L 1172 93 L 1160 117"/>
+          <g class="roadmap-compass" transform="translate(56 468)">
+            <circle r="15"/>
+            <path d="M 0 -11 L 3 -2 L 11 0 L 3 2 L 0 11 L -3 2 L -11 0 L -3 -2 Z"/>
+          </g>
+        </svg>
+        <ol class="roadmap-stage">
+          <li class="roadmap-stop is-top stage-0">
+            <article class="roadmap-card">
+              <div class="roadmap-card-head">
+                <div class="roadmap-card-copy">
+                  <span class="roadmap-badge">{{ t('roadmap.s0.badge') }}</span>
+                  <h3>{{ t('roadmap.s0.title') }}</h3>
+                  <p>{{ t('roadmap.s0.sub') }}</p>
+                </div>
+                <span class="roadmap-emblem" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+              </div>
+              <div class="roadmap-tags">
+                <a class="roadmap-tag is-link" href="tasks/" target="_blank" rel="noopener noreferrer">{{ t('roadmap.s0.t1') }}</a>
+                <a class="roadmap-tag is-link" href="profile/" target="_blank" rel="noopener noreferrer">{{ t('roadmap.s0.t2') }}</a>
+                <span class="roadmap-tag">{{ t('roadmap.s0.t3') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s0.t4') }}</span>
+              </div>
+            </article>
+            <span class="roadmap-stem" aria-hidden="true"></span>
+            <span class="roadmap-pin" aria-hidden="true">L0</span>
+            <span class="roadmap-pin-label">{{ t('roadmap.s0.pin') }}</span>
+          </li>
+          <li class="roadmap-stop is-bottom stage-1">
+            <span class="roadmap-pin-label">{{ t('roadmap.s1.pin') }}</span>
+            <span class="roadmap-pin" aria-hidden="true">01</span>
+            <span class="roadmap-stem" aria-hidden="true"></span>
+            <article class="roadmap-card">
+              <div class="roadmap-card-head">
+                <div class="roadmap-card-copy">
+                  <span class="roadmap-badge">{{ t('roadmap.s1.badge') }}</span>
+                  <h3>{{ t('roadmap.s1.title') }}</h3>
+                  <p>{{ t('roadmap.s1.sub') }}</p>
+                </div>
+                <span class="roadmap-emblem" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+              </div>
+              <div class="roadmap-tags">
+                <span class="roadmap-tag">{{ t('roadmap.s1.t1') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s1.t2') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s1.t3') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s1.t4') }}</span>
+              </div>
+            </article>
+          </li>
+          <li class="roadmap-stop is-top stage-2">
+            <article class="roadmap-card">
+              <div class="roadmap-card-head">
+                <div class="roadmap-card-copy">
+                  <span class="roadmap-badge">{{ t('roadmap.s2.badge') }}</span>
+                  <h3>{{ t('roadmap.s2.title') }}</h3>
+                  <p>{{ t('roadmap.s2.sub') }}</p>
+                </div>
+                <span class="roadmap-emblem" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              </div>
+              <div class="roadmap-tags">
+                <span class="roadmap-tag">{{ t('roadmap.s2.t1') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s2.t2') }}</span>
+                <a class="roadmap-tag is-link" href="profile/" target="_blank" rel="noopener noreferrer">{{ t('roadmap.s2.t3') }}</a>
+                <span class="roadmap-tag">{{ t('roadmap.s2.t4') }}</span>
+              </div>
+            </article>
+            <span class="roadmap-stem" aria-hidden="true"></span>
+            <span class="roadmap-pin" aria-hidden="true">02</span>
+            <span class="roadmap-pin-label">{{ t('roadmap.s2.pin') }}</span>
+          </li>
+          <li class="roadmap-stop is-bottom stage-3">
+            <span class="roadmap-pin-label">{{ t('roadmap.s3.pin') }}</span>
+            <span class="roadmap-pin is-crown" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2Zm0-2L5 7l4.5 4L12 5l2.5 6L19 7l2 9H3Z"/></svg></span>
+            <span class="roadmap-stem" aria-hidden="true"></span>
+            <article class="roadmap-card">
+              <div class="roadmap-card-head">
+                <div class="roadmap-card-copy">
+                  <span class="roadmap-badge">{{ t('roadmap.s3.badge') }}</span>
+                  <h3>{{ t('roadmap.s3.title') }}</h3>
+                  <p>{{ t('roadmap.s3.sub') }}</p>
+                </div>
+                <span class="roadmap-emblem" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
+              </div>
+              <div class="roadmap-tags">
+                <span class="roadmap-tag">{{ t('roadmap.s3.t1') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s3.t2') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s3.t3') }}</span>
+                <span class="roadmap-tag">{{ t('roadmap.s3.t4') }}</span>
+              </div>
+            </article>
+          </li>
+        </ol>
+      </div>
       <div class="project-grid">{% for project in projects %}<a class="project-card project-{{ project.id }}" href="{{ project.url or (repositoryUrl ~ '/blob/main/projects/' ~ project.id ~ '/README.md') }}" target="_blank" rel="noopener noreferrer"><h3 class="project-wordmark">{{ project.name }}<span aria-hidden="true">↗</span></h3><p>{{ t('tracks.' ~ project.id) }}</p></a>{% endfor %}</div>
     </section>
 
