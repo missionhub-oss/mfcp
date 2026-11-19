@@ -52,8 +52,9 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their artwork and proportions. The partners wrap into rows of four;
-each incomplete row is centered with the same card widths and spacing.
+their artwork and proportions. On desktop, the 18 partners wrap into three
+compact rows of six; each incomplete row is centered with the same card
+widths and spacing.
 Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
 websites. ReedPilot uses the supplied white transparent PNG, retaining its
