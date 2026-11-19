@@ -198,3 +198,44 @@ if (!reducedMotion.matches) {
     revealObserver.observe(element);
   });
 }
+
+const lightbox = document.getElementById('blog-lightbox');
+if (lightbox) {
+  const lightboxImage = document.getElementById('blog-lightbox-image');
+  const lightboxCaption = document.getElementById('blog-lightbox-caption');
+  const closeButton = document.getElementById('blog-lightbox-close');
+  document.querySelectorAll('.blog-body .blog-media img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImage.src = img.currentSrc || img.src;
+      lightboxImage.alt = img.alt;
+      if (lightboxCaption) lightboxCaption.textContent = '';
+      lightbox.showModal();
+    });
+  });
+  closeButton?.addEventListener('click', () => lightbox.close());
+  lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) lightbox.close();
+  });
+}
+
+const tocSidebar = document.querySelector('.blog-toc-sidebar');
+if (tocSidebar) {
+  const tocLinks = [...tocSidebar.querySelectorAll('a[href^="#"]')];
+  const linkById = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const headings = [...document.querySelectorAll('.blog-body h2[id]')];
+  const updateActiveToc = () => {
+    const activeLang = document.documentElement.lang === 'en' ? 'en' : 'zh';
+    const visibleHeadings = headings.filter(h => {
+      const block = h.closest('[data-lang-block]');
+      return !block || block.dataset.langBlock === activeLang;
+    });
+    let current = visibleHeadings[0]?.id;
+    for (const heading of visibleHeadings) {
+      if (heading.getBoundingClientRect().top <= 140) current = heading.id;
+    }
+    for (const link of tocLinks) link.classList.toggle('is-active', link === linkById.get(current));
+  };
+  window.addEventListener('scroll', updateActiveToc, {passive: true});
+  languageButton?.addEventListener('click', () => requestAnimationFrame(updateActiveToc));
+  updateActiveToc();
+}
