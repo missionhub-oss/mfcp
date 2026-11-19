@@ -1,4 +1,39 @@
 {
   "github_id": 162305972,
-  "github_login": "Iscreamx"
+  "github_login": "Iscreamx",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-274",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 274
+        },
+        "actor": 162305972,
+        "at": "2026-11-19T05:34:26Z",
+        "digest": "d91533d3156499d7f097c99d04960172d4d7e8176020b69b7aa2d9e40ddac588",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/274\",\"merge_commit\":\"5c5e906742f81a33e21db24b3cfa810ae099a3ac\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 274
+  },
+  "updated_at": "2026-11-19T05:34:26Z"
 }
