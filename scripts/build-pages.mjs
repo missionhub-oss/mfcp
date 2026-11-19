@@ -176,8 +176,6 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await rm(join(output, 'news'), {recursive: true, force: true});
   await writeNewsPage(null);
   for (const article of news) await writeNewsPage(article);
-  const featuredBlog = blogs.find(item => item.featured) ?? blogs[0] ?? null;
-  const otherBlogs = blogs.filter(item => item !== featuredBlog);
   async function writeBlogPage(post) {
     const path = post ? `blogs/${post.slug}/` : 'blogs/';
     const homePath = post ? '../../' : '../';
@@ -190,7 +188,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
         : copy['blogs.description'],
     };
     const body = template.render('blogs.njk', {...common, copy: pageCopy, payload: pagePayload(pageCopy, homePath), post, blogs,
-      featured: featuredBlog, otherBlogs, homePath, isBlogs: true,
+      homePath, isBlogs: true,
       pageUrl: new URL(path, siteUrl).href});
     const target = join(output, path);
     await mkdir(target, {recursive: true});

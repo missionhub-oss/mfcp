@@ -2,7 +2,7 @@
 title: "Humanize: Toward an Efficient, Scalable Agent Flow Runtime and Flow Science"
 summary: "From single-purpose loops to a unified Agent Flow runtime, systematic Flow Science ablations, and scalable infrastructure powered by Exomyth, CogAnchor, and dynamic DAG scheduling."
 date: "2026-11-13"
-published_at: "2026-11-19"
+published_at: "2026-11-13"
 author: "Zijian Zhang"
 tags: ["Humanize", "Agent Flow", "Flow Science", "MFCP"]
 cover: "assets/humanize-runtime-and-flow-science/slide-01.webp"
@@ -175,7 +175,7 @@ Once writing and iterating on Flows stops being a chore, you can focus entirely 
 
 ![Breakthrough results across four frontier domains built on Humanize 2](assets/humanize-runtime-and-flow-science/slide-21.webp)
 
-## Flow Science
+## Flow Science and Key Findings
 
 After seeing so many task-specific Flows, a fair question naturally comes up: are Flows just another round of case-by-case glue work—like ad-hoc prompt, context, or skill tweaking—or are there underlying principles that generalize? Put simply: **is Flow purely engineering, or is it also a science?**
 
@@ -320,11 +320,11 @@ Looking five to ten years ahead, our vision is bold: one unified Flow framework 
 
 ## Live Q&A
 
-After the talk, our host Chao Liu (Zevorn) and community member Kai Liu raised several sharp questions grounded in day-to-day research and systems engineering. Here is a recap of our discussion:
+After the talk, our host Zevorn and community member Kai Liu raised several sharp questions grounded in day-to-day research and systems engineering. Here is a recap of our discussion:
 
 ### Auto-Research Flows
 
-**Context (Chao Liu)**: Coding and planning in Humanize 2.0 already feel solid, but many students want to use it for academic research. What would an Auto-Research Flow look like?
+**Context (Zevorn)**: Coding and planning in Humanize 2.0 already feel solid, but many students want to use it for academic research. What would an Auto-Research Flow look like?
 
 **My take**: Auto-Research has exploded over the last two or three months—look at the 60,000 submissions to ICLR this year, a huge fraction of which clearly involved automated research pipelines. We originally considered building one ourselves, but with limited bandwidth we chose to stay focused on the runtime, kernels, and formal math.
 
@@ -332,7 +332,7 @@ End-to-end research also needs upstream literature surveys and downstream paper 
 
 ### Systems Infra and Outworlder
 
-**Context (Chao Liu & Kai Liu)**: Kernel optimization has cycle counts and Lean has a proof kernel, whereas operating systems, compilers, and Kubernetes backends involve scheduling, interrupts, signals, and multiple interacting services. There is no single benchmark to converge on, and maintainability matters enormously. Given only a rough initial blueprint, models frequently wander off into an architecture that technically works yet feels completely wrong to an experienced engineer. Chao also noted his own workflow: using an outer agent to customize `Flame-Chase` variants, running multiple parallel exploratory implementations first, diffing them manually to pick the cleanest architecture, and only then iterating deeply with `Flame-Chase`.
+**Context (Zevorn & Kai Liu)**: Kernel optimization has cycle counts and Lean has a proof kernel, whereas operating systems, compilers, and Kubernetes backends involve scheduling, interrupts, signals, and multiple interacting services. There is no single benchmark to converge on, and maintainability matters enormously. Given only a rough initial blueprint, models frequently wander off into an architecture that technically works yet feels completely wrong to an experienced engineer. Zevorn also noted his own workflow: using an outer agent to customize `Flame-Chase` variants, running multiple parallel exploratory implementations first, diffing them manually to pick the cleanest architecture, and only then iterating deeply with `Flame-Chase`.
 
 **My take**: Software engineering—especially OS and core infrastructure—lacks a purely objective metric, which means human-in-the-loop ergonomics matter much more. Here is something I didn't even put in the slides: about a month ago, **we elevated humans to first-class peers alongside agents inside Humanize**. Historically, systems treated humans as external observers looking down on agents. We introduced a component called **`Outworlder`**, which represents a human directly as a standard Agent node inside a Flow.
 
