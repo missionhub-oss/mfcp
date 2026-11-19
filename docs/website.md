@@ -22,8 +22,11 @@ publish only from `main`. Deployment jobs are serialized.
 `site/index.njk` defines the page structure, `site/content.mjs` contains the
 English and Chinese interface copy, and `site/site.css` defines responsive
 layouts. `site/app.mjs` handles language, search and navigation.
-The main sections cover the program, one contributor leaderboard, partners
-and joining. Partners appear immediately after the leaderboard.
+The main homepage sections cover the program, partners and joining.
+The contributor leaderboard lives on its own `leaderboard/` page opened
+in a new browser tab from the header and the homepage Contributors stat,
+with `#leaderboard` and `#contributor-<login>` fragments on the homepage
+redirecting to `leaderboard/`.
 The project section lists Zephyr, Linux, Yocto Project, Humanize and QEMU.
 On screens wider than 700 pixels, the first row contains Zephyr, Linux and
 Yocto Project, and the centered second row contains Humanize and QEMU. All
@@ -96,9 +99,8 @@ The header's Events link opens the independent `events/` page in a new
 browser tab. It includes the weekly schedule, all replay links, slides
 and the Bilibili collection from `site/events.md`. The page shares the
 website header, language control and mobile navigation. Local slide links
-resolve from the new page to the existing `slides/` directory. The homepage
-displays the contributor leaderboard directly; visits to its `#events`
-fragment navigate to the events page.
+resolve from the new page to the existing `slides/` directory. Visits to
+the homepage's `#events` fragment navigate to the events page.
 
 ## News articles
 

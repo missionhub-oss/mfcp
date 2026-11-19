@@ -8,6 +8,8 @@ const strings = {
   'nav.home': ['Mission Forge home', 'Mission Forge 首页'],
   'nav.program': ['The program', '计划介绍'],
   'nav.ranking': ['Leaderboard', '排行榜'],
+  'nav.rankingNewTab': ['Leaderboard (opens in a new tab)', '排行榜（在新标签页打开）'],
+  'nav.githubStars': ['MFCP GitHub repository stars', 'MFCP GitHub 仓库 Star 数'],
   'nav.events': ['Events', '活动'],
   'nav.eventsNewTab': ['Events (opens in a new tab)', '活动（在新标签页打开）'],
   'nav.news': ['News', '新闻'],
