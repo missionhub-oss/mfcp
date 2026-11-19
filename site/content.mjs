@@ -97,6 +97,7 @@ const strings = {
   'partners.title': ['Partners.', '合作伙伴。'],
   'partners.gevico': ['GTOC', '格维开源社区'],
   'partners.hust': ['HUST OpenAtom Open Source Club', '华中科技大学开放原子开源俱乐部'],
+  'partners.qemucamp': ['QEMU Camp', 'QEMU 训练营'],
   'partners.ghfind': ['ghfind', 'ghfind'],
   'partners.rustsbi': ['RustSBI', 'RustSBI'],
   'partners.cnb': ['CNB', '云原生构建'],
