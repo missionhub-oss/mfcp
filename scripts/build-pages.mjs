@@ -21,7 +21,7 @@ template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.s
 export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const assetNames = ['site.css', 'app.mjs', 'news.css', 'tasks.css', 'tasks.mjs'];
+  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'news.css', 'tasks.css', 'tasks.mjs'];
   const assetVersions = Object.fromEntries(await Promise.all(assetNames.map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
@@ -29,7 +29,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   const news = await loadNews();
   const siteUrl = 'https://missionhub-oss.github.io/mfcp/';
   const repositorySlug = 'missionhub-oss/mfcp';
-  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false, isTasks: false, isLeaderboard: false};
+  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false, isTasks: false, isLeaderboard: false, isProfile: false, profilePerson: null};
   const pagePayload = (pageCopy, homePath, extra = {}) => ({
     copy: pageCopy,
     homePath,
@@ -44,14 +44,30 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await mkdir(output, {recursive: true});
   await writeFile(join(output, 'index.html'), html);
   await writeFile(join(output, '.nojekyll'), '');
+  await writeFile(join(output, '404.html'), template.render('404.njk', {}));
   for (const name of assetNames) await copyFile(join(siteDirectory, name), join(output, name));
   await cp(join(siteDirectory, 'assets'), join(output, 'assets'), {recursive: true});
   await cp(slidesDirectory, join(output, 'slides'), {recursive: true});
+  await writeFile(join(output, 'profile-index.json'), JSON.stringify({
+    sha: program.sha,
+    builtAt: program.builtAt,
+    repositoryUrl,
+    rulesUrl: program.rulesUrl,
+    rules: {
+      id: program.rules.id,
+      year: program.rules.year,
+      points: program.rules.points,
+      level2: program.rules.level2,
+      level3: program.rules.level3,
+    },
+    leaderboardCount: program.leaderboard.length,
+    participants: program.participants,
+  }));
   const eventCopy = {...copy,
     'meta.title': {en: 'Events · Mission Forge Contributor Program', zh: '活动 · MFCP 开源人才培养计划'},
     'meta.description': copy['events.description'],
   };
-  const eventPage = template.render('events.njk', {...common, copy: eventCopy, payload: {copy: eventCopy, homePath: '../'}, homePath: '../', isEvents: true});
+  const eventPage = template.render('events.njk', {...common, copy: eventCopy, payload: pagePayload(eventCopy, '../'), homePath: '../', isEvents: true});
   await mkdir(join(output, 'events'), {recursive: true});
   await writeFile(join(output, 'events/index.html'), eventPage);
   const leaderboardCopy = {...copy,
@@ -61,13 +77,60 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   const leaderboardPage = template.render('leaderboard.njk', {
     ...common,
     copy: leaderboardCopy,
-    payload: {copy: leaderboardCopy, homePath: '../'},
+    payload: pagePayload(leaderboardCopy, '../'),
     homePath: '../',
     isLeaderboard: true,
     pageUrl: new URL('leaderboard/', siteUrl).href,
   });
   await mkdir(join(output, 'leaderboard'), {recursive: true});
   await writeFile(join(output, 'leaderboard/index.html'), leaderboardPage);
+  const profileCopy = {...copy,
+    'meta.title': {en: 'Contributor Profile · Mission Forge Contributor Program', zh: '开源履历 · MFCP 开源人才培养计划'},
+    'meta.description': copy['account.profilePageDesc'],
+  };
+  const profilePage = template.render('profile.njk', {
+    ...common,
+    copy: profileCopy,
+    payload: pagePayload(profileCopy, '../'),
+    homePath: '../',
+    isProfile: true,
+    pageUrl: new URL('profile/', siteUrl).href,
+  });
+  await mkdir(join(output, 'profile'), {recursive: true});
+  await writeFile(join(output, 'profile/index.html'), profilePage);
+
+  const reservedRoutes = new Set(['assets', 'events', 'leaderboard', 'news', 'profile', 'slides', 'tasks']);
+  for (const person of program.participants) {
+    const slug = person.login.toLowerCase();
+    if (reservedRoutes.has(slug)) continue;
+    const personCopy = {
+      ...copy,
+      'meta.title': {
+        en: `${person.login} · MFCP Open-Source Profile`,
+        zh: `${person.login} · MFCP 开源履历`,
+      },
+      'meta.description': {
+        en: `${person.login} (L${person.level}, ${person.stats.experience} XP) open-source profile on MFCP.`,
+        zh: `${person.login}（L${person.level} · ${person.stats.experience} XP）的 MFCP 开源履历。`,
+      },
+    };
+    const personPage = template.render('profile.njk', {
+      ...common,
+      copy: personCopy,
+      payload: pagePayload(personCopy, '../', {
+        profileLogin: person.login,
+        profileData: person,
+        leaderboardCount: program.leaderboard.length,
+      }),
+      profilePerson: person,
+      homePath: '../',
+      isProfile: true,
+      pageUrl: new URL(`${slug}/`, siteUrl).href,
+    });
+    const targetDir = join(output, slug);
+    await mkdir(targetDir, {recursive: true});
+    await writeFile(join(targetDir, 'index.html'), personPage);
+  }
   const taskCopy = {...copy,
     'meta.title': {en: 'Task Plaza · Mission Forge Contributor Program', zh: '任务广场 · MFCP 开源人才培养计划'},
     'meta.description': copy['tasks.description'],
@@ -95,12 +158,13 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   }));
   async function writeNewsPage(article) {
     const path = article ? `news/${article.slug}/` : 'news/';
+    const homePath = article ? '../../' : '../';
     const pageCopy = {...copy,
       'meta.title': article ? {en: `${article.title} · MFCP News`, zh: `${article.title} · MFCP 新闻`} : {en: 'News · Mission Forge Contributor Program', zh: '社区新闻 · MFCP 开源人才培养计划'},
       'meta.description': article ? {en: article.summary, zh: article.summary} : copy['news.description'],
     };
-    const body = template.render('news.njk', {...common, copy: pageCopy, payload: {copy: pageCopy}, article, news,
-      featured: news.find(item => item.featured) ?? null, homePath: article ? '../../' : '../', isNews: true,
+    const body = template.render('news.njk', {...common, copy: pageCopy, payload: pagePayload(pageCopy, homePath), article, news,
+      featured: news.find(item => item.featured) ?? null, homePath, isNews: true,
       pageUrl: new URL(path, siteUrl).href});
     const target = join(output, path);
     await mkdir(target, {recursive: true});

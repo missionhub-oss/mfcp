@@ -247,6 +247,7 @@
   <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
   <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
   <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+  <script type="module" src="{{ homePath }}account.mjs?v={{ assetVersions['account.mjs'] }}"></script>
   <script type="module" src="{{ homePath }}tasks.mjs?v={{ assetVersions['tasks.mjs'] }}"></script>
 </body>
 </html>

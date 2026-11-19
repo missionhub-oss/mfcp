@@ -1,0 +1,62 @@
+{# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
+{# SPDX-License-Identifier: MIT #}
+{% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="mfcp-source-commit" content="{{ program.sha }}">
+  <meta name="mfcp-built-at" content="{{ program.builtAt }}">
+  <meta name="description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:title" content="{{ copy['meta.title'].zh }}">
+  <meta property="og:description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ pageUrl }}">
+  <link rel="canonical" href="{{ pageUrl }}">
+  <link rel="icon" href="{{ homePath }}assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ homePath }}site.css?v={{ assetVersions['site.css'] }}">
+  <title>{{ copy['meta.title'].zh }}</title>
+</head>
+<body id="top" class="profile-page" data-page="profile">
+  <a class="skip-link" href="#main">{{ t('nav.skip') }}</a>
+  {% include 'header.njk' %}
+
+  <main id="main" class="container profile-main">
+    <header class="profile-page-heading">
+      <p class="eyebrow"><span class="red-rule"></span>MissionHub · MFCP</p>
+      <h1>{{ t('account.profileTitle') }}</h1>
+    </header>
+
+    <section class="profile-page-signin" id="profile-page-signin" {% if profilePerson %}hidden{% endif %}>
+      <div class="profile-signin-card">
+        <h2>{{ t('account.modalTitle') }}</h2>
+        <p class="account-subtitle">{{ t('account.modalSubtitle') }}</p>
+        <form id="profile-login-form" novalidate>
+          <div class="account-field">
+            <label for="profile-username-input">{{ t('account.usernameLabel') }}</label>
+            <div class="account-input-wrap">
+              <input id="profile-username-input" type="text" list="mfcp-participant-list" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="{{ copy['account.usernamePlaceholder'].zh }}" data-i18n-placeholder="account.usernamePlaceholder">
+            </div>
+            <p class="account-help">{{ t('account.usernameHelp') }}</p>
+          </div>
+          <p class="account-error" id="profile-signin-error" role="alert" hidden></p>
+          <div class="account-form-actions">
+            <button class="button primary" id="profile-login-submit" type="submit">{{ t('account.submit') }}</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="profile-page-dashboard" id="profile-page-dashboard" {% if not profilePerson %}hidden{% endif %}>
+      <div id="profile-page-content"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
+  <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
+  <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+  <script type="module" src="{{ homePath }}account.mjs?v={{ assetVersions['account.mjs'] }}"></script>
+</body>
+</html>
