@@ -1,8 +1,6 @@
 {# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
 {# SPDX-License-Identifier: MIT #}
 {% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
-{% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
-{% macro avatar(person, size=48) %}<span class="avatar" aria-hidden="true"><span>{{ person.initials }}</span><img src="{{ person.avatarUrl }}" alt="" width="{{ size }}" height="{{ size }}" loading="lazy"></span>{% endmacro %}
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -31,7 +29,7 @@
         <p class="eyebrow"><span class="red-rule"></span>{{ t('hero.eyebrow') }}</p>
         <h1 id="hero-title">{{ t('hero.title1') }} <span class="accent">{{ t('hero.title2') }}</span></h1>
         <p class="hero-description">{{ t('hero.description') }}</p>
-        <div class="button-row"><a class="button primary" href="#join">{{ t('hero.start') }}<span aria-hidden="true">↗</span></a><a class="button secondary" href="{{ repositoryUrl }}/issues?q=is%3Aissue+is%3Aopen+type%3ATask" target="_blank" rel="noopener noreferrer">{{ t('hero.tasks') }}<span aria-hidden="true">↗</span></a></div>
+        <div class="button-row"><a class="button primary" href="#join">{{ t('hero.start') }}<span aria-hidden="true">↗</span></a><a class="button secondary" href="tasks/" target="_blank" rel="noopener noreferrer">{{ t('hero.tasks') }}<span aria-hidden="true">↗</span></a></div>
         <a class="text-link hero-community-link" href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 4H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3v3l4-3h9a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Z"/><path d="M7 9h10M7 13h7"/></svg>{{ t('hero.community') }}<span aria-hidden="true">↗</span></a>
       </div>
       <div class="forge-art" aria-hidden="true">
@@ -44,65 +42,15 @@
     <div class="stats-strip">
       <div class="container stats-grid">
         <a class="stat" href="#join"><strong>{{ community.members }}</strong><span>{{ t('stats.community') }}</span></a>
-        <a class="stat" href="#leaderboard"><strong>{{ program.stats.participants }}</strong><span>{{ t('stats.people') }}</span></a>
-        <a class="stat" href="{{ repositoryUrl }}/issues?q=is%3Aissue+type%3ATask" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.tasks }}</strong><span>{{ t('stats.tasks') }}</span></a>
-        <a class="stat" href="{{ repositoryUrl }}/issues?q=is%3Aissue+type%3ATask+is%3Aopen+assignee%3A*" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.inProgressTasks }}</strong><span>{{ t('stats.inProgress') }}</span></a>
+        <a class="stat" href="leaderboard/" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.participants }}</strong><span>{{ t('stats.people') }}</span></a>
+        <a class="stat" href="tasks/" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.tasks }}</strong><span>{{ t('stats.tasks') }}</span></a>
+        <a class="stat" href="tasks/?status=claimed" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.inProgressTasks }}</strong><span>{{ t('stats.inProgress') }}</span></a>
       </div>
     </div>
 
     <section class="section container" id="program" aria-labelledby="program-title">
       <div class="section-intro"><h2 class="highlight-title" id="program-title">{{ t('program.title') }}</h2><div><p class="section-description">{{ t('program.description') }}</p><div class="guide-links"><a class="text-link" href="{{ repositoryUrl }}/blob/main/docs/program.md" target="_blank" rel="noopener noreferrer">{{ t('program.guide') }} <span aria-hidden="true">↗</span></a><a class="text-link" href="{{ program.rulesUrl }}" target="_blank" rel="noopener noreferrer">{{ t('levels.rules') }} <span aria-hidden="true">↗</span></a></div></div></div>
       <div class="project-grid">{% for project in projects %}<a class="project-card project-{{ project.id }}" href="{{ project.url or (repositoryUrl ~ '/blob/main/projects/' ~ project.id ~ '/README.md') }}" target="_blank" rel="noopener noreferrer"><h3 class="project-wordmark">{{ project.name }}<span aria-hidden="true">↗</span></h3><p>{{ t('tracks.' ~ project.id) }}</p></a>{% endfor %}</div>
-    </section>
-
-    <section class="section container" id="leaderboard" aria-labelledby="ranking-title">
-      <div class="ranking-heading"><div><h2 class="highlight-title" id="ranking-title" tabindex="-1">{{ t('ranking.title') }}</h2><p class="section-description">{{ t('ranking.description') }}</p></div>
-        <label class="search-field js-only"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span class="sr-only">{{ t('people.search') }}</span><input id="search" type="search" autocomplete="off" placeholder="{{ copy['people.search'].zh }}" data-i18n-placeholder="people.search"></label>
-      </div>
-      <p class="sr-only" role="status" aria-live="polite"><span id="visible-count">{{ program.stats.participants }}</span> {{ t('people.count') }}</p>
-      <ol class="ranking-list" id="contributor-grid">{% for person in program.leaderboard %}
-        <li class="contributor-card" id="contributor-{{ person.login | lower }}" data-login="{{ person.login | lower }}" data-level="{{ person.level }}" data-xp="{{ person.stats.experience }}" value="{{ person.rank }}">
-          <details class="person-details"><summary>
-            <span class="rank-position"><span class="sr-only">{{ t('ranking.rank') }} </span><span class="rank-number">{{ person.rank }}</span></span>
-            {{ avatar(person) }}
-            <span class="person-identity"><strong>{{ person.login }}</strong><span>L{{ person.level }} · {{ t('level.' ~ person.level) }}</span></span>
-            <span class="ghfind-summary">
-              <span class="ghfind-wordmark">ghfind</span>
-              <span class="ghfind-badge-media"><img src="https://ghfind.com/api/badge/{{ person.login }}?lang=zh" data-ghfind-image="badge" alt="{{ copy['ghfind.badgeAlt'].zh }}" data-i18n-alt="ghfind.badgeAlt" height="20" loading="lazy" decoding="async"><span class="ghfind-image-fallback" hidden>{{ t('ghfind.unavailable') }}</span></span>
-            </span>
-            <span class="rank-xp"><strong>{{ person.stats.experience }}</strong> XP<span class="rank-tasks"><strong>{{ person.stats.tasks }}</strong> {{ t('profile.tasks') }}</span></span>
-            <span class="expand-mark" aria-hidden="true">+</span><span class="sr-only">{{ t('profile.history') }}</span>
-          </summary>
-            <div class="person-detail-body">
-              <section class="ghfind-panel" aria-labelledby="ghfind-{{ person.id }}">
-                <div class="ghfind-panel-heading"><span class="ghfind-wordmark">ghfind <span aria-hidden="true">↗</span></span><h3 id="ghfind-{{ person.id }}">{{ t('ghfind.title') }}</h3></div>
-                <a class="ghfind-card-link" href="https://ghfind.com/u/{{ person.login }}" target="_blank" rel="noopener noreferrer">
-                  <img src="https://ghfind.com/api/card/mini/{{ person.login }}?variant=bars&amp;theme=dark&amp;lang=zh" data-ghfind-image="card" alt="{{ copy['ghfind.cardAlt'].zh }}" data-i18n-alt="ghfind.cardAlt" width="440" height="200" loading="lazy" decoding="async">
-                  <span class="ghfind-image-fallback" hidden><span class="ghfind-wordmark">ghfind</span>{{ t('ghfind.cardUnavailable') }}</span>
-                </a>
-                <div class="guide-links profile-links">
-                  <a class="text-link" href="https://ghfind.com/u/{{ person.login }}" target="_blank" rel="noopener noreferrer">{{ t('ghfind.visit') }} <span aria-hidden="true">↗</span></a>
-                  <a class="text-link" href="{{ person.githubUrl }}" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-                  <a class="text-link" href="{{ person.recordUrl }}" target="_blank" rel="noopener noreferrer">{{ t('profile.record') }} <span aria-hidden="true">↗</span></a>
-                </div>
-                <p class="ghfind-invitation">{{ t('ghfind.invitation') }}</p>
-                {% if person.history.length %}<ul class="history-list" aria-label="{{ copy['profile.history'].zh }}" data-i18n-aria-label="profile.history">{% for event in person.history %}<li><a href="{{ event.href }}" target="_blank" rel="noopener noreferrer">{{ localized(event.title) }} <span aria-hidden="true">↗</span></a><time datetime="{{ event.at }}" data-date="{{ event.at }}">{{ event.at | date }}</time></li>{% endfor %}</ul>{% else %}<p class="small muted profile-empty-history">{{ t('profile.noHistory') }}</p>{% endif %}
-              </section>
-              <div class="person-progress">
-              <dl class="person-stats"><div><dt>XP</dt><dd>{{ person.stats.experience }}</dd></div><div><dt>{{ t('profile.tasks') }}</dt><dd>{{ person.stats.tasks }}</dd></div><div><dt>{{ t('profile.prs') }}</dt><dd>{{ person.stats.pull_requests }}</dd></div></dl>
-              {% if person.criteria.length %}<div class="criteria"><p class="criteria-title">{{ t('profile.next') }} <strong>L{{ person.nextLevel }}</strong></p>{% for criterion in person.criteria %}<label><span>{{ t('criterion.' ~ criterion.key) }}<strong>{{ criterion.current }} / {{ criterion.required }}</strong></span><progress max="{{ criterion.required }}" value="{{ criterion.value }}">{{ criterion.current }} / {{ criterion.required }}</progress></label>{% endfor %}<p class="small muted">{{ t('profile.progressNote') }}{% if person.level == 2 %} {{ t('profile.review') }}{% endif %}</p></div>{% else %}<p class="small muted">{{ t('profile.l' ~ person.level) }}</p>{% endif %}
-              </div>
-            </div>
-          </details>
-        </li>
-      {% endfor %}</ol>
-      <nav class="pagination js-only" id="pagination" aria-label="{{ copy['pagination.label'].zh }}" data-i18n-aria-label="pagination.label">
-        <button type="button" id="previous-page" aria-controls="contributor-grid" disabled>{{ t('pagination.previous') }}</button>
-        <span id="pagination-status" role="status" aria-live="polite"></span>
-        <button type="button" id="next-page" aria-controls="contributor-grid">{{ t('pagination.next') }}</button>
-      </nav>
-      <div class="empty-state" id="people-empty" hidden><p>{{ t('people.empty') }}</p><button type="button" class="button secondary" id="clear-filters">{{ t('people.clear') }}</button></div>
-      <p class="small muted ranking-note">{{ t('ranking.note') }} {{ t('ghfind.note') }}</p>
     </section>
 
     <section class="section container partners-section" id="partners" aria-labelledby="partners-title">

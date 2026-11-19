@@ -28,8 +28,8 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   const events = await loadEvents();
   const news = await loadNews();
   const siteUrl = 'https://missionhub-oss.github.io/mfcp/';
-  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false};
-  const html = template.render('index.njk', {...common, copy, payload: {copy}, homePath: '', isNews: false});
+  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false, isLeaderboard: false};
+  const html = template.render('index.njk', {...common, copy, payload: {copy, homePath: ''}, homePath: '', isNews: false});
   await mkdir(output, {recursive: true});
   await writeFile(join(output, 'index.html'), html);
   await writeFile(join(output, '.nojekyll'), '');
@@ -40,9 +40,23 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
     'meta.title': {en: 'Events · Mission Forge Contributor Program', zh: '活动 · MFCP 开源人才培养计划'},
     'meta.description': copy['events.description'],
   };
-  const eventPage = template.render('events.njk', {...common, copy: eventCopy, payload: {copy: eventCopy}, homePath: '../', isEvents: true});
+  const eventPage = template.render('events.njk', {...common, copy: eventCopy, payload: {copy: eventCopy, homePath: '../'}, homePath: '../', isEvents: true});
   await mkdir(join(output, 'events'), {recursive: true});
   await writeFile(join(output, 'events/index.html'), eventPage);
+  const leaderboardCopy = {...copy,
+    'meta.title': {en: 'Leaderboard · Mission Forge Contributor Program', zh: '排行榜 · MFCP 开源人才培养计划'},
+    'meta.description': copy['ranking.description'],
+  };
+  const leaderboardPage = template.render('leaderboard.njk', {
+    ...common,
+    copy: leaderboardCopy,
+    payload: {copy: leaderboardCopy, homePath: '../'},
+    homePath: '../',
+    isLeaderboard: true,
+    pageUrl: new URL('leaderboard/', siteUrl).href,
+  });
+  await mkdir(join(output, 'leaderboard'), {recursive: true});
+  await writeFile(join(output, 'leaderboard/index.html'), leaderboardPage);
   async function writeNewsPage(article) {
     const path = article ? `news/${article.slug}/` : 'news/';
     const pageCopy = {...copy,

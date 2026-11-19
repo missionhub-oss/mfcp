@@ -11,12 +11,36 @@ const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
 
-function openEventsFromHash() {
-  if (document.body.dataset.page === 'home' && location.hash === '#events') {
-    location.replace(new URL('events/', location.href));
+function handleLegacyFragments() {
+  if (document.body.dataset.page === 'home') {
+    if (location.hash === '#events') {
+      location.replace(new URL('events/', location.href));
+      return;
+    }
+    if (location.hash === '#leaderboard') {
+      location.replace(new URL('leaderboard/', location.href));
+      return;
+    }
+    if (location.hash.startsWith('#contributor-')) {
+      location.replace(new URL(`leaderboard/${location.hash}`, location.href));
+      return;
+    }
+  }
+  if (document.body.dataset.page === 'leaderboard' && location.hash.startsWith('#contributor-')) {
+    const login = decodeURIComponent(location.hash.slice('#contributor-'.length)).toLowerCase();
+    const index = cards.findIndex(card => card.dataset.login === login);
+    if (index >= 0) {
+      if (search) search.value = '';
+      currentPage = Math.floor(index / pageSize) + 1;
+      renderContributors();
+      const targetCard = cards[index];
+      const details = targetCard.querySelector('details');
+      if (details) details.open = true;
+      targetCard.scrollIntoView({block: 'center'});
+    }
   }
 }
-window.addEventListener('hashchange', openEventsFromHash);
+window.addEventListener('hashchange', handleLegacyFragments);
 
 function setLanguage(next) {
   language = next === 'en' ? 'en' : 'zh';
@@ -47,6 +71,7 @@ function setLanguage(next) {
   });
   try {localStorage.setItem('mfcp.language', language);} catch {}
   renderContributors();
+  window.dispatchEvent(new CustomEvent('mfcp:language-change', {detail: {language}}));
 }
 
 function renderContributors() {
@@ -114,7 +139,7 @@ document.addEventListener('keydown', event => {
 });
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
 setLanguage(language);
-openEventsFromHash();
+handleLegacyFragments();
 document.documentElement.dataset.enhanced = 'true';
 
 const art = document.querySelector('.forge-art');
