@@ -4,6 +4,10 @@ QEMU 方向围绕系统仿真、板级与 SoC 模型、外设行为、启动流�
 贡献目标包括进程使命维护的 `processmission/qemu` 仓库，以及通过 `qemu-devel`
 邮件列表评审的 QEMU 上游补丁。
 
+## 入门学习
+
+首次接触 QEMU，可以从 [QEMU 训练营课程](learning-courses.md)开始。课程按导学、基础、专业和项目四个阶段组织，覆盖 QEMU 启动流程、QOM、MemoryRegion、TCG、设备建模和调试方法，并配有六个实验方向与四个项目方向。
+
 ## 项目入口
 
 - [QEMU 官网](https://www.qemu.org/)
