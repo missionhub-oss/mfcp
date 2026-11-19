@@ -14,7 +14,7 @@ slides_path: "slides/humanize-agent-flow-infra-2026-11-13.pdf"
 
 > This post is adapted from my November 13, 2026 talk at the MFCP Open-Source Practice Sharing session, *Humanize: Moving AI Agents from Single Tasks to Complex Engineering Collaboration*.
 
-Hi everyone, I'm Zijian Zhang. Chao was a bit too generous in his introduction—I'm still a PhD student, not a doctor yet! I'm studying at the College of AI at Tsinghua University, interning at NVIDIA Research Singapore, and working as a core developer at Humanfia. I wrote most of the code for Humanize 2.0, the version we are actively shipping today. In this post, I want to walk through how Humanize evolved over the past year, how our **Agent Flow runtime** works under the hood, what we have uncovered through **Flow Science**, and where we are heading next with scalable infrastructure.
+I'm Zijian Zhang, a PhD student at the College of AI at Tsinghua University, a Research Intern at NVIDIA Research Singapore, and a core developer at Humanfia, where I wrote most of Humanize 2.0. In this post, I walk through how Humanize evolved over the past year, how our **Agent Flow runtime** works under the hood, what we have uncovered through **Flow Science**, and where we are heading next with scalable infrastructure.
 
 ![Humanize: Toward Efficient and Scalable Agent Flow Infrastructure](assets/humanize-runtime-and-flow-science/slide-01.webp)
 
