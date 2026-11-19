@@ -1,0 +1,203 @@
+{
+  "github_id": 62325246,
+  "github_login": "zevorn",
+  "projects": [
+    {
+      "id": "qemu",
+      "name": {"en": "QEMU", "zh": "QEMU"},
+      "role": {"en": "Maintainer · Reviewer", "zh": "维护者 · 评审者"},
+      "summary": {
+        "en": "K230 Machines maintainer; reviewer for RISC-V TCG CPUs and Checkpatch.",
+        "zh": "K230 Machines 维护者，RISC-V TCG CPU 与 Checkpatch 评审者。"
+      },
+      "url": "https://gitlab.com/qemu-project/qemu/-/blob/master/MAINTAINERS"
+    },
+    {
+      "id": "humanize",
+      "name": {"en": "HUMANIZE", "zh": "HUMANIZE"},
+      "role": {"en": "Maintainer", "zh": "维护者"},
+      "summary": {
+        "en": "HUMANIZE 1.0 maintainer team member; review prompts and methodology contributions.",
+        "zh": "HUMANIZE 1.0 维护团队成员，参与评审提示词与方法论改进。"
+      },
+      "url": "https://github.com/PolyArch/humanize"
+    },
+    {
+      "id": "rustsbi",
+      "name": {"en": "RustSBI", "zh": "RustSBI"},
+      "role": {"en": "Maintainer", "zh": "维护者"},
+      "summary": {
+        "en": "AIA/IMSIC interrupt backend, topology-aware tests and QEMU virt bring-up.",
+        "zh": "AIA/IMSIC 中断后端、拓扑感知测试与 QEMU virt 适配。"
+      },
+      "url": "https://github.com/rustsbi/rustsbi"
+    },
+    {
+      "id": "linux",
+      "name": {"en": "Linux Kernel", "zh": "Linux 内核"},
+      "role": {"en": "Contributor", "zh": "贡献者"},
+      "summary": {
+        "en": "RV real-time verification documentation merged in Linux 7.3.",
+        "zh": "RV 实时验证文档，已合入 Linux 7.3。"
+      },
+      "url": "https://github.com/torvalds/linux"
+    },
+    {
+      "id": "asterinas",
+      "name": {"en": "Asterinas", "zh": "Asterinas"},
+      "role": {"en": "Contributor", "zh": "贡献者"},
+      "summary": {
+        "en": "OSTD documentation and CPU fault-signal semantics on x86 and LoongArch.",
+        "zh": "OSTD 文档，以及 x86 与 LoongArch 的 CPU 故障信号语义。"
+      },
+      "url": "https://github.com/asterinas/asterinas"
+    },
+    {
+      "id": "openruyi",
+      "name": {"en": "openRuyi", "zh": "openRuyi"},
+      "role": {"en": "Contributor", "zh": "贡献者"},
+      "summary": {
+        "en": "QEMU package spec and rvsp-ref patches for the RISC-V distribution.",
+        "zh": "面向 RISC-V 发行版的 QEMU 软件包 spec 与 rvsp-ref 补丁。"
+      },
+      "url": "https://github.com/openRuyi-Project/openRuyi"
+    }
+  ],
+  "moments": [
+    {
+      "id": "linux-rv-docs-7-3",
+      "at": "2026-08-19T00:00:00Z",
+      "project": "linux",
+      "kind": "contributor",
+      "title": {
+        "en": "Linux 7.3 merged the RV sleep-monitor documentation patch",
+        "zh": "Linux 7.3 合入 RV 睡眠监控文档补丁"
+      },
+      "summary": {
+        "en": "Documentation/rv explains epoll_wait() and aborted sleeps for the rtapp sleep monitor; authored on 29 July and merged through the tracing tree for 7.3.",
+        "zh": "Documentation/rv 补充 rtapp 睡眠监控中的 epoll_wait() 与中止睡眠语义；7 月 29 日提交，经 tracing 树合入 7.3。"
+      },
+      "url": "https://github.com/torvalds/linux/commit/7d81675d1bb2cc6db61a2d93b1e0dc7fb0929f9c"
+    },
+    {
+      "id": "qemu-k230-maintainer",
+      "at": "2026-06-16T00:00:00Z",
+      "project": "qemu",
+      "kind": "maintainer",
+      "title": {
+        "en": "Became a QEMU K230 Machines maintainer",
+        "zh": "成为 QEMU K230 Machines 维护者"
+      },
+      "summary": {
+        "en": "The K230 board series added the K230 Machines entry with Chao Liu as maintainer; Alistair Francis merged the series.",
+        "zh": "K230 板级支持系列在 MAINTAINERS 中新增 K230 Machines 条目，由 Chao Liu 担任维护者；Alistair Francis 合入。"
+      },
+      "url": "https://lore.kernel.org/qemu-devel/a161697a249b896e44e2748435f6c0caec12c9f4.1781246408.git.chao.liu@processmission.com/"
+    },
+    {
+      "id": "qemu-checkpatch-reviewer",
+      "at": "2026-05-13T00:00:00Z",
+      "project": "qemu",
+      "kind": "reviewer",
+      "title": {
+        "en": "Became a QEMU Checkpatch reviewer",
+        "zh": "成为 QEMU Checkpatch 评审者"
+      },
+      "summary": {
+        "en": "MAINTAINERS patch adding Chao Liu as Checkpatch reviewer; reviewed by Philippe Mathieu-Daudé and merged by Markus Armbruster.",
+        "zh": "MAINTAINERS 补丁新增 Chao Liu 为 Checkpatch 评审者；Philippe Mathieu-Daudé 评审，Markus Armbruster 合入。"
+      },
+      "url": "https://lore.kernel.org/qemu-devel/20260513070830.851842-1-chao.liu.zevorn@gmail.com/"
+    },
+    {
+      "id": "rustsbi-maintainer",
+      "at": "2026-05-10T00:00:00Z",
+      "project": "rustsbi",
+      "kind": "maintainer",
+      "title": {
+        "en": "Became a RustSBI maintainer",
+        "zh": "成为 RustSBI 维护者"
+      },
+      "summary": {
+        "en": "GitHub lists Chao Liu with the admin role on the RustSBI organization and rustsbi/rustsbi; the organization profile was last updated on 10 May 2026.",
+        "zh": "GitHub 记录显示 Chao Liu 在 RustSBI 组织与 rustsbi/rustsbi 仓库拥有管理员角色；组织资料更新于 2026 年 5 月 10 日。"
+      },
+      "url": "https://github.com/rustsbi"
+    },
+    {
+      "id": "rustsbi-aia-imsic",
+      "at": "2026-05-01T00:00:00Z",
+      "project": "rustsbi",
+      "kind": "contributor",
+      "title": {
+        "en": "RustSBI merged the AIA/IMSIC backend for QEMU virt",
+        "zh": "RustSBI 合入 QEMU virt 的 AIA/IMSIC 中断后端"
+      },
+      "summary": {
+        "en": "PR #210 added AIA/IMSIC interrupt support, topology-aware tests and openEuler boot coverage, merged by Zhouqi Jiang.",
+        "zh": "PR #210 增加 AIA/IMSIC 中断支持、拓扑感知测试与 openEuler 启动覆盖，由蒋周奇合入。"
+      },
+      "url": "https://github.com/rustsbi/rustsbi/pull/210"
+    },
+    {
+      "id": "humanize-maintainer",
+      "at": "2026-04-14T00:00:00Z",
+      "project": "humanize",
+      "kind": "maintainer",
+      "title": {
+        "en": "Joined the HUMANIZE 1.0 maintainer team",
+        "zh": "加入 HUMANIZE 1.0 maintainer 团队"
+      },
+      "summary": {
+        "en": "The PolyArch humanize-maintainer team was created on 14 April 2026 at 07:29 CST for Humanize maintainers; Chao Liu is a member.",
+        "zh": "PolyArch 的 humanize-maintainer 团队于 2026 年 4 月 14 日 07:29（北京时间）创建，用于 HUMANIZE 维护者；Chao Liu 是团队成员。"
+      },
+      "url": "https://github.com/PolyArch/humanize"
+    },
+    {
+      "id": "asterinas-fault-signals",
+      "at": "2026-04-14T00:00:00Z",
+      "project": "asterinas",
+      "kind": "contributor",
+      "title": {
+        "en": "Asterinas merged CPU exception to fault-signal mapping",
+        "zh": "Asterinas 合入 CPU 异常到故障信号的映射"
+      },
+      "summary": {
+        "en": "PR #3120 mapped x86 and LoongArch debug and breakpoint exceptions to SIGTRAP and added regression tests; PR #3062 embedded README documentation for ostd and int-to-c-enum.",
+        "zh": "PR #3120 将 x86 与 LoongArch 的调试、断点异常映射为 SIGTRAP 并补充回归测试；PR #3062 为 ostd 与 int-to-c-enum 嵌入 README 文档。"
+      },
+      "url": "https://github.com/asterinas/asterinas/pull/3120"
+    },
+    {
+      "id": "qemu-riscv-tcg-reviewer",
+      "at": "2026-03-19T00:00:00Z",
+      "project": "qemu",
+      "kind": "reviewer",
+      "title": {
+        "en": "Became a QEMU RISC-V TCG CPU reviewer",
+        "zh": "成为 QEMU RISC-V TCG CPU 评审者"
+      },
+      "summary": {
+        "en": "The MAINTAINERS patch was submitted on 26 February and merged by Alistair Francis on 19 March, with reviews from Bin Meng, Daniel Henrique Barboza and Liu Zhiwei.",
+        "zh": "MAINTAINERS 补丁于 2 月 26 日提交，3 月 19 日由 Alistair Francis 合入；Bin Meng、Daniel Henrique Barboza 与 Liu Zhiwei 评审。"
+      },
+      "url": "https://lore.kernel.org/qemu-devel/20260226102008.146928-1-chao.liu.zevorn@gmail.com/"
+    },
+    {
+      "id": "openruyi-qemu-package",
+      "at": "2026-02-25T00:00:00Z",
+      "project": "openruyi",
+      "kind": "contributor",
+      "title": {
+        "en": "openRuyi packaged QEMU with rvsp-ref patches",
+        "zh": "openRuyi 引入 QEMU 软件包与 rvsp-ref 补丁"
+      },
+      "summary": {
+        "en": "The openRuyi QEMU spec credits Chao Liu as a file contributor; the package carries rvsp-ref patches authored on 5 January 2026.",
+        "zh": "openRuyi 的 QEMU spec 将 Chao Liu 列为文件贡献者；软件包包含 2026 年 1 月 5 日编写的 rvsp-ref 补丁。"
+      },
+      "url": "https://github.com/openRuyi-Project/openRuyi/commit/11173883eabe37c10fdc5ee6dd6f61d10c204a35"
+    }
+  ]
+}

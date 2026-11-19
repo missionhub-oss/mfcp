@@ -3,17 +3,20 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { normalizeProfile, rulesSchema, governanceSchema, activeSettlement } from './lib/profile.mjs';
+import { loadHighlights } from './lib/highlights.mjs';
 
 if (process.argv[2]) process.chdir(process.argv[2]);
 
 const read = async path => JSON.parse(await readFile(path, 'utf8'));
 const identities = new Set();
 const contributions = new Set();
+const participants = [];
 for (const file of await readdir('participants')) {
   if (!file.endsWith('.json')) continue;
   const profile = normalizeProfile(await read(`participants/${file}`), `participants/${file}`);
   if (identities.has(profile.github_id)) throw new Error('Duplicate GitHub ID.');
   identities.add(profile.github_id);
+  participants.push({id: profile.github_id, login: profile.github_login});
   for (const task of profile.contributions) {
     const [year, version] = task.policy.id.split('.');
     const path = `programs/${year}/rules/${version}.json`;
@@ -27,6 +30,8 @@ for (const file of await readdir('participants')) {
     }
   }
 }
+const highlights = await loadHighlights('.', participants);
+console.log(`Validated ${highlights.size} open-source highlights records.`);
 for (const year of (await readdir('programs')).filter(name => /^\d{4}$/.test(name))) {
   let files;
   try {files = await readdir(`programs/${year}/rules`);} catch (error) {if (error.code === 'ENOENT') continue; throw error;}
