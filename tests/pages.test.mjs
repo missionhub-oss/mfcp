@@ -24,6 +24,7 @@ test('trusted site rendering publishes real records from a separate data directo
     const $ = load(html);
     const events = await loadEvents();
     const eventPage = load(await readFile(join(output, 'events/index.html'), 'utf8'));
+    const leaderboardPage = load(await readFile(join(output, 'leaderboard/index.html'), 'utf8'));
     assert.equal(eventPage('.event-card').length, events.replays.length);
     assert.deepEqual(eventPage('.event-title-link').map((_, element) => eventPage(element).attr('href')).get(), events.replays.map(replay => replay.url));
     assert.deepEqual(eventPage('.event-slides').map((_, element) => eventPage(element).attr('href')).get(),
@@ -31,20 +32,38 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(eventPage('h1').length, 1);
     assert.equal(eventPage('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/events/');
     assert.equal(eventPage('#main-nav a[aria-current="page"]').attr('href'), '../events/');
+    assert.equal(eventPage('#main-nav a[href="../leaderboard/"]').attr('target'), '_blank');
     assert.equal(eventPage('#main-nav a[href="../news/"]').attr('target'), '_blank');
+    assert.equal(eventPage('#main-nav a.nav-tasks-cta').attr('href'), '../tasks/');
+    assert.equal(eventPage('#main-nav a.nav-tasks-cta').attr('target'), '_blank');
+    assert.equal($('#main-nav a[href="leaderboard/"]').attr('target'), '_blank');
+    assert.equal($('#main-nav a[href="leaderboard/"]').attr('rel'), 'noopener noreferrer');
     assert.equal($('#main-nav a[href="events/"]').attr('target'), '_blank');
     assert.equal($('#main-nav a[href="events/"]').attr('rel'), 'noopener noreferrer');
-    assert.equal($('#leaderboard').attr('aria-labelledby'), 'ranking-title');
+    assert.equal($('#main-nav a.nav-tasks-cta').attr('href'), 'tasks/');
+    assert.equal($('#main-nav a.nav-tasks-cta').attr('target'), '_blank');
+    assert.equal($('#main-nav a.nav-tasks-cta').attr('rel'), 'noopener noreferrer');
+    assert.equal($('#main-nav a[href*="feishu.cn"]').length, 0);
+    assert.equal($('#main-nav a[href$="#program"]').length, 0);
+    assert.equal($('.header-actions').children().last().hasClass('github-star-link'), true);
+    assert.equal($('.header-actions .github-star-link').attr('href'), 'https://github.com/missionhub-oss/mfcp');
+    assert.equal(Number($('.header-actions .github-star-count').text()), program.repository.stars);
+    assert.ok(Number.isInteger(program.repository.stars) && program.repository.stars >= 0);
+    assert.equal($('#leaderboard, .contributor-card').length, 0);
     assert.equal($('#events, [role="tablist"], [role="tabpanel"]').length, 0);
+    assert.equal(leaderboardPage('h1').length, 1);
+    assert.equal(leaderboardPage('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/leaderboard/');
+    assert.equal(leaderboardPage('#main-nav a[aria-current="page"]').attr('href'), '../leaderboard/');
+    assert.equal(leaderboardPage('#leaderboard').attr('aria-labelledby'), 'ranking-title');
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
     const rankedProfiles = profiles.filter(profile => profile.level < 4);
-    assert.equal($('.ranking-list>.contributor-card').length, rankedProfiles.length);
-    assert.equal($('.recognized-card').length, 0);
-    assert.deepEqual($('.ranking-list>.contributor-card').map((_, element) => $(element).attr('data-login')).get(),
+    assert.equal(leaderboardPage('.ranking-list>.contributor-card').length, rankedProfiles.length);
+    assert.equal(leaderboardPage('.recognized-card').length, 0);
+    assert.deepEqual(leaderboardPage('.ranking-list>.contributor-card').map((_, element) => leaderboardPage(element).attr('data-login')).get(),
       program.leaderboard.map(person => person.login.toLowerCase()));
     for (const profile of profiles.filter(profile => profile.level === 4)) {
-      assert.equal($(`#contributor-${profile.github_login.toLowerCase()}`).length, 0);
+      assert.equal(leaderboardPage(`#contributor-${profile.github_login.toLowerCase()}`).length, 0);
     }
     const tasks = issues.filter(issue => !issue.pull_request && issue.type?.name === 'Task');
     const inProgress = tasks.filter(issue => issue.state === 'open' && issue.assignees.length > 0);
@@ -63,21 +82,21 @@ test('trusted site rendering publishes real records from a separate data directo
     ]);
     assert.deepEqual($('.stats-grid>a').map((_, element) => $(element).attr('href')).get(), [
       '#join',
-      '#leaderboard',
-      'https://github.com/missionhub-oss/mfcp/issues?q=is%3Aissue+type%3ATask',
-      'https://github.com/missionhub-oss/mfcp/issues?q=is%3Aissue+type%3ATask+is%3Aopen+assignee%3A*',
+      'leaderboard/',
+      'tasks/',
+      'tasks/?status=claimed',
     ]);
     assert.equal(program.stats.experience, profiles.reduce((sum, profile) => sum + totals(profile).experience, 0));
     for (const profile of rankedProfiles) {
       const person = program.participants.find(item => item.id === profile.github_id);
       assert.deepEqual(person.stats, totals(profile));
-      const card = $(`#contributor-${profile.github_login.toLowerCase()}`);
+      const card = leaderboardPage(`#contributor-${profile.github_login.toLowerCase()}`);
       assert.equal(card.attr('data-level'), String(profile.level));
       assert.equal(card.attr('data-xp'), String(person.stats.experience));
-      assert.deepEqual(card.find('.person-stats dd').map((_, element) => Number($(element).text())).get(),
+      assert.deepEqual(card.find('.person-stats dd').map((_, element) => Number(leaderboardPage(element).text())).get(),
         [person.stats.experience, person.stats.tasks, person.stats.pull_requests]);
       assert.equal(card.find('.rank-tasks strong').text(), String(person.stats.tasks));
-      assert.deepEqual(card.find('.profile-links a[href]').map((_, element) => $(element).attr('href')).get(),
+      assert.deepEqual(card.find('.profile-links a[href]').map((_, element) => leaderboardPage(element).attr('href')).get(),
         [`https://ghfind.com/u/${person.login}`, person.githubUrl, person.recordUrl]);
       assert.ok(person.recordUrl.includes(`/blob/${sha}/participants/`));
       assert.equal(card.find('.rank-number').text(), String(person.rank));
@@ -85,9 +104,9 @@ test('trusted site rendering publishes real records from a separate data directo
       assert.equal(person.rank, 1 + program.leaderboard.filter(other =>
         other.stats.experience > person.stats.experience).length);
       const threshold = profile.level === 1 ? program.rules.level2 : profile.level === 2 ? program.rules.level3 : null;
-      assert.deepEqual(card.find('progress').map((_, element) => Number($(element).attr('max'))).get(),
+      assert.deepEqual(card.find('progress').map((_, element) => Number(leaderboardPage(element).attr('max'))).get(),
         threshold ? Object.values(threshold).filter(required => required > 0) : []);
-      assert.deepEqual(card.find('.history-list a').map((_, element) => $(element).attr('href')).get(), person.history.map(event => event.href));
+      assert.deepEqual(card.find('.history-list a').map((_, element) => leaderboardPage(element).attr('href')).get(), person.history.map(event => event.href));
       if (!profile.promotions.some(event => event.proof.source.kind === 'registration')) assert.equal(person.joinedAt, null);
     }
     assert.equal($('html').attr('lang'), 'zh-CN');
@@ -99,6 +118,19 @@ test('trusted site rendering publishes real records from a separate data directo
         const rendered = attribute === 'data-i18n' ? $(element).text() : $(element).attr(attribute.slice('data-i18n-'.length));
         assert.equal(rendered, copy[key].zh, `Incorrect initial language: ${key}`);
       });
+    }
+    const leaderboardCopy = JSON.parse(leaderboardPage('#page-data').text()).copy;
+    for (const attribute of ['data-i18n', 'data-i18n-placeholder', 'data-i18n-aria-label', 'data-i18n-alt']) {
+      leaderboardPage(`[${attribute}]`).each((_, element) => {
+        const key = leaderboardPage(element).attr(attribute);
+        assert.ok(leaderboardCopy[key]?.en && leaderboardCopy[key]?.zh, `Missing leaderboard bilingual content: ${key}`);
+        const rendered = attribute === 'data-i18n' ? leaderboardPage(element).text() : leaderboardPage(element).attr(attribute.slice('data-i18n-'.length));
+        assert.equal(rendered, leaderboardCopy[key].zh, `Incorrect initial leaderboard language: ${key}`);
+      });
+    }
+    for (const element of leaderboardPage('script[src], link[rel="stylesheet"]').toArray()) {
+      const path = leaderboardPage(element).attr('href') ?? leaderboardPage(element).attr('src');
+      await access(join(output, 'leaderboard', path.split('?')[0]));
     }
     const eventCopy = JSON.parse(eventPage('#page-data').text()).copy;
     for (const element of eventPage('[data-i18n]').toArray()) {
@@ -114,7 +146,7 @@ test('trusted site rendering publishes real records from a separate data directo
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
-    for (const name of ['app.mjs', 'site.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
+    for (const name of ['app.mjs', 'account.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
     }
     for (const replay of events.replays.filter(replay => replay.slides)) {

@@ -1,0 +1,33 @@
+{# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
+{# SPDX-License-Identifier: MIT #}
+<dialog class="mfcp-dialog account-dialog" id="account-dialog" aria-labelledby="account-dialog-title">
+  <div class="dialog-shell">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <p class="dialog-kicker">GitHub · MFCP</p>
+        <h2 id="account-dialog-title">{{ t('account.modalTitle') }}</h2>
+      </div>
+      <button class="dialog-close" id="account-dialog-close" type="button" aria-label="{{ copy['account.close'].zh }}" data-i18n-aria-label="account.close">×</button>
+    </div>
+
+    <div class="dialog-body">
+      <section class="account-login-view" id="account-login-view">
+        <p class="account-subtitle">{{ t('account.modalSubtitle') }}</p>
+        <form id="account-login-form" novalidate>
+          <div class="account-field">
+            <label for="github-username-input">{{ t('account.usernameLabel') }}</label>
+            <div class="account-input-wrap">
+              <input id="github-username-input" type="text" list="mfcp-participant-list" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="{{ copy['account.usernamePlaceholder'].zh }}" data-i18n-placeholder="account.usernamePlaceholder">
+            </div>
+            <p class="account-help">{{ t('account.usernameHelp') }}</p>
+          </div>
+          <p class="account-error" id="account-login-error" role="alert" hidden></p>
+          <div class="account-form-actions">
+            <button class="button primary" id="account-login-submit" type="submit">{{ t('account.submit') }}</button>
+          </div>
+        </form>
+        <datalist id="mfcp-participant-list"></datalist>
+      </section>
+    </div>
+  </div>
+</dialog>

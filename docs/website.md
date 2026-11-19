@@ -120,6 +120,29 @@ project track, keyword search and sort order, open the full synced issue
 content in a detail dialog (with `#task-<number>` deep links), or click
 live sync to fetch the latest GitHub Issues state directly in the browser.
 
+The header actions place language switching, the GitHub account control
+powered by `site/account.mjs`, and at the far top-right a GitHub
+repository link showing the live build-time Star count
+(`stargazers_count` from the GitHub Repository API). Without any backend
+server or token, visitors enter their GitHub username
+(with autocomplete from published MFCP contributors) to match their
+record in `site-dist/profile-index.json`, `tasks-data.json` and public
+GitHub profile metadata (`https://api.github.com/users/<login>`), saved
+in `localStorage` until refreshed or signed out.
+
+Each registered contributor also gets a static open-source resume page
+at `site-dist/<login-lowercase>/index.html` (with `404.html` redirecting
+mixed-case username paths case-insensitively and `profile/` serving as
+the sign-in and lookup entry). The top panel combines identity, level
+progress bar (`L0`–`L4`), core completion metrics (`XP`, accepted tasks,
+upstream PRs, mentored tasks, mentored completions) and the embedded
+`ghfind` card, followed by four equal-sized scrollable/paginated panels:
+participating open-source projects, participating tasks, concrete
+open-source contributions (merged upstream PRs and recognitions) and
+mentored tasks. Unregistered accounts see a
+ready-to-copy `participants/<login>.json` registration snippet with
+their `github_login` and `github_id`.
+
 ## News articles
 
 The header's News link opens the independent `news/` page in a new browser
