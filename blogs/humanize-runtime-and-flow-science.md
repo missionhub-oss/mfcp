@@ -14,7 +14,7 @@ slides_path: "slides/humanize-agent-flow-infra-2026-11-13.pdf"
 
 > 这篇博客文章整理自 2026 年 11 月 13 日 MFCP 开源实践分享《Humanize：让 AI Agent 从单次任务走向复杂工程协作》。
 
-大家好，我是张子健。刚才主持人泽文过誉了，我其实还是在读博士研究生，还没有毕业，暂时还称不上“张博”。我现在就读于清华大学人工智能学院，同时也是 NVIDIA Research Singapore 的 Research Intern，以及 Humanfia 组织的核心开发者——Humanize 项目的第二版（也就是我们目前主推的 Humanize 2.0）主要代码都是我实现的。借这次分享的机会，我想把 Humanize 这一年来的演进脉络、底层实现思路，以及我们在 Agent Flow 科学和大规模基础设施上的一些思考完整写出来。
+我是张子健，清华大学人工智能学院博士研究生，NVIDIA Research Singapore 的 Research Intern，也是 Humanfia 核心开发者与 Humanize 2.0 主要代码实现者。这篇文章系统梳理 Humanize 一年来的演进脉络、统一 Agent Flow 运行时的底层实现、我们在 Flow 科学上的实验发现，以及面向大规模并发基础设施的探索。
 
 ![Humanize：迈向高效可扩展的 Agent Flow 基础设施](assets/humanize-runtime-and-flow-science/slide-01.webp)
 
