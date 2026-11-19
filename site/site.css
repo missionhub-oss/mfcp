@@ -118,4 +118,22 @@ html[lang="zh-CN"] h1{font-size:clamp(2.7rem,4.8vw,4.4rem);letter-spacing:-.035e
 .github-star-sep{width:1px;height:14px;background:#ffffff24}
 .github-star-icon{color:#e6ba63;flex-shrink:0}
 .github-star-count{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;color:#f3e5c4}
+#main-nav a.nav-tasks-cta{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:3px;background:linear-gradient(135deg,var(--red),#d83a0e);border:1px solid #ff764d66;color:#fff;font-weight:650;letter-spacing:.01em;box-shadow:0 0 0 1px #b2260040,0 6px 18px #b2260052;transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;white-space:nowrap}
+#main-nav a.nav-tasks-cta:hover{color:#fff;background:linear-gradient(135deg,#c93108,var(--accent));border-color:#ff9473a0;transform:translateY(-1px);box-shadow:0 0 0 1px #e84c2266,0 10px 24px #b2260070}
+#main-nav a.nav-tasks-cta[aria-current="page"]{color:#fff;background:linear-gradient(135deg,#c93108,var(--accent));border-color:#ffaa8ea8;box-shadow:0 0 0 2px var(--accent),0 8px 24px #e84c2255}
+.nav-tasks-dot{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px #ffffff38;animation:nav-task-pulse 2.4s ease-in-out infinite;flex-shrink:0}
+.nav-tasks-count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:20px;padding:0 6px;border-radius:2px;background:#11111160;font:600 12px/1 var(--mono);color:#fff;font-variant-numeric:tabular-nums}
+@keyframes nav-task-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+.mfcp-dialog{width:min(760px,calc(100vw - 28px));max-height:min(88vh,860px);padding:0;border:1px solid #ffffff28;border-radius:4px;background:#161616;color:var(--text);box-shadow:0 28px 90px #000000cc;overflow:hidden}
+.mfcp-dialog::backdrop{background:#090909bf;backdrop-filter:blur(6px)}
+.mfcp-dialog[open]{display:flex;flex-direction:column}
+.dialog-shell{display:flex;flex-direction:column;max-height:min(88vh,860px);min-height:0}
+.dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:24px 28px 20px;border-bottom:1px solid var(--line);background:#1b1a19}
+.dialog-title-group{min-width:0}
+.dialog-kicker{margin:0 0 8px;font:600 12px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.dialog-header h2{margin:0;max-width:none;font-size:clamp(1.35rem,2.4vw,1.8rem);line-height:1.35;letter-spacing:-.02em;overflow-wrap:anywhere}
+.dialog-close{flex-shrink:0;width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:3px;background:transparent;color:var(--muted);font-size:24px;line-height:1;transition:border-color .18s,color .18s}
+.dialog-close:hover{border-color:var(--accent);color:var(--text)}
+.dialog-body{padding:26px 28px;overflow-y:auto;flex:1;min-height:0}
+.dialog-footer{display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:18px 28px;border-top:1px solid var(--line);background:#1b1a19}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.forge-art,.button:hover{transform:none}.reveal{opacity:1;transform:none}}

@@ -102,6 +102,24 @@ website header, language control and mobile navigation. Local slide links
 resolve from the new page to the existing `slides/` directory. Visits to
 the homepage's `#events` fragment navigate to the events page.
 
+## Task Plaza and GitHub account view
+
+The highlighted Task Plaza call-to-action at the right end of the header
+navigation opens the independent `tasks/` page in a new browser tab and
+displays the count of currently available tasks. `scripts/lib/tasks.mjs`
+classifies every native `Task` issue from the GitHub Issues API into
+`available` (open with no assignees), `claimed` (open with assignees),
+`completed` (closed as completed) or `closed`, resolves difficulty level,
+program year, project tracks (from `project/*` labels with a fallback to
+the `Project / 实践项目` section) and mentors, and renders sanitized
+issue Markdown into `site-dist/tasks/index.html` and
+`site-dist/tasks/tasks-data.json`.
+
+Visitors can filter tasks by status, difficulty level (`L1`–`L4`), year,
+project track, keyword search and sort order, open the full synced issue
+content in a detail dialog (with `#task-<number>` deep links), or click
+live sync to fetch the latest GitHub Issues state directly in the browser.
+
 ## News articles
 
 The header's News link opens the independent `news/` page in a new browser
