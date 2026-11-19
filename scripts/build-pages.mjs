@@ -10,10 +10,12 @@ import {loadProgram, repositoryUrl} from './lib/pages.mjs';
 import {loadCommunity} from './lib/community.mjs';
 import {loadEvents} from './lib/events.mjs';
 import {loadNews} from './lib/news.mjs';
+import {loadBlogs} from './lib/blogs.mjs';
 import {copy, projects, communityUrl} from '../site/content.mjs';
 
 const siteDirectory = fileURLToPath(new URL('../site/', import.meta.url));
 const slidesDirectory = fileURLToPath(new URL('../slides/', import.meta.url));
+const blogsAssetsDirectory = fileURLToPath(new URL('../blogs/assets/', import.meta.url));
 const template = new nunjucks.Environment(new nunjucks.FileSystemLoader(siteDirectory), {autoescape: true, throwOnUndefined: true});
 template.addFilter('date', value => new Intl.DateTimeFormat('zh-CN', {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}).format(new Date(value)));
 template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.stringify(value).replaceAll('<', '\\u003c')));
@@ -21,15 +23,16 @@ template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.s
 export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'news.css', 'tasks.css', 'tasks.mjs'];
+  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
   const assetVersions = Object.fromEntries(await Promise.all(assetNames.map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
   const events = await loadEvents();
   const news = await loadNews();
+  const blogs = await loadBlogs();
   const siteUrl = 'https://missionhub-oss.github.io/mfcp/';
   const repositorySlug = 'missionhub-oss/mfcp';
-  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isEvents: false, isTasks: false, isLeaderboard: false, isProfile: false, profilePerson: null};
+  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isBlogs: false, isEvents: false, isTasks: false, isLeaderboard: false, isProfile: false, profilePerson: null};
   const pagePayload = (pageCopy, homePath, extra = {}) => ({
     copy: pageCopy,
     homePath,
@@ -99,7 +102,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await mkdir(join(output, 'profile'), {recursive: true});
   await writeFile(join(output, 'profile/index.html'), profilePage);
 
-  const reservedRoutes = new Set(['assets', 'events', 'leaderboard', 'news', 'profile', 'slides', 'tasks']);
+  const reservedRoutes = new Set(['assets', 'blogs', 'events', 'leaderboard', 'news', 'profile', 'slides', 'tasks']);
   for (const person of program.participants) {
     const slug = person.login.toLowerCase();
     if (reservedRoutes.has(slug)) continue;
@@ -173,8 +176,32 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await rm(join(output, 'news'), {recursive: true, force: true});
   await writeNewsPage(null);
   for (const article of news) await writeNewsPage(article);
+  const featuredBlog = blogs.find(item => item.featured) ?? blogs[0] ?? null;
+  const otherBlogs = blogs.filter(item => item !== featuredBlog);
+  async function writeBlogPage(post) {
+    const path = post ? `blogs/${post.slug}/` : 'blogs/';
+    const homePath = post ? '../../' : '../';
+    const pageCopy = {...copy,
+      'meta.title': post
+        ? {en: `${post.localizedTitle.en} · MFCP Blogs`, zh: `${post.title} · MFCP 技术博客`}
+        : {en: 'Blogs · Mission Forge Contributor Program', zh: '技术博客 · MFCP 开源人才培养计划'},
+      'meta.description': post
+        ? {en: post.localizedSummary.en, zh: post.summary}
+        : copy['blogs.description'],
+    };
+    const body = template.render('blogs.njk', {...common, copy: pageCopy, payload: pagePayload(pageCopy, homePath), post, blogs,
+      featured: featuredBlog, otherBlogs, homePath, isBlogs: true,
+      pageUrl: new URL(path, siteUrl).href});
+    const target = join(output, path);
+    await mkdir(target, {recursive: true});
+    await writeFile(join(target, 'index.html'), body);
+  }
+  await rm(join(output, 'blogs'), {recursive: true, force: true});
+  await writeBlogPage(null);
+  for (const post of blogs) await writeBlogPage(post);
+  if (blogs.length) await cp(blogsAssetsDirectory, join(output, 'blogs/assets'), {recursive: true});
   console.log(`Built MFCP website for ${program.stats.participants} contributors at ${sha}.`);
-  return {program, html, output, news};
+  return {program, html, output, news, blogs};
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await buildPages(resolve(process.argv[2] || '.'));

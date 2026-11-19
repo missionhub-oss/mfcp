@@ -193,6 +193,43 @@ community members and their participation and remarks do not represent
 their employers or schools. Organization names describe personal work or
 study backgrounds.
 
+## Technical blogs
+
+The header's Blogs link opens the independent `blogs/` page in a new browser
+tab. The blog index and each article page share the website header, language
+control, GitHub account dialog and mobile navigation. Blog articles are
+maintained as Markdown files in the top-level `blogs/` directory so contributors
+can author and review posts directly at the repository root.
+
+Write each post as `blogs/<slug>.md` with YAML front matter and a Markdown body.
+Add an optional English translation at `blogs/<slug>.en.md` so switching the
+site language displays the English title, summary, author, table of contents and
+body on the same `blogs/<slug>/` URL. The filename uses lowercase letters,
+digits and hyphens, and becomes the article's standalone URL suffix
+`blogs/<slug>/`. Images live under `blogs/assets/` and are referenced with
+relative paths such as `assets/<slug>/slide-01.webp`, so previews work both on
+GitHub and in the built website. `gray-matter` reads the metadata, `marked`
+renders the body and builds the section table of contents, `sanitize-html`
+restricts the published HTML to safe article elements, and `image-size` supplies
+image dimensions. JavaScript front matter is rejected.
+
+| Field | Meaning |
+| --- | --- |
+| `title`, `summary` | Post title and index description |
+| `date` | Session or topic date, quoted as `YYYY-MM-DD` |
+| `published_at` | Publication date, quoted as `YYYY-MM-DD` |
+| `author` | Speaker or author attribution |
+| `tags` | Optional list of topic tags |
+| `cover`, `cover_alt` | Local image path under `blogs/assets/` and its alternative text |
+| `featured` | Select a post for the index's featured position |
+| `video_url` | Optional replay video URL |
+| `slides_path` | Optional repository slide path under `slides/` |
+
+The build produces `site-dist/blogs/index.html`,
+`site-dist/blogs/<slug>/index.html`, and copies `blogs/assets/` into
+`site-dist/blogs/assets/`. `blogs` is reserved alongside the other top-level
+site sections so per-username profile routes never shadow the blog pages.
+
 ## Published records and rankings
 
 The homepage shows Community members, Contributors, Total tasks and In progress.
