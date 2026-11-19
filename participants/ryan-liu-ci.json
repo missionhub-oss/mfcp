@@ -3,8 +3,80 @@
   "github_login": "Ryan-LIU-CI",
   "schema_version": 1,
   "level": 1,
-  "experience": 0,
-  "contributions": [],
+  "experience": 30,
+  "contributions": [
+    {
+      "id": "task-8",
+      "issue": 8,
+      "participant_id": 75163652,
+      "mentor_id": 62325246,
+      "difficulty": 2,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "points": 30,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 8,
+          "comment": 6328320174
+        },
+        "actor": 62325246,
+        "at": "2026-10-21T22:51:52Z",
+        "digest": "b9f2f2e7adc47eac6e546cc57be013b7f7db62ee9e04a0c2e31c01c5ed5cf612",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-7001131112",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 8,
+              "comment": 7001131112
+            },
+            "actor": 62325246,
+            "at": "2026-11-19T05:59:10Z",
+            "digest": "a652dcf03ee901a3f46e6ed0c6e5b9691f8411df0678d5a0cbeb3d16540a6011",
+            "details": "{\"pull_requests\":[\"https://github.com/zephyrproject-rtos/zephyr/pull/124028\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "zephyrproject-rtos/zephyr",
+              "number": 124028,
+              "author": 75163652,
+              "merge_commit": "22ca1df01087413279cba4931510dddbbd85bc1d",
+              "merged_at": "2026-11-17T17:22:49Z",
+              "commits": [
+                "17085e50bd2fef8f4992d1c168b8de13cfe84d7d"
+              ],
+              "url": "https://github.com/zephyrproject-rtos/zephyr/pull/124028"
+            }
+          ],
+          "points": 30
+        }
+      ],
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 8,
+              "comment": 6328320174
+            },
+            "actor": 62325246,
+            "at": "2026-10-21T22:51:52Z",
+            "digest": "b9f2f2e7adc47eac6e546cc57be013b7f7db62ee9e04a0c2e31c01c5ed5cf612",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ]
+    }
+  ],
   "promotions": [
     {
       "id": "registration-40",
@@ -30,9 +102,11 @@
     }
   ],
   "adjustments": [],
+  "recognitions": [],
   "last_event": {
-    "kind": "registration",
-    "pr": 40
+    "kind": "comment",
+    "issue": 8,
+    "comment": 7001131112
   },
-  "updated_at": "2026-10-24T14:23:09Z"
+  "updated_at": "2026-11-19T05:59:10Z"
 }
