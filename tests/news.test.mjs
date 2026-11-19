@@ -20,8 +20,8 @@ test('news publishes the real Markdown collection with complete partner records 
     const partners = home('.partner-grid > .partner-link').map((_, element) =>
       home(element).attr('class').split(/\s+/).find(name => name.startsWith('partner-') && name !== 'partner-link').slice('partner-'.length)).get().sort();
     assert.deepEqual(news.filter(article => article.category === 'partner').map(article => article.partner).sort(), partners);
-    assert.equal(home('#main-nav a[href="news/"]').attr('target'), '_blank');
-    assert.equal(home('#main-nav a[href="news/"]').attr('rel'), 'noopener noreferrer');
+    assert.equal(home('#main-nav a[href="news/"]').attr('target'), undefined);
+    assert.equal(home('#main-nav a[href="news/"]').attr('rel'), undefined);
 
     const index = load(await readFile(join(output, 'news/index.html'), 'utf8'));
     const featured = news.find(article => article.featured);

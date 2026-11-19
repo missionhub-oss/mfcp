@@ -140,7 +140,7 @@ test('Task Plaza and profile index build from real GitHub Task issues and reposi
     assert.equal(profilePage('h1').length, 1);
     assert.equal(profilePage('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/profile/');
     assert.equal(profilePage('#account-trigger').attr('aria-current'), 'page');
-    assert.equal(Number(profilePage('.header-actions .github-star-count').text()), program.repository.stars);
+    assert.equal(profilePage('.header-actions .github-star-link').length, 0);
     const profileCopy = JSON.parse(profilePage('#page-data').text()).copy;
     for (const attribute of ['data-i18n', 'data-i18n-placeholder', 'data-i18n-aria-label', 'data-i18n-alt']) {
       profilePage(`[${attribute}]`).each((_, element) => {

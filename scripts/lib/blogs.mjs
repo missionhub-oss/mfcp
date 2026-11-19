@@ -189,6 +189,6 @@ export async function loadBlogs() {
       },
     });
   }
-  const timestamp = post => Date.parse(`${post.date}T00:00:00+08:00`);
+  const timestamp = post => Date.parse(`${post.published_at}T00:00:00+08:00`);
   return posts.sort((a, b) => timestamp(b) - timestamp(a) || a.slug.localeCompare(b.slug));
 }

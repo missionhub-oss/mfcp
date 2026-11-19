@@ -17,13 +17,21 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     const home = load(html);
     const sourceNames = (await readdir('blogs')).filter(name => name.endsWith('.md') && !name.endsWith('.en.md')).sort();
     assert.deepEqual(blogs.map(post => `${post.slug}.md`).sort(), sourceNames);
-    assert.equal(home('#main-nav a[href="blogs/"]').attr('target'), '_blank');
-    assert.equal(home('#main-nav a[href="blogs/"]').attr('rel'), 'noopener noreferrer');
+    assert.equal(home('#main-nav a[href="blogs/"]').attr('target'), undefined);
+    assert.equal(home('#main-nav a[href="blogs/"]').attr('rel'), undefined);
 
     const indexPath = resolve(output, 'blogs/index.html');
     const index = load(await readFile(indexPath, 'utf8'));
-    const featured = blogs.find(post => post.featured) ?? blogs[0];
-    assert.equal(index('.blog-feature h2 a').attr('href'), `${featured.slug}/`);
+    assert.deepEqual(blogs.map(post => post.slug), [
+      'humanize-runtime-and-flow-science',
+      'qemu-riscv-performance-optimization',
+    ]);
+    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-13', '2026-11-06']);
+    assert.deepEqual(index('.blog-entry h2 a').map((_, element) => index(element).attr('href')).get(),
+      blogs.map(post => `${post.slug}/`));
+    assert.deepEqual(index('.blog-entry').map((_, element) => index(element).hasClass('is-reversed')).get(),
+      blogs.map((_, idx) => idx % 2 === 1));
+    assert.equal(index('.blog-card, .blogs-list').length, 0);
     assert.equal(index('#main-nav a[aria-current="page"]').attr('href'), '../blogs/');
     assert.equal(index('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/blogs/');
 
@@ -86,6 +94,22 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     assert.ok(humanize('h1 [data-en]').attr('data-en').includes('Humanize'));
     const headingIds = humanize('.blog-body [id]').map((_, element) => humanize(element).attr('id')).get();
     assert.equal(new Set(headingIds).size, headingIds.length);
+
+    const qemuPath = resolve(output, 'blogs/qemu-riscv-performance-optimization/index.html');
+    const qemu = load(await readFile(qemuPath, 'utf8'));
+    assert.equal(qemu('.blog-body[lang="zh-CN"] .blog-media img').length, 16);
+    assert.equal(qemu('.blog-body[lang="en"] .blog-media img').length, 16);
+    for (const lang of ['zh-CN', 'en']) {
+      const srcs = qemu(`.blog-body[lang="${lang}"] .blog-media img`).map((_, element) => qemu(element).attr('src')).get();
+      for (let i = 1; i <= 16; i += 1) {
+        const expected = `../assets/qemu-riscv-performance-optimization/slide-${String(i).padStart(2, '0')}.webp`;
+        assert.ok(srcs.includes(expected), `Missing slide image in QEMU (${lang}) blog: ${expected}`);
+      }
+    }
+    assert.ok(qemu('.blog-toc-sidebar ul[data-lang-block="zh"] a').length >= 5);
+    assert.ok(qemu('.blog-toc-sidebar ul[data-lang-block="en"] a').length >= 5);
+    const qemuHeadingIds = qemu('.blog-body [id]').map((_, element) => qemu(element).attr('id')).get();
+    assert.equal(new Set(qemuHeadingIds).size, qemuHeadingIds.length);
   } finally {
     await rm(output, {recursive: true, force: true});
   }
