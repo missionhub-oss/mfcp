@@ -70,7 +70,6 @@ export async function validateMentorConfiguration(client, issue, profiles, read,
   if (!isTaskIssue(issue)) throw new Error('Set the native issue type to Task before configuring a mentor.');
   taskYear(issue, {at: read.proof.at, recordedYear: recordedYear(recordedTask(profiles, issue)), required: false});
   const {governance} = await currentRules(client, ref, read.proof.at);
-  requireRole(governance.maintainers, read.proof.actor, 'Only maintainers can configure tasks.');
   const name = read.command.data.mentor;
   const record = profiles.find(p => /^\d+$/.test(name)
     ? p.profile.github_id === Number(name)
@@ -112,6 +111,13 @@ export function selectTaskMentor(configurations, mentorId, at, task) {
   const configuration = configurations.find(record => record.mentor.id === mentorId);
   if (!configuration || Date.parse(configuration.proof.at) > Date.parse(at)) throw new Error('Task approval requires a previously configured mentor.');
   return configuration;
+}
+
+export function settlementCommandCandidates(comments, slug) {
+  return comments.filter(comment => {
+    if (comment.user.type !== 'User' || comment.created_at !== comment.updated_at) return false;
+    try {return parseCommand(comment.body, slug)?.action === 'settle';} catch {return false;}
+  });
 }
 
 async function evidenceComment(client, url, action, candidate, level, governance, ref, slug) {
@@ -232,11 +238,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     const contract = profiles.find(p => p.profile.contributions.some(c => c.issue === source.issue));
     const task = contract?.profile.contributions.find(c => c.issue === source.issue);
     if (task && activeSettlement(contract.profile, task)) return null;
-    const closingRules = await currentRules(client, ref, event.created_at);
-    const candidates = comments.filter(c => {
-      if (c.user.type !== 'User' || c.created_at !== c.updated_at || !closingRules.governance.maintainers.includes(c.user.id)) return false;
-      try {return parseCommand(c.body, slug)?.action === 'settle';} catch {return false;}
-    });
+    const candidates = settlementCommandCandidates(comments, slug);
     let comment;
     for (const candidate of candidates.reverse()) {
       if (await isMentor(candidate.user)) {comment = candidate; break;}
@@ -274,7 +276,6 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
   }
   if (issue?.pull_request) throw new Error('Use an issue for contribution commands.');
   if (action === 'settle') {
-    requireRole(governance.maintainers, proof.actor, 'Final settlement requires a maintainer.');
     if (proof.actor === before.github_id) throw new Error('A contributor cannot settle their own task.');
     if (task && activeSettlement(after, task)) return null;
     if (issue.state === 'closed' && issue.state_reason !== 'completed') throw new Error('Reopen tasks closed as Not planned before requesting settlement.');

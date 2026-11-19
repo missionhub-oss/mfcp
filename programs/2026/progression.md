@@ -68,7 +68,7 @@ ELISA 仓库当前归入 Linux 方向。QEMU 上游通过
 首字母大写，也可以将姓氏全部大写；
 作者的签署姓名和邮箱与提交作者一致。
 
-维护者审核成果后，在任务中发表 `@mfcp-progress settle <上游 PR 链接>`。
+导师审核成果后，在任务中发表 `@mfcp-progress settle <上游 PR 链接>`。
 Bot 直接核对负责人、标签、导师配置、上游合入、作者 DCO 和重复计分。
 验证通过并写入结算记录后，Bot 自动将 Issue 关闭为 Completed。已手动关闭为
 Completed 的任务也使用同一命令结算。上游 PR、作者签署和导师配置授权是结算证据。
