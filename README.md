@@ -29,7 +29,7 @@
 
 ---
 
-MFCP is a contributor development program initiated by **Process Mission**.
+MFCP is a contributor development program initiated by the **MissionHub community**.
 It brings together open-source learning, mentorship, practical project work,
 and contribution assessments to help participants build engineering experience.
 
