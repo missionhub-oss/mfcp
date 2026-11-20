@@ -13,3 +13,4 @@
 | 2026-10-30 | [Linux 开源贡献流程分享](https://www.bilibili.com/video/BV15Zxi68Ecg/) | Linux contribution workflow | 48:54 | - |
 | 2026-11-06 | [QEMU RISC-V 性能优化经验分享](https://www.bilibili.com/video/BV1224z6tE4s/) | QEMU RISC-V performance optimization | 36:59 | [Slides](./slides/qemu-user-mode-performance-2026-11-06.pptx) |
 | 2026-11-13 | [Humanize：让 AI Agent 从单次任务走向复杂工程协作](https://www.bilibili.com/video/BV1eyWB6FEkn/) | Humanize: from single tasks to complex engineering collaboration | 52:52 | [Slides](./slides/humanize-agent-flow-infra-2026-11-13.pdf) |
+| 2026-11-20 | [RustSBI 开源安全固件速报（2026）](https://www.bilibili.com/video/BV1X1ysz9EkE/) | RustSBI 2026 open-source security firmware progress report | 52:15 | [Slides](./slides/rustsbi-security-firmware-2026-11-20.pdf) |

@@ -23,10 +23,11 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     const indexPath = resolve(output, 'blogs/index.html');
     const index = load(await readFile(indexPath, 'utf8'));
     assert.deepEqual(blogs.map(post => post.slug), [
+      'rustsbi-security-firmware-2026',
       'humanize-runtime-and-flow-science',
       'qemu-riscv-performance-optimization',
     ]);
-    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-13', '2026-11-06']);
+    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-20', '2026-11-13', '2026-11-06']);
     assert.deepEqual(index('.blog-entry h2 a').map((_, element) => index(element).attr('href')).get(),
       blogs.map(post => `${post.slug}/`));
     assert.deepEqual(index('.blog-entry').map((_, element) => index(element).hasClass('is-reversed')).get(),
@@ -110,6 +111,24 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     assert.ok(qemu('.blog-toc-sidebar ul[data-lang-block="en"] a').length >= 5);
     const qemuHeadingIds = qemu('.blog-body [id]').map((_, element) => qemu(element).attr('id')).get();
     assert.equal(new Set(qemuHeadingIds).size, qemuHeadingIds.length);
+
+    const rustsbiPath = resolve(output, 'blogs/rustsbi-security-firmware-2026/index.html');
+    const rustsbi = load(await readFile(rustsbiPath, 'utf8'));
+    assert.equal(rustsbi('.blog-body[lang="zh-CN"] .blog-media img').length, 8);
+    assert.equal(rustsbi('.blog-body[lang="en"] .blog-media img').length, 8);
+    for (const lang of ['zh-CN', 'en']) {
+      const srcs = rustsbi(`.blog-body[lang="${lang}"] .blog-media img`).map((_, element) => rustsbi(element).attr('src')).get();
+      for (let i = 1; i <= 8; i += 1) {
+        const expected = `../assets/rustsbi-security-firmware-2026/slide-${String(i).padStart(2, '0')}.webp`;
+        assert.ok(srcs.includes(expected), `Missing slide image in RustSBI (${lang}) blog: ${expected}`);
+      }
+    }
+    assert.ok(rustsbi('.blog-toc-sidebar ul[data-lang-block="zh"] a').length >= 5);
+    assert.ok(rustsbi('.blog-toc-sidebar ul[data-lang-block="en"] a').length >= 5);
+    assert.ok(rustsbi('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('Q&A'));
+    assert.ok(!rustsbi('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('&amp;'));
+    const rustsbiHeadingIds = rustsbi('.blog-body [id]').map((_, element) => rustsbi(element).attr('id')).get();
+    assert.equal(new Set(rustsbiHeadingIds).size, rustsbiHeadingIds.length);
   } finally {
     await rm(output, {recursive: true, force: true});
   }
