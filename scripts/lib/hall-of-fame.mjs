@@ -8,7 +8,7 @@ export const HALL_TAGS = ['open-source', 'advocacy'];
 
 const login = z.string().regex(/^[a-z0-9](?:[a-z0-9]|-(?=[a-z0-9])){0,38}$/i);
 const entry = z.strictObject({
-  name: z.string().min(1),
+  name: z.strictObject({zh: z.string().min(1), en: z.string().min(1)}),
   github: login,
   bio: z.strictObject({zh: z.string().min(1), en: z.string().min(1)}),
   tags: z.array(z.enum(HALL_TAGS)).nonempty(),
@@ -41,11 +41,13 @@ export async function loadHallOfFame() {
     throw new Error(`hall-of-fame.md table needs columns: ${headerNames.join(', ')}.`);
   }
   const column = name => columns.indexOf(name);
+  const englishName = columns.indexOf('English name');
   const englishBio = columns.indexOf('English bio');
   const avatar = columns.indexOf('头像');
   const zhihu = columns.indexOf('知乎');
   const entries = table.rows.map(row => {
     const zh = row[column('介绍')]?.text.trim() ?? '';
+    const zhName = row[column('姓名')]?.text.trim() ?? '';
     const tagCell = row[column('标签')]?.text.trim() ?? '';
     const tags = [...new Set(tagCell.split(/[、,，/]/).map(tag => tag.trim()).filter(Boolean).map(tag => {
       const id = tagLabels.get(tag);
@@ -58,7 +60,7 @@ export async function loadHallOfFame() {
     const zhihuCell = zhihu >= 0 ? row[zhihu]?.text.trim() : '';
     const zhihuUrl = zhihuCell && zhihuCell !== '-' ? zhihuCell : '';
     return {
-      name: row[column('姓名')]?.text.trim() ?? '',
+      name: {zh: zhName, en: englishName >= 0 ? (row[englishName]?.text.trim() || zhName) : zhName},
       github: row[column('GitHub')]?.text.trim().replace(/^@/, '') ?? '',
       bio: {
         zh,

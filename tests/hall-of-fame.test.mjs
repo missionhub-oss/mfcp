@@ -9,10 +9,12 @@ test('hall of fame Markdown loads tagged ambassadors', async () => {
   assert.equal(entries.length, 1);
   const luojia = entries[0];
   assert.equal(luojia.github, 'luojia65');
+  assert.equal(luojia.name.zh, '蒋周奇（洛佳）');
+  assert.equal(luojia.name.en, 'Zhouqi Jiang (Luo Jia)');
   assert.deepEqual(luojia.tags, ['open-source']);
   assert.ok(luojia.bio.zh && luojia.bio.en);
   assert.ok(luojia.since);
-  assert.equal(luojia.avatar, 'assets/ambassadors/luojia65.png');
+  assert.equal(luojia.avatar, 'assets/ambassadors/luojia65.jpg');
   assert.equal(luojia.zhihu, 'https://www.zhihu.com/people/luojia-14-40');
 });
 
