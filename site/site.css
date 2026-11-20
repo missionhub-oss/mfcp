@@ -111,6 +111,13 @@ html[lang="zh-CN"] h1{font-size:clamp(2.7rem,4.8vw,4.4rem);letter-spacing:-.035e
 .event-action a{color:var(--accent);text-decoration:none}
 .event-action a:hover{text-decoration:underline}
 .event-note{margin-top:20px}
+.event-carousel{position:relative}
+.event-slide{min-width:0}
+html[data-enhanced] .event-slide:not(.is-active){display:none}
+html[data-enhanced] .event-slide.is-active{animation:event-slide-in .24s ease-out}
+.event-pagination{margin-top:24px}
+@keyframes event-slide-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){html[data-enhanced] .event-slide.is-active{animation:none}}
 @media(max-width:1100px){.site-header #main-nav{gap:16px;font-size:14px;flex-wrap:wrap}.header-actions{gap:12px}.language-button{padding-left:12px}}
 @media(max-width:760px){.events-main,.leaderboard-main{padding-top:42px}.event-grid{grid-template-columns:1fr}.event-schedule{align-items:flex-start;flex-direction:column}.events-page .events-heading h1,.leaderboard-page .ranking-heading h1{font-size:44px}}
 #main-nav a.nav-tasks-cta{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:3px;background:linear-gradient(135deg,var(--red),#d83a0e);border:1px solid #ff764d66;color:#fff;font-weight:650;letter-spacing:.01em;box-shadow:0 0 0 1px #b2260040,0 6px 18px #b2260052;transition:transform .18s,box-shadow .18s,background .18s,border-color .18s;white-space:nowrap}

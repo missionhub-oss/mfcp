@@ -27,6 +27,13 @@ test('trusted site rendering publishes real records from a separate data directo
     const leaderboardPage = load(await readFile(join(output, 'leaderboard/index.html'), 'utf8'));
     assert.equal(eventPage('.event-card').length, events.replays.length);
     assert.deepEqual(eventPage('.event-title-link').map((_, element) => eventPage(element).attr('href')).get(), events.replays.map(replay => replay.url));
+    assert.deepEqual(eventPage('.event-card time').map((_, element) => eventPage(element).attr('datetime')).get(), events.replays.map(replay => replay.date));
+    assert.equal(eventPage('.event-slide').length, Math.ceil(events.replays.length / 6));
+    assert.equal(eventPage('.event-slide').first().find('.event-card').length, Math.min(6, events.replays.length));
+    assert.equal(eventPage('.event-slide').first().hasClass('is-active'), true);
+    assert.equal(eventPage('.event-slide.is-active').length, 1);
+    assert.equal(eventPage('#event-pagination').is('[hidden]'), true);
+    assert.equal(eventPage('#event-previous').is('[disabled]'), true);
     assert.deepEqual(eventPage('.event-slides').map((_, element) => eventPage(element).attr('href')).get(),
       events.replays.filter(replay => replay.slides).map(replay => `../${replay.slides}`));
     assert.equal(eventPage('h1').length, 1);
@@ -138,7 +145,7 @@ test('trusted site rendering publishes real records from a separate data directo
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
-    for (const name of ['app.mjs', 'account.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
+    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
     }
     for (const replay of events.replays.filter(replay => replay.slides)) {

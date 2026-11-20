@@ -17,6 +17,15 @@ export const eventsSchema = z.object({
   replays: z.array(replaySchema).nonempty(),
 });
 
+export const EVENTS_PER_GROUP = 6;
+
+export function groupReplays(replays, size = EVENTS_PER_GROUP) {
+  if (!Number.isInteger(size) || size < 1) throw new Error('Event group size must be a positive integer.');
+  const groups = [];
+  for (let index = 0; index < replays.length; index += size) groups.push(replays.slice(index, index + size));
+  return groups;
+}
+
 function findLinks(tokens = []) {
   return tokens.flatMap(token => {
     if (token.type === 'link') return [token];
@@ -51,6 +60,9 @@ export async function loadEvents() {
       slides: slidesLink?.href,
     };
   });
+
+  // Sort newest first; stable sort keeps table order for events on the same day.
+  replays.sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
 
   const collection = tokens
     .filter(token => token.type !== 'table')
