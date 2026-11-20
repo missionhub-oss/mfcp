@@ -65,7 +65,7 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.deepEqual(leaderboardPage('.ambassador-media').map((_, element) => leaderboardPage(element).attr('href')).get(),
       ['https://github.com/luojia65', 'https://www.zhihu.com/people/luojia-14-40']);
     assert.equal(leaderboardPage('.hall-empty').length, 0);
-    assert.match(leaderboardPage('.hall-toolbar').text(), /现任大使/);
+    assert.equal(leaderboardPage('.hall-toolbar').text().trim(), '申请成为大使 ↗');
     assert.equal(leaderboardPage('#leaderboard').attr('aria-labelledby'), 'ranking-title');
     assert.equal(leaderboardPage('#ranking-title').length, 1);
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
