@@ -107,9 +107,9 @@ html[data-enhanced] [data-leaderboard-panel]:not(.is-active){display:none}
 .ambassador-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .ambassador-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;transition:border-color .2s,transform .2s}
 .ambassador-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.ambassador-portrait{aspect-ratio:1/1;display:flex;align-items:flex-end;justify-content:center;background:radial-gradient(circle at 50% 28%,#332c25,#141312 72%);border-bottom:1px solid var(--line);overflow:hidden}
-.ambassador-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center 28%}
-.ambassador-photo.is-cutout{object-fit:contain;object-position:center bottom;padding:10px 8px 0}
+.ambassador-portrait{aspect-ratio:5/7;display:flex;align-items:flex-end;justify-content:center;background:#f4f1eb;border-bottom:1px solid var(--line);overflow:hidden}
+.ambassador-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.ambassador-photo.is-original{object-fit:contain}
 .ambassador-body{display:flex;flex:1;flex-direction:column;gap:4px;padding:16px 18px 18px}
 .ambassador-body h2{margin:0;font-size:18px;line-height:1.3;letter-spacing:-.01em}
 .ambassador-body h2 a{color:var(--text);text-decoration:none}

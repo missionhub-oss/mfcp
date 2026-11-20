@@ -45,10 +45,10 @@
         {% for person in hallOfFame.entries %}
         <article class="ambassador-card">
           <div class="ambassador-portrait">
-            {% if person.avatar %}<img class="ambassador-photo is-cutout" src="{{ homePath }}{{ person.avatar }}" alt="" width="512" height="512" loading="lazy">{% else %}<img class="ambassador-photo" src="https://github.com/{{ person.github }}.png?size=320" alt="" width="512" height="512" loading="lazy">{% endif %}
+            {% if person.avatar %}<img class="ambassador-photo is-original" src="{{ homePath }}{{ person.avatar }}" alt="" loading="lazy">{% else %}<img class="ambassador-photo" src="https://github.com/{{ person.github }}.png?size=320" alt="" loading="lazy">{% endif %}
           </div>
           <div class="ambassador-body">
-            <h2><a href="https://github.com/{{ person.github }}" target="_blank" rel="noopener noreferrer">{{ person.name }}</a></h2>
+            <h2><a href="https://github.com/{{ person.github }}" target="_blank" rel="noopener noreferrer">{{ localized(person.name) }}</a></h2>
             <p class="ambassador-handle">@{{ person.github }}</p>
             <div class="ambassador-tags">
               {% for tag in person.tags %}<span class="ambassador-tag is-{{ tag }}">{{ t('hall.tag.' ~ tag) }}</span>{% endfor %}

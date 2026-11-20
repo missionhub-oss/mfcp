@@ -59,7 +59,8 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(leaderboardPage('#leaderboard').hasClass('is-active'), false);
     assert.equal(leaderboardPage('.hall-tab[aria-selected="true"]').text().trim(), '名人堂');
     assert.equal(leaderboardPage('.ambassador-card').length, 1);
-    assert.equal(leaderboardPage('.ambassador-photo').attr('src'), '../assets/ambassadors/luojia65.png');
+    assert.equal(leaderboardPage('.ambassador-photo').attr('src'), '../assets/ambassadors/luojia65.jpg');
+    assert.equal(leaderboardPage('.ambassador-body h2').text().trim(), '蒋周奇（洛佳）');
     assert.equal(leaderboardPage('.ambassador-tag').text().trim(), '开源大使');
     assert.deepEqual(leaderboardPage('.ambassador-media').map((_, element) => leaderboardPage(element).attr('href')).get(),
       ['https://github.com/luojia65', 'https://www.zhihu.com/people/luojia-14-40']);
@@ -158,7 +159,7 @@ test('trusted site rendering publishes real records from a separate data directo
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
-    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.png']) {
+    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.jpg']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
     }
     for (const replay of events.replays.filter(replay => replay.slides)) {
