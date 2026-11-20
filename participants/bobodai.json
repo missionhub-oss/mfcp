@@ -1,4 +1,39 @@
 {
   "github_id": 95924216,
-  "github_login": "BoBoDai"
+  "github_login": "BoBoDai",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-328",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 328
+        },
+        "actor": 95924216,
+        "at": "2026-11-20T14:12:58Z",
+        "digest": "2c7037d45fb242e65f01c5d5a95be692d1518c18b5044d3685b02ab9f0c40e1d",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/328\",\"merge_commit\":\"735b7f8de113fb8e7a2b381fcd71ff2d614c5f92\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 328
+  },
+  "updated_at": "2026-11-20T14:12:58Z"
 }
