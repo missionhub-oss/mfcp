@@ -58,11 +58,13 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(leaderboardPage('#hall-of-fame').hasClass('is-active'), true);
     assert.equal(leaderboardPage('#leaderboard').hasClass('is-active'), false);
     assert.equal(leaderboardPage('.hall-tab[aria-selected="true"]').text().trim(), '名人堂');
-    assert.equal(leaderboardPage('#hall-category-open-source .ambassador-card').length, 1);
-    assert.equal(leaderboardPage('#hall-category-open-source .ambassador-card').first().find('img').attr('src'), '../assets/ambassadors/luojia65.png');
-    assert.equal(leaderboardPage('#hall-category-open-source .ambassador-card').first().find('.ambassador-media').attr('href'), 'https://www.zhihu.com/people/luojia-14-40');
-    assert.equal(leaderboardPage('.ambassador-media').length, 1);
-    assert.equal(leaderboardPage('#hall-category-advocacy .hall-empty').length, 1);
+    assert.equal(leaderboardPage('.ambassador-card').length, 1);
+    assert.equal(leaderboardPage('.ambassador-photo').attr('src'), '../assets/ambassadors/luojia65.png');
+    assert.equal(leaderboardPage('.ambassador-tag').text().trim(), '开源大使');
+    assert.deepEqual(leaderboardPage('.ambassador-media').map((_, element) => leaderboardPage(element).attr('href')).get(),
+      ['https://github.com/luojia65', 'https://www.zhihu.com/people/luojia-14-40']);
+    assert.equal(leaderboardPage('.hall-empty').length, 0);
+    assert.match(leaderboardPage('.hall-toolbar').text(), /现任大使/);
     assert.equal(leaderboardPage('#leaderboard').attr('aria-labelledby'), 'ranking-title');
     assert.equal(leaderboardPage('#ranking-title').length, 1);
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
