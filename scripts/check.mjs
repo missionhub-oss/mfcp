@@ -34,7 +34,7 @@ for (const file of await readdir('participants')) {
 const highlights = await loadHighlights('.', participants);
 console.log(`Validated ${highlights.size} open-source highlights records.`);
 const hallOfFame = await loadHallOfFame();
-console.log(`Validated ${hallOfFame.categories.reduce((sum, category) => sum + category.entries.length, 0)} hall of fame records.`);
+console.log(`Validated ${hallOfFame.entries.length} hall of fame records.`);
 for (const year of (await readdir('programs')).filter(name => /^\d{4}$/.test(name))) {
   let files;
   try {files = await readdir(`programs/${year}/rules`);} catch (error) {if (error.code === 'ENOENT') continue; throw error;}
