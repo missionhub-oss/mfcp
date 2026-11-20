@@ -1,6 +1,6 @@
 <div align="center">
 
-<p><sub>进程使命 · 开源社区</sub></p>
+<p><sub>MissionHub · 开源社区</sub></p>
 <h1>MFCP 开源人才培养计划</h1>
 <p>
   <strong>学习 · 实践 · 贡献 · 成长</strong><br>
@@ -29,7 +29,7 @@
 
 ---
 
-MFCP 由<strong>进程使命（Process Mission）</strong>发起，通过开源学习、导师指导、真实项目实践和贡献评估，帮助参与者积累工程经验。
+MFCP 由<strong>MissionHub 社区</strong>发起，通过开源学习、导师指导、真实项目实践和贡献评估，帮助参与者积累工程经验。
 
 本仓库管理参与规则、项目资料、培养记录和贡献追踪。代码贡献提交到对应项目的上游仓库。配套指南目前使用中文。
 

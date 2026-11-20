@@ -26,7 +26,7 @@ const strings = {
   'stats.tasks': ['Total tasks', '任务总数'],
   'stats.inProgress': ['In progress', '进行中'],
   'program.title': ['Build experience, in the open.', '在开源实践中成长。'],
-  'program.description': ['The Mission Forge Contributor Program (MFCP) is initiated by Process Mission. It brings together practical tasks, mentorship and reviewed contributions across open-source projects.', 'Mission Forge Contributor Program（MFCP）由进程使命发起，围绕开源项目，通过实践任务、导师指导和成果评审培养贡献者。'],
+  'program.description': ['The Mission Forge Contributor Program (MFCP) is initiated by the MissionHub community. It brings together practical tasks, mentorship and reviewed contributions across open-source projects.', 'Mission Forge Contributor Program（MFCP）由 MissionHub 社区发起，围绕开源项目，通过实践任务、导师指导和成果评审培养贡献者。'],
   'program.guide': ['Participation guide', '参与指南'],
   'roadmap.aria': ['MFCP contributor growth roadmap', 'MFCP 贡献者成长路径地图'],
   'roadmap.s0.badge': ['L0 Start', 'L0 起步'],
