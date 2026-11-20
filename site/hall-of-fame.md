@@ -5,3 +5,4 @@
 | 姓名 | English name | GitHub | 介绍 | English bio | 标签 | 入选时间 | 头像 | 知乎 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 蒋周奇（洛佳） | Zhouqi Jiang (Luo Jia) | luojia65 | 中国科学院软件研究所在读博士生，本硕毕业于华中科技大学，主要研究方向为智能体安全和系统安全。RustSBI 项目发起人。 | PhD student at the Institute of Software, Chinese Academy of Sciences; BSc and MSc from Huazhong University of Science and Technology. Research focuses on agent security and system security; founder of the RustSBI project. | 开源大使 | 2026-11 | assets/ambassadors/luojia65.jpg | https://www.zhihu.com/people/luojia-14-40 |
+| 徐堃元 | Kunyuan Xu | kunyuanxu-star | GTOC 社区成员，RustSBI 社区成员，华科开源俱乐部成员，笑傲内核会议组织者，悟羽智能 COO。 | Member of GTOC and the RustSBI community, member of the HUST Open Atom Club, organizer of the XiaoAo Kernel meetup, and COO of Wuyu Intelligence. | 宣传大使 | 2026-11 | assets/ambassadors/kunyuanxu-star.jpg | - |
