@@ -1,0 +1,4 @@
+interface:
+  display_name: "MFCP 博客写作"
+  short_description: "将 MFCP 分享口播稿与幻灯片整理为中英双语技术博客，并完成导出、测试与本地预览"
+  default_prompt: "使用 $mfcp-write-blog，将这份 MFCP 开源实践分享的口播稿与对应幻灯片整理为中英双语技术博客，导出全部幻灯片并先启动本地预览。"
