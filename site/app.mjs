@@ -9,8 +9,7 @@ const previousPage = document.getElementById('previous-page');
 const nextPage = document.getElementById('next-page');
 const leaderboardTabs = [...document.querySelectorAll('[data-leaderboard-tab]')];
 const leaderboardPanels = [...document.querySelectorAll('[data-leaderboard-panel]')];
-const initialLeaderboardTab = document.body.dataset.page === 'leaderboard' &&
-  (location.hash === '#ranking' || location.hash.startsWith('#contributor-')) ? 'ranking' : 'hall';
+const initialLeaderboardTab = location.hash === '#hall' ? 'hall' : 'ranking';
 const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
@@ -45,6 +44,10 @@ function handleLegacyFragments() {
       location.replace(new URL(`leaderboard/${location.hash}`, location.href));
       return;
     }
+  }
+  if (document.body.dataset.page === 'leaderboard' && location.hash === '#hall') {
+    setLeaderboardTab('hall');
+    return;
   }
   if (document.body.dataset.page === 'leaderboard' && location.hash === '#ranking') {
     setLeaderboardTab('ranking');
@@ -128,7 +131,7 @@ for (const button of leaderboardTabs) {
     const tab = button.dataset.leaderboardTab;
     setLeaderboardTab(tab);
     const url = new URL(location.href);
-    url.hash = tab === 'ranking' ? 'ranking' : '';
+    url.hash = tab === 'hall' ? 'hall' : 'ranking';
     history.replaceState(null, '', url);
   });
   button.addEventListener('keydown', event => {

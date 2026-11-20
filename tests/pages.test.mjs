@@ -55,9 +55,9 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(leaderboardPage('#main-nav a[aria-current="page"]').attr('href'), '../leaderboard/');
     assert.equal(leaderboardPage('#main-nav a[aria-current="page"]').text().trim(), '名人堂');
     assert.equal(leaderboardPage('#hall-title').text().trim(), '名人堂。');
-    assert.equal(leaderboardPage('#hall-of-fame').hasClass('is-active'), true);
-    assert.equal(leaderboardPage('#leaderboard').hasClass('is-active'), false);
-    assert.equal(leaderboardPage('.hall-tab[aria-selected="true"]').text().trim(), '名人堂');
+    assert.equal(leaderboardPage('#hall-of-fame').hasClass('is-active'), false);
+    assert.equal(leaderboardPage('#leaderboard').hasClass('is-active'), true);
+    assert.equal(leaderboardPage('.hall-tab[aria-selected="true"]').text().trim(), '排行榜');
     assert.equal(leaderboardPage('.ambassador-card').length, 2);
     assert.deepEqual(leaderboardPage('.ambassador-photo').map((_, element) => leaderboardPage(element).attr('src')).get(),
       ['../assets/ambassadors/luojia65.jpg', '../assets/ambassadors/kunyuanxu-star.jpg']);
