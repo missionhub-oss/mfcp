@@ -31,17 +31,28 @@
     </div>
     <section aria-labelledby="event-list-title">
       <h2 class="event-list-title" id="event-list-title">{{ t('events.replays') }}</h2>
-      <div class="event-grid">
-        {% for replay in events.replays %}
-        <article class="event-card">
-          <p class="event-meta"><time datetime="{{ replay.date }}" data-date="{{ replay.date }}">{{ replay.date | date }}</time><span>{{ replay.duration }}</span></p>
-          <h3><a class="event-title-link" href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ localized(replay.title) }}<span aria-hidden="true">↗</span></a></h3>
-          <div class="event-action">
-            <a href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ t('events.watch') }}<span aria-hidden="true">↗</span></a>
-            {% if replay.slides %}<a class="event-slides" href="{{ homePath }}{{ replay.slides }}" target="_blank" rel="noopener noreferrer">{{ t('events.slides') }}<span aria-hidden="true">↗</span></a>{% endif %}
+      <div class="event-carousel" id="event-carousel" data-event-carousel>
+        {% for slide in eventSlides %}
+        <div class="event-slide{% if loop.first %} is-active{% endif %}" data-event-slide>
+          <div class="event-grid">
+            {% for replay in slide %}
+            <article class="event-card">
+              <p class="event-meta"><time datetime="{{ replay.date }}" data-date="{{ replay.date }}">{{ replay.date | date }}</time><span>{{ replay.duration }}</span></p>
+              <h3><a class="event-title-link" href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ localized(replay.title) }}<span aria-hidden="true">↗</span></a></h3>
+              <div class="event-action">
+                <a href="{{ replay.url }}" target="_blank" rel="noopener noreferrer">{{ t('events.watch') }}<span aria-hidden="true">↗</span></a>
+                {% if replay.slides %}<a class="event-slides" href="{{ homePath }}{{ replay.slides }}" target="_blank" rel="noopener noreferrer">{{ t('events.slides') }}<span aria-hidden="true">↗</span></a>{% endif %}
+              </div>
+            </article>
+            {% endfor %}
           </div>
-        </article>
+        </div>
         {% endfor %}
+        <nav class="pagination event-pagination js-only" id="event-pagination" aria-label="{{ copy['events.groupLabel'].zh }}" data-i18n-aria-label="events.groupLabel" hidden>
+          <button type="button" id="event-previous" aria-controls="event-carousel" disabled>{{ t('events.previousGroup') }}</button>
+          <span id="event-status" role="status" aria-live="polite"></span>
+          <button type="button" id="event-next" aria-controls="event-carousel">{{ t('events.nextGroup') }}</button>
+        </nav>
       </div>
       <p class="small muted event-note"><a class="text-link" href="{{ events.collection_url }}" target="_blank" rel="noopener noreferrer">{{ t('events.collection') }} <span aria-hidden="true">↗</span></a></p>
     </section>
@@ -49,6 +60,7 @@
   <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
   <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
   <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+  <script type="module" src="{{ homePath }}events.mjs?v={{ assetVersions['events.mjs'] }}"></script>
   <script type="module" src="{{ homePath }}account.mjs?v={{ assetVersions['account.mjs'] }}"></script>
 </body>
 </html>

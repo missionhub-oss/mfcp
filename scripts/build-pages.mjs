@@ -8,7 +8,7 @@ import {execFileSync} from 'node:child_process';
 import nunjucks from 'nunjucks';
 import {loadProgram, repositoryUrl} from './lib/pages.mjs';
 import {loadCommunity} from './lib/community.mjs';
-import {loadEvents} from './lib/events.mjs';
+import {loadEvents, groupReplays} from './lib/events.mjs';
 import {loadNews} from './lib/news.mjs';
 import {loadBlogs} from './lib/blogs.mjs';
 import {copy, projects, communityUrl} from '../site/content.mjs';
@@ -23,7 +23,7 @@ template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.s
 export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
+  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'events.mjs', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
   const assetVersions = Object.fromEntries(await Promise.all(assetNames.map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
@@ -70,7 +70,8 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
     'meta.title': {en: 'Events · Mission Forge Contributor Program', zh: '活动 · MFCP 开源人才培养计划'},
     'meta.description': copy['events.description'],
   };
-  const eventPage = template.render('events.njk', {...common, copy: eventCopy, payload: pagePayload(eventCopy, '../'), homePath: '../', isEvents: true});
+  const eventSlides = groupReplays(events.replays);
+  const eventPage = template.render('events.njk', {...common, events, eventSlides, copy: eventCopy, payload: pagePayload(eventCopy, '../'), homePath: '../', isEvents: true});
   await mkdir(join(output, 'events'), {recursive: true});
   await writeFile(join(output, 'events/index.html'), eventPage);
   const leaderboardCopy = {...copy,
