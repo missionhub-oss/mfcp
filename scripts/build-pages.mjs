@@ -9,6 +9,7 @@ import nunjucks from 'nunjucks';
 import {loadProgram, repositoryUrl} from './lib/pages.mjs';
 import {loadCommunity} from './lib/community.mjs';
 import {loadEvents, groupReplays} from './lib/events.mjs';
+import {loadHallOfFame} from './lib/hall-of-fame.mjs';
 import {loadNews} from './lib/news.mjs';
 import {loadBlogs} from './lib/blogs.mjs';
 import {copy, projects, communityUrl} from '../site/content.mjs';
@@ -28,6 +29,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
   const events = await loadEvents();
+  const hallOfFame = await loadHallOfFame();
   const news = await loadNews();
   const blogs = await loadBlogs();
   const siteUrl = 'https://missionhub-oss.github.io/mfcp/';
@@ -75,11 +77,12 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await mkdir(join(output, 'events'), {recursive: true});
   await writeFile(join(output, 'events/index.html'), eventPage);
   const leaderboardCopy = {...copy,
-    'meta.title': {en: 'Leaderboard · Mission Forge Contributor Program', zh: '排行榜 · MFCP 开源人才培养计划'},
-    'meta.description': copy['ranking.description'],
+    'meta.title': {en: 'Hall of Fame · Mission Forge Contributor Program', zh: '名人堂 · MFCP 开源人才培养计划'},
+    'meta.description': copy['hall.description'],
   };
   const leaderboardPage = template.render('leaderboard.njk', {
     ...common,
+    hallOfFame,
     copy: leaderboardCopy,
     payload: pagePayload(leaderboardCopy, '../'),
     homePath: '../',

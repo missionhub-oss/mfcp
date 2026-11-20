@@ -53,7 +53,18 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(leaderboardPage('h1').length, 1);
     assert.equal(leaderboardPage('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/leaderboard/');
     assert.equal(leaderboardPage('#main-nav a[aria-current="page"]').attr('href'), '../leaderboard/');
+    assert.equal(leaderboardPage('#main-nav a[aria-current="page"]').text().trim(), '名人堂');
+    assert.equal(leaderboardPage('#hall-title').text().trim(), '名人堂。');
+    assert.equal(leaderboardPage('#hall-of-fame').hasClass('is-active'), true);
+    assert.equal(leaderboardPage('#leaderboard').hasClass('is-active'), false);
+    assert.equal(leaderboardPage('.hall-tab[aria-selected="true"]').text().trim(), '名人堂');
+    assert.equal(leaderboardPage('#hall-category-open-source .ambassador-card').length, 1);
+    assert.equal(leaderboardPage('#hall-category-open-source .ambassador-card').first().find('img').attr('src'), '../assets/ambassadors/luojia65.png');
+    assert.equal(leaderboardPage('#hall-category-open-source .ambassador-card').first().find('.ambassador-media').attr('href'), 'https://www.zhihu.com/people/luojia-14-40');
+    assert.equal(leaderboardPage('.ambassador-media').length, 1);
+    assert.equal(leaderboardPage('#hall-category-advocacy .hall-empty').length, 1);
     assert.equal(leaderboardPage('#leaderboard').attr('aria-labelledby'), 'ranking-title');
+    assert.equal(leaderboardPage('#ranking-title').length, 1);
     const profiles = await Promise.all((await readdir('participants')).filter(file => file.endsWith('.json')).map(async file =>
       normalizeProfile(JSON.parse(await readFile(join('participants', file), 'utf8')), `participants/${file}`)));
     const rankedProfiles = profiles.filter(profile => profile.level < 4);
@@ -145,7 +156,7 @@ test('trusted site rendering publishes real records from a separate data directo
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
-    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png']) {
+    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.png']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
     }
     for (const replay of events.replays.filter(replay => replay.slides)) {
