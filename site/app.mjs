@@ -7,9 +7,29 @@ const languageButton = document.getElementById('language');
 const menuButton = document.getElementById('menu-toggle');
 const previousPage = document.getElementById('previous-page');
 const nextPage = document.getElementById('next-page');
+const leaderboardTabs = [...document.querySelectorAll('[data-leaderboard-tab]')];
+const leaderboardPanels = [...document.querySelectorAll('[data-leaderboard-panel]')];
+const initialLeaderboardTab = document.body.dataset.page === 'leaderboard' &&
+  (location.hash === '#ranking' || location.hash.startsWith('#contributor-')) ? 'ranking' : 'hall';
 const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
+
+function setLeaderboardTab(tab) {
+  if (!leaderboardTabs.length) return;
+  for (const button of leaderboardTabs) {
+    const active = button.dataset.leaderboardTab === tab;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-selected', String(active));
+    button.tabIndex = active ? 0 : -1;
+  }
+  for (const panel of leaderboardPanels) {
+    const active = panel.dataset.leaderboardPanel === tab;
+    panel.classList.toggle('is-active', active);
+    panel.hidden = !active;
+  }
+  if (tab === 'ranking') renderContributors();
+}
 
 function handleLegacyFragments() {
   if (document.body.dataset.page === 'home') {
@@ -26,7 +46,12 @@ function handleLegacyFragments() {
       return;
     }
   }
+  if (document.body.dataset.page === 'leaderboard' && location.hash === '#ranking') {
+    setLeaderboardTab('ranking');
+    return;
+  }
   if (document.body.dataset.page === 'leaderboard' && location.hash.startsWith('#contributor-')) {
+    setLeaderboardTab('ranking');
     const login = decodeURIComponent(location.hash.slice('#contributor-'.length)).toLowerCase();
     const index = cards.findIndex(card => card.dataset.login === login);
     if (index >= 0) {
@@ -98,6 +123,23 @@ function changePage(delta) {
   document.getElementById('leaderboard').scrollIntoView({block: 'start'});
 }
 
+for (const button of leaderboardTabs) {
+  button.addEventListener('click', () => {
+    const tab = button.dataset.leaderboardTab;
+    setLeaderboardTab(tab);
+    const url = new URL(location.href);
+    url.hash = tab === 'ranking' ? 'ranking' : '';
+    history.replaceState(null, '', url);
+  });
+  button.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    const index = leaderboardTabs.indexOf(button);
+    const next = leaderboardTabs[(index + (event.key === 'ArrowRight' ? 1 : -1) + leaderboardTabs.length) % leaderboardTabs.length];
+    next.focus();
+    next.click();
+  });
+}
 languageButton.addEventListener('click', () => setLanguage(language === 'en' ? 'zh' : 'en'));
 search?.addEventListener('input', () => {
   currentPage = 1;
@@ -139,6 +181,7 @@ document.addEventListener('keydown', event => {
 });
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
 setLanguage(language);
+setLeaderboardTab(initialLeaderboardTab);
 handleLegacyFragments();
 document.documentElement.dataset.enhanced = 'true';
 
