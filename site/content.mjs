@@ -103,7 +103,6 @@ const strings = {
   'hall.tabsLabel': ['Hall of Fame and leaderboard', '名人堂与排行榜切换'],
   'hall.tab.hall': ['Hall of Fame', '名人堂'],
   'hall.tab.ranking': ['Leaderboard', '排行榜'],
-  'hall.current': ['Current ambassadors', '现任大使'],
   'hall.tag.open-source': ['Open-Source Ambassador', '开源大使'],
   'hall.tag.advocacy': ['Advocacy Ambassador', '宣传大使'],
   'hall.empty': ['No ambassadors recorded yet.', '暂无大使记录。'],

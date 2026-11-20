@@ -102,8 +102,7 @@ html[lang="zh-CN"] h1{font-size:clamp(2.7rem,4.8vw,4.4rem);letter-spacing:-.035e
 .hall-tab:hover{color:var(--text)}
 .hall-tab.is-active{color:var(--accent);border-bottom-color:var(--accent)}
 html[data-enhanced] [data-leaderboard-panel]:not(.is-active){display:none}
-.hall-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 20px}
-.hall-toolbar p{margin:0;font-size:15px;font-weight:600;color:var(--text)}
+.hall-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:16px;flex-wrap:wrap;margin:0 0 20px}
 .ambassador-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .ambassador-card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;transition:border-color .2s,transform .2s}
 .ambassador-card:hover{border-color:var(--accent);transform:translateY(-2px)}
