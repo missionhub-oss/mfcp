@@ -57,5 +57,6 @@ test('syntax failures explain fields and pending checks remain pending', () => {
   assert.equal(errorOutcome(failure).status, 'failed');
   assert.match(errorOutcome(failure).reason, /pull_requests/);
   assert.equal(errorOutcome(new Error('Candidate checks are pending; rerun or wait for scheduled reconciliation.')).status, 'waiting');
+  assert.equal(errorOutcome(new Error('Command reply could not be delivered; reconciliation will retry. API unavailable.')).status, 'waiting');
   assert.equal(errorOutcome(new Error('Only active members may execute commands.')).status, 'failed');
 });

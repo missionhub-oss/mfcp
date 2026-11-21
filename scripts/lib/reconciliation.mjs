@@ -7,6 +7,7 @@ import {readProfiles} from './progression.mjs';
 import {isBotCommand} from './commands.mjs';
 import {isTaskIssue} from './issue-types.mjs';
 import {isRateLimited, overlapSince} from './processing-state.mjs';
+import {errorOutcome} from './command-feedback.mjs';
 
 const id = z.number().int().positive();
 const sourceSchema = z.discriminatedUnion('kind', [
@@ -119,7 +120,13 @@ export async function processReconciliationWork(client, work, state, processSour
         delete state.pending[key];
       }
     } catch (error) {
-      reports.push({status: 'pending', source: item.source, reason: error.message});
+      const outcome = errorOutcome(error);
+      const terminal = item.source.kind === 'comment' && outcome.status === 'failed';
+      reports.push({status: terminal ? 'failed' : 'pending', source: item.source, reason: outcome.reason});
+      if (terminal && write) {
+        state.completed[key] = item.fingerprint;
+        delete state.pending[key];
+      }
       if (isRateLimited(error)) {await checkpoint(); break;}
     }
     await checkpoint();

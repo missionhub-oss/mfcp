@@ -7,7 +7,8 @@ import {join} from 'node:path';
 import {notificationDelivered, notificationsFor, notificationStateSchema} from '../scripts/lib/notifications.mjs';
 import {reusableCheck, validationFingerprint, prCheckStateSchema} from '../scripts/lib/pr-checks.mjs';
 import {readProcessingState, saveProcessingState, isRateLimited, overlapSince} from '../scripts/lib/processing-state.mjs';
-import {completedRegistrationPRs, reconciliationStateSchema, sourceKey, prepareReconciliationState} from '../scripts/lib/reconciliation.mjs';
+import {completedRegistrationPRs, reconciliationStateSchema, sourceKey, prepareReconciliationState,
+  processReconciliationWork} from '../scripts/lib/reconciliation.mjs';
 import {readProfileSnapshot} from '../scripts/lib/profile-snapshot.mjs';
 import {isTrustedBotComment} from '../scripts/lib/bot-identity.mjs';
 
@@ -77,4 +78,20 @@ test('update cursors overlap while unfinished sources remain explicit retry entr
   assert.equal(isRateLimited({cause: evidence.rate_limit}), true);
   assert.equal(isRateLimited(null), false);
   assert.deepEqual(prCheckStateSchema.parse({}).prs, {});
+});
+
+test('terminal command failures are recorded while retryable sources remain pending', async () => {
+  const command = {kind: 'comment', issue: 210, comment: 6967288844};
+  const registration = {kind: 'registration', pr: 264};
+  const work = [{source: command, fingerprint: 'command-digest'}, {source: registration, fingerprint: 'merge-digest'}];
+  const state = reconciliationStateSchema.parse({pending: Object.fromEntries(work.map(item => [sourceKey(item.source), item]))});
+  const failures = new Map([[sourceKey(command), new Error('Post a new settlement command after the latest reopen event.')],
+    [sourceKey(registration), new Error('Registration evidence is unavailable.')]]);
+  const reports = await processReconciliationWork({}, work, state, async (client, source) => {
+    throw failures.get(sourceKey(source));
+  }, {write: true});
+  assert.deepEqual(reports.map(report => report.status), ['failed', 'pending']);
+  assert.equal(state.completed[sourceKey(command)], 'command-digest');
+  assert.equal(state.pending[sourceKey(command)], undefined);
+  assert.equal(state.pending[sourceKey(registration)].fingerprint, 'merge-digest');
 });

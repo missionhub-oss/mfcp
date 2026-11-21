@@ -15,7 +15,7 @@ export function errorOutcome(error) {
     ? error.issues.slice(0, 3).map(issue => `${issue.path.join('.') || 'command'}: ${issue.message}`).join('; ')
     : error.message;
   const waiting = error.status === 429 || error.status >= 500 ||
-    /^(Candidate checks are pending|Main changed repeatedly|Settlement is recorded; automatic closure is pending)/.test(reason ?? '');
+    /^(Candidate checks are pending|Main changed repeatedly|Settlement is recorded; automatic closure is pending|Command reply could not be delivered)/.test(reason ?? '');
   return {status: waiting ? 'waiting' : 'failed', reason: reason || 'Command processing could not be completed.'};
 }
 

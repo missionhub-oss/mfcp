@@ -272,11 +272,14 @@ eligible on the next run. Task completion still precedes its related promotion.
 Progression reconciliation queries repository issues and PRs updated since its
 saved start time, with a one-minute overlap. Completed registration PRs come from
 the committed contributor records. Immutable command comments with a confirmed
-bot success reaction establish receipts on the first scan. Failed sources and
-sources waiting for review are stored separately and retried even when their
-update time falls outside the window. Changes to trusted scripts or program
-rules reset the scan and command receipts. `--full-scan` requests a complete scan.
-Every new write still validates the current source evidence and authorization.
+bot success reaction establish receipts on the first scan. Sources waiting on
+review, checks or API limits are stored separately and retried even when their
+update time falls outside the window. A command validation failure is recorded
+as final after the bot explains it; the author posts a new command after
+correcting the issue. Other failed sources remain retryable. Changes to trusted
+scripts or program rules reset the scan and command receipts. `--full-scan`
+requests a complete scan. Every new write still validates the current source
+evidence and authorization.
 
 GitHub data addressed by a complete commit SHA is reused within a process.
 Mutable issue state, references, permissions and membership lookups remain live.
