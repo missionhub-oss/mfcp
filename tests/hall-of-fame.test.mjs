@@ -6,7 +6,7 @@ import {loadHallOfFame, validateHallOfFame} from '../scripts/lib/hall-of-fame.mj
 
 test('hall of fame Markdown loads tagged ambassadors', async () => {
   const {entries} = await loadHallOfFame();
-  assert.equal(entries.length, 3);
+  assert.equal(entries.length, 4);
   const luojia = entries.find(person => person.github === 'luojia65');
   assert.equal(luojia.name.zh, '蒋周奇（洛佳）');
   assert.equal(luojia.name.en, 'Zhouqi Jiang (Luo Jia)');
@@ -25,6 +25,13 @@ test('hall of fame Markdown loads tagged ambassadors', async () => {
   assert.equal(wanglian.name.en, 'Lian Wang');
   assert.deepEqual(wanglian.tags, ['open-source']);
   assert.equal(wanglian.avatar, 'assets/ambassadors/lianux-mm.jpg');
+  const weipeng = entries.find(person => person.github === 'IxaKylin');
+  assert.equal(weipeng.name.zh, '杨伟鹏');
+  assert.equal(weipeng.name.en, 'Mig Yang');
+  assert.deepEqual(weipeng.tags, ['advocacy']);
+  assert.match(weipeng.bio.zh, /RTOS/);
+  assert.match(weipeng.bio.en, /RTOS/);
+  assert.equal(weipeng.avatar, 'assets/ambassadors/IxaKylin.jpg');
 });
 
 test('hall of fame rejects duplicate GitHub logins', async () => {

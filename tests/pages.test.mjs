@@ -58,15 +58,17 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(leaderboardPage('#hall-of-fame').hasClass('is-active'), false);
     assert.equal(leaderboardPage('#leaderboard').hasClass('is-active'), true);
     assert.equal(leaderboardPage('.hall-tab[aria-selected="true"]').text().trim(), '排行榜');
-    assert.equal(leaderboardPage('.ambassador-card').length, 3);
+    assert.equal(leaderboardPage('.ambassador-card').length, 4);
     assert.deepEqual(leaderboardPage('.ambassador-photo').map((_, element) => leaderboardPage(element).attr('src')).get(),
-      ['../assets/ambassadors/luojia65.jpg', '../assets/ambassadors/kunyuanxu-star.jpg', '../assets/ambassadors/lianux-mm.jpg']);
+      ['../assets/ambassadors/luojia65.jpg', '../assets/ambassadors/kunyuanxu-star.jpg', '../assets/ambassadors/lianux-mm.jpg',
+        '../assets/ambassadors/IxaKylin.jpg']);
     assert.deepEqual(leaderboardPage('.ambassador-body h2').map((_, element) => leaderboardPage(element).text().trim()).get(),
-      ['蒋周奇（洛佳）', '徐堃元', '王炼']);
+      ['蒋周奇（洛佳）', '徐堃元', '王炼', '杨伟鹏']);
     assert.deepEqual(leaderboardPage('.ambassador-tag').map((_, element) => leaderboardPage(element).text().trim()).get(),
-      ['开源大使', '宣传大使', '开源大使']);
+      ['开源大使', '宣传大使', '开源大使', '宣传大使']);
     assert.deepEqual(leaderboardPage('.ambassador-media').map((_, element) => leaderboardPage(element).attr('href')).get(),
-      ['https://github.com/luojia65', 'https://www.zhihu.com/people/luojia-14-40', 'https://github.com/kunyuanxu-star', 'https://github.com/lianux-mm']);
+      ['https://github.com/luojia65', 'https://www.zhihu.com/people/luojia-14-40', 'https://github.com/kunyuanxu-star',
+        'https://github.com/lianux-mm', 'https://github.com/IxaKylin']);
     assert.equal(leaderboardPage('.hall-empty').length, 0);
     assert.equal(leaderboardPage('.hall-apply').text().trim(), '申请成为大使 ↗');
     assert.equal(leaderboardPage('.hall-apply').next().length, 0);
