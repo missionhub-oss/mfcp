@@ -26,8 +26,9 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
       'rustsbi-security-firmware-2026',
       'humanize-runtime-and-flow-science',
       'qemu-riscv-performance-optimization',
+      'zephyr-contribution-workflow',
     ]);
-    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-20', '2026-11-13', '2026-11-06']);
+    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-20', '2026-11-13', '2026-11-06', '2026-10-23']);
     assert.deepEqual(index('.blog-entry h2 a').map((_, element) => index(element).attr('href')).get(),
       blogs.map(post => `${post.slug}/`));
     assert.deepEqual(index('.blog-entry').map((_, element) => index(element).hasClass('is-reversed')).get(),
@@ -129,6 +130,24 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     assert.ok(!rustsbi('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('&amp;'));
     const rustsbiHeadingIds = rustsbi('.blog-body [id]').map((_, element) => rustsbi(element).attr('id')).get();
     assert.equal(new Set(rustsbiHeadingIds).size, rustsbiHeadingIds.length);
+
+    const zephyrPath = resolve(output, 'blogs/zephyr-contribution-workflow/index.html');
+    const zephyr = load(await readFile(zephyrPath, 'utf8'));
+    assert.equal(zephyr('.blog-body[lang="zh-CN"] .blog-media img').length, 15);
+    assert.equal(zephyr('.blog-body[lang="en"] .blog-media img').length, 15);
+    for (const lang of ['zh-CN', 'en']) {
+      const srcs = zephyr(`.blog-body[lang="${lang}"] .blog-media img`).map((_, element) => zephyr(element).attr('src')).get();
+      for (let i = 1; i <= 15; i += 1) {
+        const expected = `../assets/zephyr-contribution-workflow/slide-${String(i).padStart(2, '0')}.webp`;
+        assert.ok(srcs.includes(expected), `Missing slide image in Zephyr (${lang}) blog: ${expected}`);
+      }
+    }
+    assert.ok(zephyr('.blog-toc-sidebar ul[data-lang-block="zh"] a').length >= 5);
+    assert.ok(zephyr('.blog-toc-sidebar ul[data-lang-block="en"] a').length >= 5);
+    assert.ok(zephyr('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('Q&A'));
+    assert.ok(!zephyr('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('&amp;'));
+    const zephyrHeadingIds = zephyr('.blog-body [id]').map((_, element) => zephyr(element).attr('id')).get();
+    assert.equal(new Set(zephyrHeadingIds).size, zephyrHeadingIds.length);
   } finally {
     await rm(output, {recursive: true, force: true});
   }
