@@ -1,0 +1,36 @@
+{
+  "source": "https://github.com/missionhub-oss/mfcp/pull/339",
+  "pr": {
+    "number": 339,
+    "merged": true,
+    "merged_at": "2026-11-22T11:43:26Z",
+    "html_url": "https://github.com/missionhub-oss/mfcp/pull/339",
+    "changed_files": 1,
+    "user": {
+      "id": 75160543,
+      "login": "iiiiSaber",
+      "type": "User"
+    },
+    "base": {
+      "ref": "main"
+    },
+    "head": {
+      "ref": "participants/rename-iiiisaber",
+      "repo": {
+        "id": 1436835821,
+        "fork": true,
+        "full_name": "iiiiSaber/mission-forge"
+      }
+    }
+  },
+  "files": [
+    {
+      "sha": "31a1057e416e8a2dc6935f67c47c243f03364e88",
+      "filename": "participants/iiiisaber.json",
+      "previous_filename": "participants/iiceight.json",
+      "status": "renamed",
+      "additions": 1,
+      "deletions": 1
+    }
+  ]
+}

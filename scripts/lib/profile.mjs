@@ -58,6 +58,7 @@ export function canonical(value) {
 export const digest = value => createHash('sha256').update(canonical(value)).digest('hex');
 export const equal = (a, b) => canonical(a) === canonical(b);
 export const participantPath = name => `participants/${login.parse(name).toLowerCase()}.json`;
+export const participantFilePattern = /^participants\/[a-z0-9-]{1,39}\.json$/;
 export function initialProfile(identity) {
   return {...identitySchema.parse(identity), schema_version: 1, level: 0, experience: 0,
     contributions: [], promotions: [], adjustments: [], recognitions: [], last_event: null, updated_at: null};
