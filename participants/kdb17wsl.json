@@ -1,4 +1,39 @@
 {
   "github_id": 61262239,
-  "github_login": "kdb17wsl"
+  "github_login": "kdb17wsl",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-346",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 346
+        },
+        "actor": 61262239,
+        "at": "2026-11-23T02:50:34Z",
+        "digest": "0944e0c0ae4a2af25890d7a4c1fcb720e02717fe0602889d48ad6091cdea4d8f",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/346\",\"merge_commit\":\"2ec549da6509e6c6a819c944a79f5db24fe1bf04\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 346
+  },
+  "updated_at": "2026-11-23T02:50:34Z"
 }
