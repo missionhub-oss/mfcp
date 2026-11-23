@@ -3,7 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import { REPOSITORY_ID } from './github.mjs';
 import { isMentor, requireMentor, withMentorSignoffs } from './mentors.mjs';
-import { participantPath, normalizeProfile, validateProfile, rulesSchema, governanceSchema,
+import { participantPath, participantFilePattern, normalizeProfile, validateProfile, rulesSchema, governanceSchema,
   totals, eligible, activeSettlement, digest, equal, taskMentors } from './profile.mjs';
 import { parseCommand, taskSettings } from './commands.mjs';
 import { planAssignment } from './assignments.mjs';
@@ -182,6 +182,12 @@ export async function hasPendingReversal(client, participantId, slug) {
   return prs.some(pr => pr.user.login === `${slug}[bot]` && pr.head.ref.startsWith(`progress/review/reopened-${participantId}-`));
 }
 
+export function isParticipantRename(pr, files) {
+  const [file] = files;
+  return files.length === 1 && file.status === 'renamed' && file.filename === participantPath(pr.user.login) &&
+    participantFilePattern.test(file.previous_filename ?? '');
+}
+
 export async function buildProposal(client, source, ref, {slug, reviewPr = null} = {}) {
   const profiles = await readProfiles(client, ref);
   let selected, proof, action, data, issue, settings, commandSource;
@@ -220,6 +226,7 @@ export async function buildProposal(client, source, ref, {slug, reviewPr = null}
     const repo = await client.metadata();
     if (!pr.merged || pr.base.ref !== repo.default_branch || !pr.head.repo?.fork || pr.head.repo.id === repo.id) throw new Error('Expected a merged registration from a fork.');
     const files = await client.list(`${client.root}/pulls/${source.pr}/files`);
+    if (isParticipantRename(pr, files)) return null;
     if (files.length !== 1 || !['added', 'modified'].includes(files[0].status) || files[0].filename !== participantPath(pr.user.login)) throw new Error('Not an initial registration PR.');
     const original = await client.request(`${client.root}/git/blobs/${files[0].sha}`);
     const content = normalizeProfile(JSON.parse(Buffer.from(original.content, 'base64').toString('utf8')), files[0].filename);

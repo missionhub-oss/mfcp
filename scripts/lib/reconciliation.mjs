@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 import {z} from 'zod';
 import {execFileSync} from 'node:child_process';
-import {activeSettlement, digest} from './profile.mjs';
-import {readProfiles} from './progression.mjs';
+import {activeSettlement, digest, participantPath} from './profile.mjs';
+import {readProfiles, isParticipantRename} from './progression.mjs';
 import {isBotCommand} from './commands.mjs';
 import {isTaskIssue} from './issue-types.mjs';
 import {isRateLimited, overlapSince} from './processing-state.mjs';
@@ -69,7 +69,7 @@ export async function collectReconciliationWork(client, state, {slug, botId, ful
         if (profile.last_event) add(profile.last_event, digest({pr: pr.number, head: pr.head.sha, updated_at: pr.updated_at}));
       } else if (pr.merged_at && pr.user.type === 'User' && pr.changed_files === 1) {
         const files = await client.list(`${client.root}/pulls/${pr.number}/files`);
-        if (files.length === 1 && files[0].filename === `participants/${pr.user.login.toLowerCase()}.json`) {
+        if (files.length === 1 && files[0].filename === participantPath(pr.user.login) && !isParticipantRename(pr, files)) {
           add({kind: 'registration', pr: pr.number}, digest({merge: pr.merge_commit_sha}));
         }
       }

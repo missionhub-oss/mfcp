@@ -46,6 +46,9 @@ No mentor is required. The bot checks the PR author, original identity file,
 fork origin and merge, then records the evidence in the contributor JSON.
 The notification workflow congratulates and mentions that author in the
 registration PR after the updated record is published.
+A merged PR that only renames the contributor's own identity file, such as
+after a username change, keeps the existing record and needs no progression
+update.
 
 Existing two-field registrations remain valid. Scheduled reconciliation checks
 previously merged registration PRs. A contributor whose file was added directly

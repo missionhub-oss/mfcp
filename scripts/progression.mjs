@@ -5,11 +5,11 @@ import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { createClient, REPOSITORY_ID, apiUsage } from './lib/github.mjs';
-import { buildProposal, verifyReview } from './lib/progression.mjs';
+import { buildProposal, verifyReview, isParticipantRename } from './lib/progression.mjs';
 import { isBotCommand } from './lib/commands.mjs';
 import { replyToCommand } from './lib/command-feedback.mjs';
 import { markCommandProcessing } from './lib/command-reactions.mjs';
-import { digest, equal, validateProfile } from './lib/profile.mjs';
+import { digest, equal, validateProfile, participantPath } from './lib/profile.mjs';
 import {updateMentorSection, readMentorCommands} from './lib/mentor-section.mjs';
 import {formatSignoff, validateCommitMessage} from './lib/commit-policy.mjs';
 import { cleanupProgressionBranches } from './lib/branch-cleanup.mjs';
@@ -217,7 +217,8 @@ async function sourcesForEvent(client, event, name) {
   if (name === 'pull_request_target' && event.action === 'closed' && event.pull_request.merged) {
     if (event.pull_request.user.type !== 'User') return [];
     const files = await client.list(`${client.root}/pulls/${event.pull_request.number}/files`);
-    if (files.length !== 1 || files[0].filename !== `participants/${event.pull_request.user.login.toLowerCase()}.json`) return [];
+    if (isParticipantRename(event.pull_request, files)) return [];
+    if (files.length !== 1 || files[0].filename !== participantPath(event.pull_request.user.login)) return [];
     return [{kind: 'registration', pr: event.pull_request.number}];
   }
   return [];
