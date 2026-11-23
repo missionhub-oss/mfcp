@@ -3,7 +3,7 @@
   "github_login": "yydawx",
   "schema_version": 1,
   "level": 1,
-  "experience": 60,
+  "experience": 120,
   "contributions": [
     {
       "id": "task-158",
@@ -84,6 +84,22 @@
       "issue": 155,
       "participant_id": 195621032,
       "mentor_id": 62325246,
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 155,
+              "comment": 6704936461
+            },
+            "actor": 62325246,
+            "at": "2026-11-07T09:15:01Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ],
       "difficulty": 2,
       "policy": {
         "id": "2026.v7",
@@ -116,7 +132,6 @@
             "digest": "3343edcf451b2aeccc274f7f490dd8123171ff4cf8e9afe5461fd5feb27aa2f1",
             "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/53\"]}"
           },
-          "mentor_id": 62325246,
           "upstream": [
             {
               "repository": "processmission/qemu",
@@ -132,7 +147,65 @@
               "url": "https://github.com/processmission/qemu/pull/53"
             }
           ],
-          "points": 30
+          "points": 30,
+          "mentor_id": 62325246
+        }
+      ]
+    },
+    {
+      "id": "task-178",
+      "issue": 178,
+      "participant_id": 195621032,
+      "mentor_id": 62325246,
+      "difficulty": 3,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "points": 60,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 178,
+          "comment": 6704942314
+        },
+        "actor": 62325246,
+        "at": "2026-11-07T09:15:35Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-7092490726",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 178,
+              "comment": 7092490726
+            },
+            "actor": 62325246,
+            "at": "2026-11-23T05:32:09Z",
+            "digest": "4386ad55c66acae97c136befa313b9d9943f45dee2c0d44236ba2057306e49d1",
+            "details": "{\"pull_requests\":[\"https://github.com/zephyrproject-rtos/zephyr/pull/125901\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "zephyrproject-rtos/zephyr",
+              "number": 125901,
+              "author": 195621032,
+              "merge_commit": "50cbfcca870f0dc02ea8a16e569b133c7fc57f3f",
+              "merged_at": "2026-11-23T02:08:54Z",
+              "commits": [
+                "862094b3287e614cb326e61f42d841fdd877bd1a",
+                "700426707614e6813d5bbe2edd9bd8f50210e7de",
+                "8fbe4adfbbc9b08ecf60e02da6732a6e892914c2"
+              ],
+              "url": "https://github.com/zephyrproject-rtos/zephyr/pull/125901"
+            }
+          ],
+          "points": 60
         }
       ],
       "mentors": [
@@ -141,11 +214,11 @@
           "configuration": {
             "source": {
               "kind": "comment",
-              "issue": 155,
-              "comment": 6704936461
+              "issue": 178,
+              "comment": 6704942314
             },
             "actor": 62325246,
-            "at": "2026-11-07T09:15:01Z",
+            "at": "2026-11-07T09:15:35Z",
             "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
             "details": "{\"mentor\":\"@zevorn\"}"
           }
@@ -181,8 +254,8 @@
   "recognitions": [],
   "last_event": {
     "kind": "comment",
-    "issue": 155,
-    "comment": 6904966115
+    "issue": 178,
+    "comment": 7092490726
   },
-  "updated_at": "2026-11-16T01:40:23Z"
+  "updated_at": "2026-11-23T05:32:09Z"
 }
