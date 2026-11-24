@@ -43,6 +43,7 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(eventPage('#main-nav a.nav-tasks-cta').attr('href'), '../tasks/');
     assert.equal($('#main-nav a[href="leaderboard/"]').length, 1);
     assert.equal($('#main-nav a[href="events/"]').length, 1);
+    assert.equal($('#main-nav a[href="https://missionhub-oss.github.io/website/"]').text().trim(), '社区门户');
     assert.equal($('#main-nav a.nav-tasks-cta').attr('href'), 'tasks/');
     assert.equal($('#main-nav a[target]').length, 0);
     assert.equal($('#main-nav a[href*="feishu.cn"]').length, 0);
