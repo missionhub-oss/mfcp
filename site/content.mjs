@@ -175,7 +175,7 @@ const strings = {
   'partners.dshtui': ['dsh-TUI', 'dsh-TUI'],
   'partners.dshgo': ['DSH Go', 'DSH Go'],
   'partners.spacemit': ['SpacemiT', '进迭时空'],
-  'partners.asterinas': ['Asterinas', 'Asterinas'],
+  'partners.asterinas': ['Asterinas', '星绽'],
   'partners.sipeed': ['Sipeed', '矽速科技'],
   'join.title': ['Make your first contribution.', '开始你的开源贡献。'],
   'join.body': ['Register, choose a project, and join the community.', '完成注册，选择实践方向，参与社区讨论。'],
