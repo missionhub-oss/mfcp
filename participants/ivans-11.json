@@ -3,8 +3,84 @@
   "github_login": "Ivans-11",
   "schema_version": 1,
   "level": 1,
-  "experience": 0,
-  "contributions": [],
+  "experience": 60,
+  "contributions": [
+    {
+      "id": "task-186",
+      "issue": 186,
+      "participant_id": 169465461,
+      "mentor_id": 62325246,
+      "difficulty": 3,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "points": 60,
+      "configuration": {
+        "source": {
+          "kind": "comment",
+          "issue": 186,
+          "comment": 6741638965
+        },
+        "actor": 62325246,
+        "at": "2026-11-09T13:47:43Z",
+        "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+        "details": "{\"mentor\":\"@zevorn\"}"
+      },
+      "stages": [],
+      "settlements": [
+        {
+          "id": "comment-7120189424",
+          "proof": {
+            "source": {
+              "kind": "comment",
+              "issue": 186,
+              "comment": 7120189424
+            },
+            "actor": 62325246,
+            "at": "2026-11-24T02:29:01Z",
+            "digest": "61788a23a7bde17d5dec88d9978891172556afa5fa28891f64d056152c652e20",
+            "details": "{\"pull_requests\":[\"https://github.com/processmission/qemu/pull/58\"]}"
+          },
+          "mentor_id": 62325246,
+          "upstream": [
+            {
+              "repository": "processmission/qemu",
+              "number": 58,
+              "author": 169465461,
+              "merge_commit": "f6c6344831f14860b368698b8dcf9189739bd152",
+              "merged_at": "2026-11-23T07:33:48Z",
+              "commits": [
+                "67ef5d77ca5963544816f17cebba84c04f52b924",
+                "f91a180c3dedc85da4918b5a44646e34e8731f49",
+                "1015b031f675dbf5e3147c961f3afcbf4cb97b44",
+                "03961ae0ac876962ec92306a622b9b66017db513",
+                "27db0bb5a78d5b7824dd72f31e1a0380d6bb00ca"
+              ],
+              "url": "https://github.com/processmission/qemu/pull/58"
+            }
+          ],
+          "points": 60
+        }
+      ],
+      "mentors": [
+        {
+          "mentor_id": 62325246,
+          "configuration": {
+            "source": {
+              "kind": "comment",
+              "issue": 186,
+              "comment": 6741638965
+            },
+            "actor": 62325246,
+            "at": "2026-11-09T13:47:43Z",
+            "digest": "c8786ab2ef55be82f643a3988a60b24cfd9efb0adcfbfe92e3219404dd85e22f",
+            "details": "{\"mentor\":\"@zevorn\"}"
+          }
+        }
+      ]
+    }
+  ],
   "promotions": [
     {
       "id": "registration-192",
@@ -30,9 +106,11 @@
     }
   ],
   "adjustments": [],
+  "recognitions": [],
   "last_event": {
-    "kind": "registration",
-    "pr": 192
+    "kind": "comment",
+    "issue": 186,
+    "comment": 7120189424
   },
-  "updated_at": "2026-11-10T01:20:39Z"
+  "updated_at": "2026-11-24T02:29:01Z"
 }
