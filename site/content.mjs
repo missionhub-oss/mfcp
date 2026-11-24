@@ -11,6 +11,7 @@ const strings = {
   'nav.events': ['Events', '活动'],
   'nav.news': ['News', '新闻'],
   'nav.blogs': ['Blogs', '博客'],
+  'nav.portal': ['Community Portal', '社区门户'],
   'nav.tasks': ['Task Plaza', '任务广场'],
   'nav.join': ['Join the community', '加入社群'],
   'nav.menu': ['Toggle navigation', '展开或收起导航'],

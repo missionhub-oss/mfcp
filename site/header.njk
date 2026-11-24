@@ -9,6 +9,7 @@
       <a href="{{ homePath }}events/"{% if isEvents %} aria-current="page"{% endif %}>{{ t('nav.events') }}</a>
       <a href="{{ homePath }}news/"{% if isNews %} aria-current="page"{% endif %}>{{ t('nav.news') }}</a>
       <a href="{{ homePath }}blogs/"{% if isBlogs %} aria-current="page"{% endif %}>{{ t('nav.blogs') }}</a>
+      <a href="https://missionhub-oss.github.io/website/">{{ t('nav.portal') }}</a>
       <a class="nav-tasks-cta" href="{{ homePath }}tasks/"{% if isTasks %} aria-current="page"{% endif %}><span class="nav-tasks-dot" aria-hidden="true"></span><span>{{ t('nav.tasks') }}</span><span class="nav-tasks-count" aria-hidden="true">{{ program.taskCatalog.stats.available }}</span></a>
     </nav>
     <div class="header-actions">

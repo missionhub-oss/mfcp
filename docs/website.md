@@ -22,6 +22,8 @@ publish only from `main`. Deployment jobs are serialized.
 `site/index.njk` defines the page structure, `site/content.mjs` contains the
 English and Chinese interface copy, and `site/site.css` defines responsive
 layouts. `site/app.mjs` handles language, search and navigation.
+The header navigation links to the MissionHub community portal at
+`https://missionhub-oss.github.io/website/` in the same tab.
 The main homepage sections cover the program, partners and joining.
 The contributor leaderboard lives on its own `leaderboard/` page opened
 in a new browser tab from the header and the homepage Contributors stat,
