@@ -57,8 +57,8 @@ CSS and JavaScript URLs include the source commit to refresh cached assets
 after each deployment.
 
 Partner logos are stored locally under `site/assets/partners/`, preserving
-their artwork and proportions. On desktop, the 18 partners wrap into three
-compact rows of six; each incomplete row is centered with the same card
+their artwork and proportions. On desktop, the 20 partners wrap into four
+compact rows of five; each incomplete row is centered with the same card
 widths and spacing.
 Renesas uses the supplied white transparent PNG;
 SiFli uses the supplied blue transparent PNG. Both link to their official
@@ -80,6 +80,9 @@ transparent PNG and links to `https://go.dshtui.com/`.
 SpacemiT uses the supplied transparent SVG with green artwork and white
 lettering, preserving its original viewBox and colors. It links to
 `https://www.spacemit.com/` and is labeled 进迭时空 in Chinese.
+Sipeed uses the supplied transparent SVG with red artwork, displayed at
+its original 3000×538 proportions, and links to `https://sipeed.com/`.
+The Chinese page labels it 矽速科技.
 The independent partner section
 shares the leaderboard's dark background, heading size, spacing and divider.
 The logos appear directly on the dark section with transparent backgrounds.
