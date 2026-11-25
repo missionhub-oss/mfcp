@@ -1,4 +1,39 @@
 {
   "github_id": 168631859,
-  "github_login": "Timoking1"
+  "github_login": "Timoking1",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-353",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 353
+        },
+        "actor": 168631859,
+        "at": "2026-11-25T02:07:58Z",
+        "digest": "b42ed8e7d2dc044524ea1d421105047036d206c4202a6381af30265cff4eeaaa",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/353\",\"merge_commit\":\"b7c487fd792cdbed4fb5de5cb3e5178c07804b7b\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 353
+  },
+  "updated_at": "2026-11-25T02:07:58Z"
 }
