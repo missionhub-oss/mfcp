@@ -5,6 +5,7 @@ import {z} from 'zod';
 
 export const communitySnapshotSchema = z.strictObject({
   members: z.number().int().nonnegative().safe(),
+  approximate: z.boolean().default(false),
   observed_at: z.iso.datetime({offset: true}),
 });
 

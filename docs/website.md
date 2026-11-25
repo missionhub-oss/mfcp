@@ -239,8 +239,10 @@ site sections so per-username profile routes never shadow the blog pages.
 
 The homepage shows Community members, Contributors, Total tasks and In progress.
 Community members comes from the Feishu group's `user_count`.
-The trusted source file `site/community.json` contains only the count and its
-observation time. Refresh it using an authenticated local `lark-cli` session:
+The trusted source file `site/community.json` contains the count, an optional
+`approximate` flag and the observation time. When `approximate` is true, the
+homepage appends `+` to the displayed member count.
+Refresh it using an authenticated local `lark-cli` session:
 
 ```sh
 npm run refresh:community -- --chat-id <MFCP-chat-id>
