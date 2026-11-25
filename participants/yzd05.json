@@ -1,4 +1,39 @@
 {
   "github_id": 353774909,
-  "github_login": "yzd05"
+  "github_login": "yzd05",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-360",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 360
+        },
+        "actor": 353774909,
+        "at": "2026-11-25T02:07:06Z",
+        "digest": "1676ff3b079cc822453ab9b95fe337e3cc51709991bbfd5a4da48e0e54b5e860",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/360\",\"merge_commit\":\"fcf4dd6754761fc353f4f89f2577694437769d86\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 360
+  },
+  "updated_at": "2026-11-25T02:07:06Z"
 }
