@@ -64,6 +64,7 @@
 .tasks-search-field{min-width:260px;flex:1;background:#11100f;border:1px solid #ffffff20;transition:border-color .18s,box-shadow .18s}
 .tasks-search-field:focus-within{border-color:var(--brass);box-shadow:0 0 0 1px #d5a65735}
 .tasks-search-field input[type="search"]{height:46px;font-size:15px}
+.tasks-search-field input[type="search"]:focus,.tasks-search-field input[type="search"]:focus-visible{outline:none}
 .tasks-select-group{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .tasks-select-wrap{display:inline-flex;align-items:center;gap:10px;padding:0 0 0 12px;background:#11100f;border:1px solid #ffffff20;border-radius:3px;font-size:13px;color:#b4afa4}
 .tasks-select-wrap select{appearance:none;-webkit-appearance:none;height:44px;padding:0 36px 0 8px;border:0;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23d5a657' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center/11px 7px;color:var(--text);font-size:14px}
