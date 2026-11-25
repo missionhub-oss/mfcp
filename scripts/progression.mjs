@@ -69,7 +69,7 @@ async function branchHead(client, branch) {
   catch (error) {if (error.status === 404) return null; throw error;}
 }
 
-async function waitChecks(client, head) {
+export async function waitChecks(client, head, base) {
   for (let attempt = 0; attempt < 36; attempt++) {
     const data = await client.request(`${client.root}/commits/${head}/check-runs?per_page=100`);
     if (data.total_count > 100) throw new Error('Too many check runs; manual inspection required.');
@@ -78,8 +78,12 @@ async function waitChecks(client, head) {
       if (check.app?.id === 15368) newest.set(check.name, check);
     }
     const checks = CHECKS.map(name => newest.get(name));
-    if (checks.every(c => c?.status === 'completed' && c.conclusion === 'success')) return;
-    if (checks.some(c => c?.status === 'completed' && c.conclusion !== 'success')) throw new Error('Required candidate check failed.');
+    if (checks.every(c => c?.status === 'completed' && c.conclusion === 'success')) return 'passed';
+    if (checks.some(c => c?.status === 'completed' && c.conclusion !== 'success')) {
+      if (await client.head() !== base) return 'stale';
+      throw new Error('Required candidate check failed.');
+    }
+    if (await client.head() !== base) return 'stale';
     await new Promise(resolve => setTimeout(resolve, 10_000));
   }
   throw new Error('Candidate checks are pending; rerun or wait for scheduled reconciliation.');
@@ -154,8 +158,8 @@ async function executeSource(client, source, {write = false} = {}) {
         return {status: 'awaiting-review', url: pr.html_url, reason: error.message};
       }
     }
-    await waitChecks(client, head);
-    if (await client.head() !== base) continue;
+    const outcome = await waitChecks(client, head, base);
+    if (outcome === 'stale' || await client.head() !== base) continue;
     await verifyCandidate(client, head);
     try {
       await client.request(`${client.root}/git/refs/heads/${(await client.metadata()).default_branch}`, 'PATCH', {sha: head, force: false});
