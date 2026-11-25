@@ -222,6 +222,8 @@ closed task can be reopened by commenting on it.
 - `Automatic progression checks`: validates each candidate once before main
   can advance. The three required check names report the result of that shared
   verification under GitHub Actions, including its failure or cancellation.
+  A candidate whose base advanced while its checks were running is rebuilt on
+  the new main; unrelated check failures still stop the run.
 - `Contributor progression`: serializes writes and reconciles updated records
   and pending sources every ten minutes.
 - `Close stale tasks`: closes unassigned Task issues older than thirty days,
