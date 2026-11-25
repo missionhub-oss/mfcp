@@ -41,7 +41,7 @@
 
     <div class="stats-strip">
       <div class="container stats-grid">
-        <a class="stat" href="#join"><strong>{{ community.members }}</strong><span>{{ t('stats.community') }}</span></a>
+        <a class="stat" href="#join"><strong>{{ community.members }}{% if community.approximate %}+{% endif %}</strong><span>{{ t('stats.community') }}</span></a>
         <a class="stat" href="leaderboard/" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.participants }}</strong><span>{{ t('stats.people') }}</span></a>
         <a class="stat" href="tasks/" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.tasks }}</strong><span>{{ t('stats.tasks') }}</span></a>
         <a class="stat" href="tasks/?status=claimed" target="_blank" rel="noopener noreferrer"><strong>{{ program.stats.inProgressTasks }}</strong><span>{{ t('stats.inProgress') }}</span></a>

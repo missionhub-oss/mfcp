@@ -93,12 +93,12 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(program.stats.completedTasks, completed.length);
     const community = await loadCommunity();
     assert.deepEqual($('.stats-grid>a').map((_, element) => ({
-      label: $(element).children('span').text(), value: Number($(element).find('strong').text()),
+      label: $(element).children('span').text(), value: $(element).find('strong').text().trim(),
     })).get(), [
-      {label: '社群人数', value: community.members},
-      {label: '贡献者', value: profiles.length},
-      {label: '任务总数', value: tasks.length},
-      {label: '进行中', value: inProgress.length},
+      {label: '社群人数', value: `${community.members}${community.approximate ? '+' : ''}`},
+      {label: '贡献者', value: String(profiles.length)},
+      {label: '任务总数', value: String(tasks.length)},
+      {label: '进行中', value: String(inProgress.length)},
     ]);
     assert.deepEqual($('.stats-grid>a').map((_, element) => $(element).attr('href')).get(), [
       '#join',
