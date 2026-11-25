@@ -1,4 +1,39 @@
 {
+  "github_id": 146743193,
   "github_login": "dDostalker",
-  "github_id": 146743193
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-358",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 358
+        },
+        "actor": 146743193,
+        "at": "2026-11-25T02:08:39Z",
+        "digest": "7203f1c87ea17c9abbce94e8583e59519d7021b825d29a45d992bc1fc3a8633b",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/358\",\"merge_commit\":\"bf6438c5c5f00ea7960501fd2923f527bf9edc65\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 358
+  },
+  "updated_at": "2026-11-25T02:08:39Z"
 }
