@@ -130,6 +130,7 @@ JavaScript front matter is rejected.
 | Field | Meaning |
 | --- | --- |
 | `title`, `company`, `summary` | Role title, hiring organization and index description |
+| `industry` | Optional industry category used for index filtering |
 | `location` | Work location |
 | `employment_type` | `full-time`, `intern`, `part-time` or `contract` |
 | `published_at` | Publication date, quoted as `YYYY-MM-DD` |

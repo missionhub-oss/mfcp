@@ -2,6 +2,12 @@
 {# SPDX-License-Identifier: MIT #}
 {% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
 {% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
+{% macro applyActions(job) %}
+      <div class="job-actions">
+        {% if job.apply_url %}<a class="job-action-link is-primary" href="{{ job.apply_url }}" target="_blank" rel="noopener noreferrer">{{ t('jobs.apply') }} <span aria-hidden="true">↗</span></a>{% endif %}
+        {% if job.apply_email %}<a class="job-action-link{{ ' is-primary' if not job.apply_url }}" href="{{ job.applyMailto.zh }}" data-mailto-zh="{{ job.applyMailto.zh }}" data-mailto-en="{{ job.applyMailto.en }}"><svg class="job-mail-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><span class="job-action-label">{{ t('jobs.applyEmail') }}</span><span class="job-action-email">{{ job.apply_email }}</span></a>{% endif %}
+      </div>
+{% endmacro %}
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -32,6 +38,7 @@
       <h1>{{ localized(job.localizedTitle) }}</h1>
       <p class="job-post-meta">
         <strong>{{ localized(job.localizedCompany) }}</strong>
+        {% if job.localizedIndustry %}<span aria-hidden="true">·</span><span>{{ localized(job.localizedIndustry) }}</span>{% endif %}
         <span aria-hidden="true">·</span>
         <span>{{ localized(job.localizedLocation) }}</span>
         <span aria-hidden="true">·</span>
@@ -50,10 +57,7 @@
       <p class="job-tags-line" data-lang-block="en">{{ job.en.tags | join(' · ') }}</p>
       {% endif %}
       {% if job.status == 'open' and (job.apply_url or job.apply_email) %}
-      <div class="job-actions">
-        {% if job.apply_url %}<a class="job-action-link is-primary" href="{{ job.apply_url }}" target="_blank" rel="noopener noreferrer">{{ t('jobs.apply') }} <span aria-hidden="true">↗</span></a>{% endif %}
-        {% if job.apply_email %}<a class="job-action-link" href="mailto:{{ job.apply_email }}">{{ job.apply_email }}</a>{% endif %}
-      </div>
+      {{ applyActions(job) }}
       {% elif job.status == 'closed' %}
       <p class="job-closed-banner">{{ t('jobs.closedNote') }}</p>
       {% endif %}
@@ -78,6 +82,12 @@
         {% if job.en %}
         <div class="job-body" data-lang-block="en" lang="en">{{ job.en.html | safe }}</div>
         {% endif %}
+        {% if job.status == 'open' and (job.apply_url or job.apply_email) %}
+        <section class="job-apply-bar" aria-label="{{ copy['jobs.applyEmail'].zh }}" data-i18n-aria-label="jobs.applyEmail">
+          <p class="job-apply-note">{{ t('jobs.applyFooter') }}</p>
+          {{ applyActions(job) }}
+        </section>
+        {% endif %}
         <footer class="job-post-footer">
           <a class="text-link" href="{{ homePath }}jobs/">← {{ t('jobs.back') }}</a>
           <a class="text-link" href="#top">{{ t('jobs.top') }} ↑</a>
@@ -90,14 +100,51 @@
       <h1>{{ t('jobs.title') }}</h1>
     </header>
     {% if jobs.length %}
-    <div class="jobs-summary-bar">
-      <p class="jobs-count"><strong>{{ openJobsCount }}</strong> {{ t('jobs.countOpen') }}</p>
-    </div>
+    <section class="jobs-filters js-only" aria-label="{{ copy['jobs.filter.label'].zh }}" data-i18n-aria-label="jobs.filter.label">
+      <div class="jobs-filter-top">
+        <label class="search-field jobs-search-field">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+          <span class="sr-only">{{ t('jobs.filter.search') }}</span>
+          <input id="job-search" type="search" autocomplete="off" placeholder="{{ copy['jobs.filter.search'].zh }}" data-i18n-placeholder="jobs.filter.search">
+        </label>
+      </div>
+      {% if jobFacets.companies.length %}
+      <div class="jobs-filter-row">
+        <span class="jobs-filter-label">{{ t('jobs.filter.company') }}</span>
+        <div class="jobs-chip-group" role="group" aria-label="{{ copy['jobs.filter.company'].zh }}" data-i18n-aria-label="jobs.filter.company">
+          <button class="jobs-chip is-active" type="button" data-job-company="all" aria-pressed="true">{{ t('jobs.filter.all') }} <span class="jobs-chip-count">{{ jobs.length }}</span></button>
+          {% for company in jobFacets.companies %}
+          <button class="jobs-chip" type="button" data-job-company="{{ company.value }}" aria-pressed="false">{{ localized(company.label) }} <span class="jobs-chip-count">{{ company.count }}</span></button>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if jobFacets.industries.length %}
+      <div class="jobs-filter-row">
+        <span class="jobs-filter-label">{{ t('jobs.filter.industry') }}</span>
+        <div class="jobs-chip-group" role="group" aria-label="{{ copy['jobs.filter.industry'].zh }}" data-i18n-aria-label="jobs.filter.industry">
+          <button class="jobs-chip is-active" type="button" data-job-industry="all" aria-pressed="true">{{ t('jobs.filter.all') }} <span class="jobs-chip-count">{{ jobs.length }}</span></button>
+          {% for industry in jobFacets.industries %}
+          <button class="jobs-chip" type="button" data-job-industry="{{ industry.value }}" aria-pressed="false">{{ localized(industry.label) }} <span class="jobs-chip-count">{{ industry.count }}</span></button>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      <div class="jobs-filter-meta">
+        <p class="jobs-count" role="status" aria-live="polite">{{ t('jobs.filter.showing') }} <strong id="jobs-visible-count">{{ jobs.length }}</strong> / {{ jobs.length }} {{ t('jobs.filter.unit') }}</p>
+        <button class="jobs-reset-btn" id="jobs-reset-filters" type="button" data-jobs-reset hidden>{{ t('jobs.filter.reset') }}</button>
+      </div>
+    </section>
+    <noscript>
+      <div class="jobs-summary-bar">
+        <p class="jobs-count"><strong>{{ openJobsCount }}</strong> {{ t('jobs.countOpen') }}</p>
+      </div>
+    </noscript>
     <div class="jobs-list">
       {% for item in jobs %}
-      <article class="job-card{% if item.status == 'closed' %} is-closed{% endif %}{% if item.featured %} is-featured{% endif %}">
+      <article class="job-card{% if item.status == 'closed' %} is-closed{% endif %}{% if item.featured %} is-featured{% endif %}" data-company="{{ item.company }}" data-industry="{{ item.industry or '' }}" data-search="{{ (item.localizedTitle.zh ~ ' ' ~ item.localizedTitle.en ~ ' ' ~ item.localizedCompany.zh ~ ' ' ~ item.localizedCompany.en ~ ' ' ~ (item.localizedIndustry.zh if item.localizedIndustry else '') ~ ' ' ~ (item.localizedIndustry.en if item.localizedIndustry else '') ~ ' ' ~ item.localizedLocation.zh ~ ' ' ~ item.localizedLocation.en ~ ' ' ~ (item.tags | join(' ')) ~ ' ' ~ item.localizedSummary.zh ~ ' ' ~ item.localizedSummary.en) | lower }}">
         <div class="job-card-head">
-          <span class="job-company">{{ localized(item.localizedCompany) }}</span>
+          <span class="job-company-group"><span class="job-company">{{ localized(item.localizedCompany) }}</span>{% if item.localizedIndustry %}<span aria-hidden="true">·</span><span>{{ localized(item.localizedIndustry) }}</span>{% endif %}</span>
           <div class="job-card-aside">
             {% if item.status == 'closed' %}<span class="job-status-text">{{ t('jobs.status.closed') }}</span>{% endif %}
             <time class="job-date" datetime="{{ item.published_at }}" data-date="{{ item.published_at }}">{{ item.published_at | date }}</time>
@@ -117,6 +164,10 @@
       </article>
       {% endfor %}
     </div>
+    <div class="jobs-filter-empty" id="jobs-filter-empty" hidden>
+      <p>{{ t('jobs.filter.empty') }}</p>
+      <button class="job-action-link" type="button" data-jobs-reset>{{ t('jobs.filter.reset') }}</button>
+    </div>
     {% else %}
     <section class="jobs-empty" aria-labelledby="jobs-empty-title">
       <h2 id="jobs-empty-title">{{ t('jobs.emptyTitle') }}</h2>
@@ -131,6 +182,7 @@
   <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
   <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
   <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+  <script type="module" src="{{ homePath }}jobs.mjs?v={{ assetVersions['jobs.mjs'] }}"></script>
   <script type="module" src="{{ homePath }}account.mjs?v={{ assetVersions['account.mjs'] }}"></script>
 </body>
 </html>

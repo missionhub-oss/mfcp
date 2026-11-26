@@ -21,6 +21,7 @@ const httpUrl = z.url().refine(value => {
 const schema = z.strictObject({
   title: z.string().min(1),
   company: z.string().min(1),
+  industry: z.string().min(1).optional(),
   summary: z.string().min(1),
   location: z.string().min(1),
   employment_type: z.enum(['full-time', 'intern', 'part-time', 'contract']),
@@ -169,14 +170,22 @@ export async function loadJobs(jobsDirectory = defaultJobsDirectory) {
       ? await parseJobFile(enName, {jobsDirectory: directory, image, idPrefix: 'en-section-'})
       : null;
 
+    const enTitle = en ? en.metadata.title : zh.metadata.title;
+    const applyMailto = zh.metadata.apply_email ? {
+      zh: `mailto:${zh.metadata.apply_email}?subject=${encodeURIComponent(`应聘 ${zh.metadata.title}`)}`,
+      en: `mailto:${zh.metadata.apply_email}?subject=${encodeURIComponent(`Application: ${enTitle}`)}`,
+    } : null;
+
     jobs.push({
       ...zh.metadata,
       slug,
       html: zh.html,
       toc: zh.toc,
+      applyMailto,
       en: en ? {
         title: en.metadata.title,
         company: en.metadata.company,
+        industry: en.metadata.industry ?? null,
         summary: en.metadata.summary,
         location: en.metadata.location,
         salary: en.metadata.salary ?? null,
@@ -187,6 +196,7 @@ export async function loadJobs(jobsDirectory = defaultJobsDirectory) {
       } : null,
       localizedTitle: localizedField(zh.metadata.title, en?.metadata.title),
       localizedCompany: localizedField(zh.metadata.company, en?.metadata.company),
+      localizedIndustry: localizedField(zh.metadata.industry, en?.metadata.industry),
       localizedSummary: localizedField(zh.metadata.summary, en?.metadata.summary),
       localizedLocation: localizedField(zh.metadata.location, en?.metadata.location),
       localizedSalary: localizedField(zh.metadata.salary, en?.metadata.salary),

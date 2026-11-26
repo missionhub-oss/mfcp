@@ -25,7 +25,7 @@ template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.s
 export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues, jobsDirectory = defaultJobsDirectory} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'events.mjs', 'jobs.css', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
+  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'events.mjs', 'jobs.css', 'jobs.mjs', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
   const assetVersions = Object.fromEntries(await Promise.all(assetNames.map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
@@ -205,6 +205,20 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   for (const post of blogs) await writeBlogPage(post);
   if (blogs.length) await cp(blogsAssetsDirectory, join(output, 'blogs/assets'), {recursive: true});
   const openJobsCount = jobs.filter(item => item.status === 'open').length;
+  function buildJobFacet(getValue, getLocalized) {
+    const map = new Map();
+    for (const item of jobs) {
+      const value = getValue(item);
+      if (!value) continue;
+      if (!map.has(value)) map.set(value, {value, label: getLocalized(item) ?? {zh: value, en: value}, count: 0});
+      map.get(value).count += 1;
+    }
+    return [...map.values()].sort((a, b) => b.count - a.count || a.value.localeCompare(b.value, 'zh-CN'));
+  }
+  const jobFacets = {
+    companies: buildJobFacet(item => item.company, item => item.localizedCompany),
+    industries: buildJobFacet(item => item.industry, item => item.localizedIndustry),
+  };
   async function writeJobPage(job) {
     const path = job ? `jobs/${job.slug}/` : 'jobs/';
     const homePath = job ? '../../' : '../';
@@ -216,7 +230,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
         ? {en: job.localizedSummary.en, zh: job.summary}
         : copy['jobs.description'],
     };
-    const body = template.render('jobs.njk', {...common, copy: pageCopy, payload: pagePayload(pageCopy, homePath), job, jobs, openJobsCount,
+    const body = template.render('jobs.njk', {...common, copy: pageCopy, payload: pagePayload(pageCopy, homePath), job, jobs, openJobsCount, jobFacets,
       homePath, isJobs: true,
       pageUrl: new URL(path, siteUrl).href});
     const target = join(output, path);

@@ -20,6 +20,7 @@ Each job posting on the MFCP website lives as an independent Markdown file in th
 | --- | --- | --- |
 | `title` | Yes | 岗位名称 |
 | `company` | Yes | 招聘单位或社区团队 |
+| `industry` | No | 所属行业类型（如 `嵌入式操作系统`、`开源基础软件`、`芯片与硬件`，用于页面行业筛选） |
 | `summary` | Yes | 岗位一句话简介，用于列表卡片与页面摘要 |
 | `location` | Yes | 工作地点（如 `北京 / 远程`、`上海`、`远程`） |
 | `employment_type` | Yes | 岗位类型：`full-time`、`intern`、`part-time` 或 `contract` |
