@@ -4,6 +4,7 @@ const {copy} = JSON.parse(document.getElementById('page-data').textContent);
 const cards = [...document.querySelectorAll('.contributor-card')];
 const search = document.getElementById('search');
 const languageButton = document.getElementById('language');
+const themeButton = document.getElementById('theme-toggle');
 const menuButton = document.getElementById('menu-toggle');
 const previousPage = document.getElementById('previous-page');
 const nextPage = document.getElementById('next-page');
@@ -13,6 +14,24 @@ const initialLeaderboardTab = location.hash === '#hall' ? 'hall' : 'ranking';
 const pageSize = 10;
 let currentPage = 1;
 let language = 'zh';
+let theme = 'dark';
+const lightSchemeQuery = matchMedia('(prefers-color-scheme: light)');
+
+function setTheme(next, persist = false) {
+  theme = next === 'light' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) metaTheme.content = theme === 'light' ? '#eeece1' : '#111111';
+  if (themeButton) {
+    const labelKey = theme === 'light' ? 'a11y.themeDark' : 'a11y.themeLight';
+    themeButton.setAttribute('aria-pressed', String(theme === 'light'));
+    themeButton.setAttribute('data-i18n-aria-label', labelKey);
+    if (copy[labelKey]) themeButton.setAttribute('aria-label', copy[labelKey][language]);
+  }
+  if (persist) {
+    try {localStorage.setItem('mfcp.theme', theme);} catch {}
+  }
+}
 
 function setLeaderboardTab(tab) {
   if (!leaderboardTabs.length) return;
@@ -144,6 +163,13 @@ for (const button of leaderboardTabs) {
   });
 }
 languageButton.addEventListener('click', () => setLanguage(language === 'en' ? 'zh' : 'en'));
+themeButton?.addEventListener('click', () => setTheme(theme === 'light' ? 'dark' : 'light', true));
+lightSchemeQuery.addEventListener('change', event => {
+  try {
+    if (localStorage.getItem('mfcp.theme')) return;
+  } catch {}
+  setTheme(event.matches ? 'light' : 'dark');
+});
 search?.addEventListener('input', () => {
   currentPage = 1;
   renderContributors();
@@ -183,6 +209,11 @@ document.addEventListener('keydown', event => {
   }
 });
 try {language = localStorage.getItem('mfcp.language') === 'en' ? 'en' : 'zh';} catch {}
+try {
+  const savedTheme = localStorage.getItem('mfcp.theme');
+  theme = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : (lightSchemeQuery.matches ? 'light' : 'dark');
+} catch {}
+setTheme(theme);
 setLanguage(language);
 setLeaderboardTab(initialLeaderboardTab);
 handleLegacyFragments();

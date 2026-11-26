@@ -46,6 +46,7 @@ test('jobs navigation is placed between Hall of Fame and Events and builds stand
     assert.equal(index('.jobs-heading .section-description').length, 0);
     assert.equal(index('#main-nav a[aria-current="page"]').attr('href'), '../jobs/');
     assert.equal(index('#main-nav a[target]').length, 0);
+    assert.equal(index('#theme-toggle').length, 1);
     assert.equal(index('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/jobs/');
 
     const {copy} = JSON.parse(index('#page-data').text());
@@ -256,7 +257,7 @@ Hands-on Linux kernel debugging and upstream collaboration experience.
     const closedPath = resolve(output, 'jobs/closed-role/index.html');
     const closed = load(await readFile(closedPath, 'utf8'));
     assert.equal(closed('.job-closed-banner').length, 1);
-    assert.equal(closed('.job-apply-panel').length, 0);
+    assert.equal(closed('.job-actions').length, 0);
   } finally {
     await rm(jobsDir, {recursive: true, force: true});
     await rm(output, {recursive: true, force: true});
