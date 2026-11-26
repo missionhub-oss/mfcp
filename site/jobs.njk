@@ -1,0 +1,161 @@
+{# SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission #}
+{# SPDX-License-Identifier: MIT #}
+{% macro t(key) %}<span data-i18n="{{ key }}">{{ copy[key].zh }}</span>{% endmacro %}
+{% macro localized(value) %}<span data-en="{{ value.en }}" data-zh="{{ value.zh }}">{{ value.zh }}</span>{% endmacro %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="mfcp-source-commit" content="{{ program.sha }}">
+  <meta name="mfcp-built-at" content="{{ program.builtAt }}">
+  <meta name="description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:title" content="{{ copy['meta.title'].zh }}">
+  <meta property="og:description" content="{{ copy['meta.description'].zh }}">
+  <meta property="og:type" content="{{ 'article' if job else 'website' }}">
+  <meta property="og:url" content="{{ pageUrl }}">
+  {% if job %}<meta property="article:published_time" content="{{ job.published_at }}T00:00:00+08:00">{% endif %}
+  <link rel="canonical" href="{{ pageUrl }}">
+  <link rel="icon" href="{{ homePath }}assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ homePath }}site.css?v={{ assetVersions['site.css'] }}">
+  <link rel="stylesheet" href="{{ homePath }}jobs.css?v={{ assetVersions['jobs.css'] }}">
+  <title>{{ copy['meta.title'].zh }}</title>
+</head>
+<body id="top" class="jobs-page">
+  <a class="skip-link" href="#main">{{ t('nav.skip') }}</a>
+  {% include 'header.njk' %}
+  <main id="main" class="container jobs-main">
+    {% if job %}
+    <header class="job-post-header">
+      <nav class="job-breadcrumb" aria-label="{{ copy['jobs.breadcrumb'].zh }}" data-i18n-aria-label="jobs.breadcrumb"><a href="{{ homePath }}">{{ t('jobs.home') }}</a><span aria-hidden="true">/</span><a href="{{ homePath }}jobs/">{{ t('nav.jobs') }}</a></nav>
+      <div class="job-kicker">
+        <span class="job-status is-{{ job.status }}">{{ t('jobs.status.' ~ job.status) }}</span>
+        {% if job.featured %}<span class="job-featured-badge">{{ t('jobs.featured') }}</span>{% endif %}
+        <span class="job-company">{{ localized(job.localizedCompany) }}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime="{{ job.published_at }}" data-date="{{ job.published_at }}">{{ job.published_at | date }}</time>
+      </div>
+      <h1>{{ localized(job.localizedTitle) }}</h1>
+      <p class="job-post-summary">{{ localized(job.localizedSummary) }}</p>
+      <dl class="job-facts">
+        <div><dt>{{ t('jobs.company') }}</dt><dd>{{ localized(job.localizedCompany) }}</dd></div>
+        <div><dt>{{ t('jobs.location') }}</dt><dd>{{ localized(job.localizedLocation) }}</dd></div>
+        <div><dt>{{ t('jobs.type') }}</dt><dd>{{ t('jobs.type.' ~ job.employment_type) }}</dd></div>
+        {% if job.work_mode %}<div><dt>{{ t('jobs.mode') }}</dt><dd>{{ t('jobs.mode.' ~ job.work_mode) }}</dd></div>{% endif %}
+        {% if job.localizedSalary %}<div><dt>{{ t('jobs.salary') }}</dt><dd>{{ localized(job.localizedSalary) }}</dd></div>{% endif %}
+        {% if job.localizedExperience %}<div><dt>{{ t('jobs.experience') }}</dt><dd>{{ localized(job.localizedExperience) }}</dd></div>{% endif %}
+        <div><dt>{{ t('jobs.published') }}</dt><dd><time datetime="{{ job.published_at }}" data-date="{{ job.published_at }}">{{ job.published_at | date }}</time></dd></div>
+        {% if job.updated_at %}<div><dt>{{ t('jobs.updated') }}</dt><dd><time datetime="{{ job.updated_at }}" data-date="{{ job.updated_at }}">{{ job.updated_at | date }}</time></dd></div>{% endif %}
+      </dl>
+      {% if job.tags.length %}
+      <ul class="job-tags"{% if job.en and job.en.tags.length %} data-lang-block="zh"{% endif %}>{% for tag in job.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if job.en and job.en.tags.length %}
+      <ul class="job-tags" data-lang-block="en">{% for tag in job.en.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+      {% endif %}
+      {% if job.status == 'open' and (job.apply_url or job.apply_email) %}
+      <div class="job-actions">
+        {% if job.apply_url %}<a class="button primary" href="{{ job.apply_url }}" target="_blank" rel="noopener noreferrer">{{ t('jobs.apply') }} <span aria-hidden="true">↗</span></a>{% endif %}
+        {% if job.apply_email %}<a class="button {{ 'secondary' if job.apply_url else 'primary' }}" href="mailto:{{ job.apply_email }}">{{ t('jobs.applyEmail') }}: {{ job.apply_email }}</a>{% endif %}
+      </div>
+      {% elif job.status == 'closed' %}
+      <p class="job-closed-banner">{{ t('jobs.closedNote') }}</p>
+      {% endif %}
+    </header>
+    <div class="job-layout{% if job.toc.length %} has-toc{% endif %}">
+      {% if job.toc.length %}
+      <aside class="job-toc-sidebar" aria-label="{{ copy['jobs.toc'].zh }}" data-i18n-aria-label="jobs.toc">
+        <p class="job-toc-title">{{ t('jobs.toc') }}</p>
+        <ul{% if job.en %} data-lang-block="zh"{% endif %}>{% for item in job.toc %}<li><a href="#{{ item.id }}">{{ item.text }}</a></li>{% endfor %}</ul>
+        {% if job.en %}<ul data-lang-block="en">{% for item in job.en.toc %}<li><a href="#{{ item.id }}">{{ item.text }}</a></li>{% endfor %}</ul>{% endif %}
+      </aside>
+      {% endif %}
+      <article class="job-post">
+        {% if job.toc.length %}
+        <details class="job-toc-mobile">
+          <summary>{{ t('jobs.toc') }}</summary>
+          <ul{% if job.en %} data-lang-block="zh"{% endif %}>{% for item in job.toc %}<li><a href="#{{ item.id }}">{{ item.text }}</a></li>{% endfor %}</ul>
+          {% if job.en %}<ul data-lang-block="en">{% for item in job.en.toc %}<li><a href="#{{ item.id }}">{{ item.text }}</a></li>{% endfor %}</ul>{% endif %}
+        </details>
+        {% endif %}
+        <div class="job-body"{% if job.en %} data-lang-block="zh"{% endif %} lang="zh-CN">{{ job.html | safe }}</div>
+        {% if job.en %}
+        <div class="job-body" data-lang-block="en" lang="en">{{ job.en.html | safe }}</div>
+        {% endif %}
+        {% if job.status == 'open' and (job.apply_url or job.apply_email) %}
+        <section class="job-apply-panel" aria-labelledby="job-apply-heading">
+          <h2 id="job-apply-heading">{{ t('jobs.applyHeading') }}</h2>
+          <p>{{ t('jobs.applyNote') }}</p>
+          <div class="job-actions">
+            {% if job.apply_url %}<a class="button primary" href="{{ job.apply_url }}" target="_blank" rel="noopener noreferrer">{{ t('jobs.apply') }} <span aria-hidden="true">↗</span></a>{% endif %}
+            {% if job.apply_email %}<a class="button {{ 'secondary' if job.apply_url else 'primary' }}" href="mailto:{{ job.apply_email }}">{{ t('jobs.applyEmail') }}: {{ job.apply_email }}</a>{% endif %}
+          </div>
+        </section>
+        {% endif %}
+        <footer class="job-post-footer">
+          <a class="text-link" href="{{ homePath }}jobs/">← {{ t('jobs.back') }}</a>
+          <a class="text-link" href="#top">{{ t('jobs.top') }} ↑</a>
+        </footer>
+      </article>
+    </div>
+    {% else %}
+    <header class="jobs-heading">
+      <p class="eyebrow"><span class="red-rule"></span>MissionHub · MFCP</p>
+      <h1>{{ t('jobs.title') }}</h1>
+    </header>
+    {% if jobs.length %}
+    <div class="jobs-summary-bar">
+      <p class="jobs-count"><strong>{{ openJobsCount }}</strong> {{ t('jobs.countOpen') }}</p>
+      <a class="text-link" href="{{ repositoryUrl }}/tree/main/jobs" target="_blank" rel="noopener noreferrer">{{ t('jobs.publishGuide') }} <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="jobs-list">
+      {% for item in jobs %}
+      <article class="job-card{% if item.status == 'closed' %} is-closed{% endif %}{% if item.featured %} is-featured{% endif %}">
+        <div class="job-card-head">
+          <div class="job-kicker">
+            <span class="job-status is-{{ item.status }}">{{ t('jobs.status.' ~ item.status) }}</span>
+            {% if item.featured %}<span class="job-featured-badge">{{ t('jobs.featured') }}</span>{% endif %}
+            <span class="job-company">{{ localized(item.localizedCompany) }}</span>
+          </div>
+          <time class="job-date" datetime="{{ item.published_at }}" data-date="{{ item.published_at }}">{{ item.published_at | date }}</time>
+        </div>
+        <h2><a href="{{ item.slug }}/">{{ localized(item.localizedTitle) }}</a></h2>
+        <p class="job-summary">{{ localized(item.localizedSummary) }}</p>
+        <ul class="job-meta">
+          <li>{{ localized(item.localizedLocation) }}</li>
+          <li>{{ t('jobs.type.' ~ item.employment_type) }}</li>
+          {% if item.work_mode %}<li>{{ t('jobs.mode.' ~ item.work_mode) }}</li>{% endif %}
+          {% if item.localizedSalary %}<li class="is-highlight">{{ localized(item.localizedSalary) }}</li>{% endif %}
+          {% if item.localizedExperience %}<li>{{ localized(item.localizedExperience) }}</li>{% endif %}
+        </ul>
+        <div class="job-card-foot">
+          {% if item.tags.length %}
+          <ul class="job-tags"{% if item.en and item.en.tags.length %} data-lang-block="zh"{% endif %}>{% for tag in item.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+          {% endif %}
+          {% if item.en and item.en.tags.length %}
+          <ul class="job-tags" data-lang-block="en">{% for tag in item.en.tags %}<li>{{ tag }}</li>{% endfor %}</ul>
+          {% endif %}
+          <a class="text-link job-card-link" href="{{ item.slug }}/">{{ t('jobs.view') }} <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <section class="jobs-empty" aria-labelledby="jobs-empty-title">
+      <h2 id="jobs-empty-title">{{ t('jobs.emptyTitle') }}</h2>
+      <p>{{ t('jobs.emptyBody') }}</p>
+      <div class="jobs-empty-actions">
+        <a class="button primary" href="{{ repositoryUrl }}/tree/main/jobs" target="_blank" rel="noopener noreferrer">{{ t('jobs.publishGuide') }} <span aria-hidden="true">↗</span></a>
+        <a class="button secondary" href="{{ communityUrl }}" target="_blank" rel="noopener noreferrer">{{ t('nav.join') }} <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+    {% endif %}
+    {% endif %}
+  </main>
+  <footer class="site-footer container"><span>© {{ program.rules.year }} Process Mission</span><a href="{{ repositoryUrl }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
+  <script type="application/json" id="page-data">{{ payload | jsonScript }}</script>
+  <script type="module" src="{{ homePath }}app.mjs?v={{ assetVersions['app.mjs'] }}"></script>
+  <script type="module" src="{{ homePath }}account.mjs?v={{ assetVersions['account.mjs'] }}"></script>
+</body>
+</html>

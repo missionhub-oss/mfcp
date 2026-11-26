@@ -6,6 +6,7 @@
     <button class="menu-toggle js-only" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="{{ copy['nav.menu'].zh }}" data-i18n-aria-label="nav.menu"><span></span><span></span></button>
     <nav id="main-nav" aria-label="{{ copy['nav.label'].zh }}" data-i18n-aria-label="nav.label">
       <a href="{{ homePath }}leaderboard/"{% if isLeaderboard %} aria-current="page"{% endif %}>{{ t('nav.ranking') }}</a>
+      <a href="{{ homePath }}jobs/"{% if isJobs %} aria-current="page"{% endif %}>{{ t('nav.jobs') }}</a>
       <a href="{{ homePath }}events/"{% if isEvents %} aria-current="page"{% endif %}>{{ t('nav.events') }}</a>
       <a href="{{ homePath }}news/"{% if isNews %} aria-current="page"{% endif %}>{{ t('nav.news') }}</a>
       <a href="{{ homePath }}blogs/"{% if isBlogs %} aria-current="page"{% endif %}>{{ t('nav.blogs') }}</a>

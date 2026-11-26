@@ -1,0 +1,4 @@
+interface:
+  display_name: "MFCP 招聘发布"
+  short_description: "按 MFCP 规范编写独立 Markdown 招聘岗位文件、执行校验构建并按提交规范发起 PR"
+  default_prompt: "使用 $mfcp-post-job，按 MFCP 招聘规范将岗位信息整理为 jobs/ 目录下的独立 Markdown 文件，完成本地校验与构建，并按仓库提交与 DCO 规范创建 PR。"

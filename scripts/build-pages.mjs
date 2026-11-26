@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Process Mission
 // SPDX-License-Identifier: MIT
-import {mkdir, writeFile, copyFile, cp, readFile, rm} from 'node:fs/promises';
+import {mkdir, writeFile, copyFile, cp, readFile, rm, access} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {resolve, join} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -10,6 +10,7 @@ import {loadProgram, repositoryUrl} from './lib/pages.mjs';
 import {loadCommunity} from './lib/community.mjs';
 import {loadEvents, groupReplays} from './lib/events.mjs';
 import {loadHallOfFame} from './lib/hall-of-fame.mjs';
+import {loadJobs, defaultJobsDirectory} from './lib/jobs.mjs';
 import {loadNews} from './lib/news.mjs';
 import {loadBlogs} from './lib/blogs.mjs';
 import {copy, projects, communityUrl} from '../site/content.mjs';
@@ -21,20 +22,21 @@ const template = new nunjucks.Environment(new nunjucks.FileSystemLoader(siteDire
 template.addFilter('date', value => new Intl.DateTimeFormat('zh-CN', {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}).format(new Date(value)));
 template.addFilter('jsonScript', value => new nunjucks.runtime.SafeString(JSON.stringify(value).replaceAll('<', '\\u003c')));
 
-export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues} = {}) {
+export async function buildPages(directory = '.', {output = join(directory, 'site-dist'), sha, issues, jobsDirectory = defaultJobsDirectory} = {}) {
   sha ??= execFileSync('git', ['rev-parse', 'HEAD'], {cwd: directory, encoding: 'utf8'}).trim();
   const program = await loadProgram(directory, {sha, issues});
-  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'events.mjs', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
+  const assetNames = ['site.css', 'app.mjs', 'account.mjs', 'events.mjs', 'jobs.css', 'news.css', 'blogs.css', 'tasks.css', 'tasks.mjs'];
   const assetVersions = Object.fromEntries(await Promise.all(assetNames.map(async name =>
     [name, createHash('sha256').update(await readFile(join(siteDirectory, name))).digest('hex').slice(0, 16)])));
   const community = await loadCommunity();
   const events = await loadEvents();
   const hallOfFame = await loadHallOfFame();
+  const jobs = await loadJobs(jobsDirectory);
   const news = await loadNews();
   const blogs = await loadBlogs();
   const siteUrl = 'https://missionhub-oss.github.io/mfcp/';
   const repositorySlug = 'missionhub-oss/mfcp';
-  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isBlogs: false, isEvents: false, isTasks: false, isLeaderboard: false, isProfile: false, profilePerson: null};
+  const common = {projects, program, community, communityUrl, events, repositoryUrl, assetVersions, siteUrl, isNews: false, isBlogs: false, isEvents: false, isJobs: false, isTasks: false, isLeaderboard: false, isProfile: false, profilePerson: null};
   const pagePayload = (pageCopy, homePath, extra = {}) => ({
     copy: pageCopy,
     homePath,
@@ -106,7 +108,7 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await mkdir(join(output, 'profile'), {recursive: true});
   await writeFile(join(output, 'profile/index.html'), profilePage);
 
-  const reservedRoutes = new Set(['assets', 'blogs', 'events', 'leaderboard', 'news', 'profile', 'slides', 'tasks']);
+  const reservedRoutes = new Set(['assets', 'blogs', 'events', 'jobs', 'leaderboard', 'news', 'profile', 'slides', 'tasks']);
   for (const person of program.participants) {
     const slug = person.login.toLowerCase();
     if (reservedRoutes.has(slug)) continue;
@@ -202,8 +204,37 @@ export async function buildPages(directory = '.', {output = join(directory, 'sit
   await writeBlogPage(null);
   for (const post of blogs) await writeBlogPage(post);
   if (blogs.length) await cp(blogsAssetsDirectory, join(output, 'blogs/assets'), {recursive: true});
+  const openJobsCount = jobs.filter(item => item.status === 'open').length;
+  async function writeJobPage(job) {
+    const path = job ? `jobs/${job.slug}/` : 'jobs/';
+    const homePath = job ? '../../' : '../';
+    const pageCopy = {...copy,
+      'meta.title': job
+        ? {en: `${job.localizedTitle.en} · ${job.localizedCompany.en} · MFCP Jobs`, zh: `${job.title} · ${job.company} · MFCP 招聘`}
+        : {en: 'Jobs · Mission Forge Contributor Program', zh: '招聘 · MFCP 开源人才培养计划'},
+      'meta.description': job
+        ? {en: job.localizedSummary.en, zh: job.summary}
+        : copy['jobs.description'],
+    };
+    const body = template.render('jobs.njk', {...common, copy: pageCopy, payload: pagePayload(pageCopy, homePath), job, jobs, openJobsCount,
+      homePath, isJobs: true,
+      pageUrl: new URL(path, siteUrl).href});
+    const target = join(output, path);
+    await mkdir(target, {recursive: true});
+    await writeFile(join(target, 'index.html'), body);
+  }
+  await rm(join(output, 'jobs'), {recursive: true, force: true});
+  await writeJobPage(null);
+  for (const job of jobs) await writeJobPage(job);
+  const resolvedJobsAssets = join(resolve(jobsDirectory), 'assets');
+  try {
+    await access(resolvedJobsAssets);
+    await cp(resolvedJobsAssets, join(output, 'jobs/assets'), {recursive: true});
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
   console.log(`Built MFCP website for ${program.stats.participants} contributors at ${sha}.`);
-  return {program, html, output, news, blogs};
+  return {program, html, output, news, blogs, jobs};
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await buildPages(resolve(process.argv[2] || '.'));

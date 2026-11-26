@@ -100,6 +100,47 @@ Program, leaderboard and partner headings have a red background that expands
 from left to right when their section is hovered or contains keyboard focus.
 Touch layouts show the background directly; reduced motion disables the transition.
 
+## Recruitment
+
+The header's Jobs link sits immediately to the right of Hall of Fame
+(`Hall of Fame`, `Jobs`, `Events`) and navigates in the same browser tab to the
+standalone `jobs/` page. The jobs index and each job detail page share the
+website header, language control, GitHub account dialog and mobile navigation.
+Every job posting is maintained as an independent Markdown file in the
+top-level `jobs/` directory (`jobs/README.md` documents the schema and is
+ignored by the builder).
+
+Write each posting as `jobs/<slug>.md` with YAML front matter and a Markdown
+body. Add an optional English translation at `jobs/<slug>.en.md` so switching
+the site language displays the English title, metadata, table of contents and
+body on the same `jobs/<slug>/` URL. The filename uses lowercase letters,
+digits and hyphens, and maps to `jobs/<slug>/`. Optional local images live
+under `jobs/assets/` and are validated with `image-size`. `gray-matter` reads
+the metadata, `marked` renders the body and builds the section table of
+contents, and `sanitize-html` restricts the published HTML to safe elements.
+JavaScript front matter is rejected.
+
+| Field | Meaning |
+| --- | --- |
+| `title`, `company`, `summary` | Role title, hiring organization and index description |
+| `location` | Work location |
+| `employment_type` | `full-time`, `intern`, `part-time` or `contract` |
+| `published_at` | Publication date, quoted as `YYYY-MM-DD` |
+| `status` | Optional `open` (default) or `closed` |
+| `work_mode` | Optional `onsite`, `hybrid` or `remote` |
+| `salary`, `experience` | Optional compensation range and experience requirement |
+| `updated_at` | Optional update date, quoted as `YYYY-MM-DD` |
+| `tags` | Optional list of skill or domain tags |
+| `apply_url`, `apply_email` | Optional application link (`http`/`https`) and contact email |
+| `featured` | Optional boolean to pin an open role at the top |
+
+The build produces `site-dist/jobs/index.html`, `site-dist/jobs/<slug>/index.html`,
+and copies `jobs/assets/` when present. `jobs` is reserved alongside the other
+top-level site sections so per-username profile routes never shadow the
+recruitment pages. See `jobs/README.md`, the example posting under
+`jobs/example-embedded-systems-engineer.md`, and `.agents/skills/mfcp-post-job/`
+for authoring and PR submission instructions.
+
 ## Events
 
 The header's Events link opens the independent `events/` page in a new

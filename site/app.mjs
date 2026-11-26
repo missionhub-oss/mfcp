@@ -264,11 +264,11 @@ if (lightbox) {
   });
 }
 
-const tocSidebar = document.querySelector('.blog-toc-sidebar');
+const tocSidebar = document.querySelector('.blog-toc-sidebar, .job-toc-sidebar');
 if (tocSidebar) {
   const tocLinks = [...tocSidebar.querySelectorAll('a[href^="#"]')];
   const linkById = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
-  const headings = [...document.querySelectorAll('.blog-body h2[id]')];
+  const headings = [...document.querySelectorAll('.blog-body h2[id], .job-body h2[id]')];
   const updateActiveToc = () => {
     const activeLang = document.documentElement.lang === 'en' ? 'en' : 'zh';
     const visibleHeadings = headings.filter(h => {
