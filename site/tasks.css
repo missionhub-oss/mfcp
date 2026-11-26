@@ -171,7 +171,13 @@
 @media(max-width:420px){.tasks-select-group{grid-template-columns:minmax(0,1fr)}.tasks-hero-buttons{flex-direction:column}.tasks-hero-buttons .button{width:100%}}
 @media(prefers-reduced-motion:reduce){.tasks-kpi:hover,.task-card:hover,.task-action-github.is-claim-cta:hover{transform:none}}
 html[data-theme="light"] .tasks-page{background-color:#eeece1;background-image:none}
-html[data-theme="light"] .tasks-page .eyebrow,html[data-theme="light"] .tasks-filter-label,html[data-theme="light"] .tasks-filter-meta strong,html[data-theme="light"] .tasks-reset-link,html[data-theme="light"] .task-number,html[data-theme="light"] .task-action-github{color:var(--red)}
+html[data-theme="light"] .tasks-page .eyebrow,html[data-theme="light"] .tasks-filter-label,html[data-theme="light"] .tasks-filter-meta strong,html[data-theme="light"] .tasks-reset-link,html[data-theme="light"] .task-number,html[data-theme="light"] .task-action-github:not(.is-claim-cta){color:var(--red)}
+html[data-theme="light"] .task-action-github.is-claim-cta{background:var(--red);border-color:var(--red);color:#fff;box-shadow:none}
+html[data-theme="light"] .task-action-github.is-claim-cta:hover{background:#8f1e00;border-color:#8f1e00;color:#fff}
+html[data-theme="light"] #level-filter-group .filter-chip[data-level="1"]{border-color:#2b8a5770;color:#175a36;background:#e6f2ea}
+html[data-theme="light"] #level-filter-group .filter-chip[data-level="2"]{border-color:#2b639970;color:#184a7a;background:#e4eef7}
+html[data-theme="light"] #level-filter-group .filter-chip[data-level="3"]{border-color:#6647a370;color:#4a2f82;background:#eee8f7}
+html[data-theme="light"] #level-filter-group .filter-chip[data-level="4"]{border-color:#9f6d2480;color:#754b0c;background:#f5ead6}
 html[data-theme="light"] .tasks-page .tasks-hero h1{text-shadow:none}
 html[data-theme="light"] .tasks-hero .section-description,html[data-theme="light"] .tasks-sync-indicator,html[data-theme="light"] .tasks-account-logged-out p,html[data-theme="light"] .tasks-kpi span,html[data-theme="light"] .task-meta-label,html[data-theme="light"] .task-stats-meta,html[data-theme="light"] .task-mentor-list{color:var(--muted)}
 html[data-theme="light"] .tasks-sync-bar,html[data-theme="light"] .tasks-kpi,html[data-theme="light"] .tasks-account-banner,html[data-theme="light"] .tasks-filters,html[data-theme="light"] .task-card{background:#f5f3ea;border-color:#14141422;box-shadow:none}

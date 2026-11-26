@@ -1,6 +1,7 @@
 ---
 title: "[Example] Open-Source Embedded Systems Engineer"
 company: Process Mission
+industry: Open-Source Infrastructure
 summary: Example posting covering Linux, Zephyr, and QEMU driver development, board bring-up, and upstream patch submission to demonstrate the MFCP recruitment Markdown format.
 location: Beijing / Remote
 employment_type: full-time

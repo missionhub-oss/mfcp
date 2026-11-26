@@ -1,6 +1,7 @@
 ---
 title: "[示例] 嵌入式系统开源工程师"
 company: Process Mission
+industry: 开源基础软件
 summary: 示例岗位：参与 Linux、Zephyr 与 QEMU 开源项目的驱动开发、板级适配和上游补丁提交，展示 MFCP 招聘页面的标准 Markdown 结构。
 location: 北京 / 远程
 employment_type: full-time

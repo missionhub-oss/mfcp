@@ -134,6 +134,7 @@ published_at: "2026-11-25"
     await writeFile(join(jobsDir, 'zephyr-intern.md'), `---
 title: Zephyr 嵌入式实习生
 company: Process Mission
+industry: 嵌入式操作系统
 summary: 参与 Zephyr RTOS 驱动开发与板级验证。
 location: 北京 / 远程
 employment_type: intern
@@ -157,6 +158,7 @@ apply_email: jobs@processmission.example
     await writeFile(join(jobsDir, 'linux-kernel-engineer.md'), `---
 title: Linux 内核工程师
 company: Process Mission
+industry: 开源基础软件
 summary: 负责 RISC-V 内核子系统研发与上游合入。
 location: 远程
 employment_type: full-time
@@ -185,6 +187,7 @@ apply_email: kernel-jobs@processmission.example
     await writeFile(join(jobsDir, 'linux-kernel-engineer.en.md'), `---
 title: Linux Kernel Engineer
 company: Process Mission
+industry: Open-Source Infrastructure
 summary: Work on RISC-V kernel subsystems and upstream patch series.
 location: Remote
 employment_type: full-time
@@ -220,12 +223,24 @@ Hands-on Linux kernel debugging and upstream collaboration experience.
     const indexPath = resolve(output, 'jobs/index.html');
     const index = load(await readFile(indexPath, 'utf8'));
     assert.equal(index('.jobs-empty').length, 0);
-    assert.equal(index('.jobs-count strong').text().trim(), '2');
+    assert.equal(index('#jobs-visible-count').text().trim(), '3');
+    assert.deepEqual(index('[data-job-company]').map((_, element) => index(element).attr('data-job-company')).get(), [
+      'all',
+      'Process Mission',
+      'MissionHub',
+    ]);
+    assert.deepEqual(index('[data-job-industry]').map((_, element) => index(element).attr('data-job-industry')).get(), [
+      'all',
+      '开源基础软件',
+      '嵌入式操作系统',
+    ]);
     assert.deepEqual(index('.job-card h2 a').map((_, element) => index(element).attr('href')).get(), [
       'linux-kernel-engineer/',
       'zephyr-intern/',
       'closed-role/',
     ]);
+    assert.equal(index('.job-card').first().attr('data-company'), 'Process Mission');
+    assert.equal(index('.job-card').first().attr('data-industry'), '开源基础软件');
     assert.equal(index('.job-card').first().hasClass('is-featured'), true);
     assert.equal(index('.job-card').last().hasClass('is-closed'), true);
 
@@ -239,7 +254,16 @@ Hands-on Linux kernel debugging and upstream collaboration experience.
     assert.equal(kernel('.job-toc-sidebar ul[data-lang-block="zh"] a').length, 2);
     assert.equal(kernel('.job-toc-sidebar ul[data-lang-block="en"] a').length, 2);
     assert.equal(kernel('.job-post-header .job-actions a[href="https://example.com/apply/linux-kernel"]').length, 1);
-    assert.equal(kernel('.job-post-header .job-actions a[href="mailto:kernel-jobs@processmission.example"]').length, 1);
+    const topMail = kernel('.job-post-header .job-actions a[href^="mailto:kernel-jobs@processmission.example"]');
+    assert.equal(topMail.length, 1);
+    assert.match(topMail.attr('href'), /\?subject=/);
+    assert.equal(topMail.attr('target'), undefined);
+    assert.match(topMail.text(), /投递邮箱/);
+    const bottomMail = kernel('.job-apply-bar .job-actions a[href^="mailto:kernel-jobs@processmission.example"]');
+    assert.equal(bottomMail.length, 1);
+    assert.match(bottomMail.attr('href'), /\?subject=/);
+    assert.equal(bottomMail.attr('target'), undefined);
+    assert.match(bottomMail.text(), /投递邮箱/);
     assert.equal(kernel('link[rel="canonical"]').attr('href'), 'https://missionhub-oss.github.io/mfcp/jobs/linux-kernel-engineer/');
     assert.equal(kernel('#main-nav a[aria-current="page"]').attr('href'), '../../jobs/');
 
@@ -247,6 +271,8 @@ Hands-on Linux kernel debugging and upstream collaboration experience.
     const intern = load(await readFile(internPath, 'utf8'));
     assert.equal(intern('.job-body script, .job-body iframe, .job-body [onclick]').length, 0);
     assert.equal(intern('.job-body .job-media img').length, 1);
+    assert.equal(intern('.job-post-header .job-actions a.is-primary[href^="mailto:jobs@processmission.example"]').length, 1);
+    assert.equal(intern('.job-apply-bar .job-actions a.is-primary[href^="mailto:jobs@processmission.example"]').length, 1);
     const imgSrc = intern('.job-body .job-media img').attr('src');
     assert.equal(imgSrc, '../assets/team.png');
     const imgPath = fileURLToPath(new URL(imgSrc, pathToFileURL(internPath)));
@@ -258,6 +284,7 @@ Hands-on Linux kernel debugging and upstream collaboration experience.
     const closed = load(await readFile(closedPath, 'utf8'));
     assert.equal(closed('.job-closed-banner').length, 1);
     assert.equal(closed('.job-actions').length, 0);
+    assert.equal(closed('.job-apply-bar').length, 0);
   } finally {
     await rm(jobsDir, {recursive: true, force: true});
     await rm(output, {recursive: true, force: true});

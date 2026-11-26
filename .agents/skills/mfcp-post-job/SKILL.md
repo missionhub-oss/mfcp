@@ -19,7 +19,7 @@ description: 按 missionhub-oss/mfcp 招聘规范将岗位信息整理为 jobs/ 
 | 必填 | `location`、`employment_type` | 工作地点；岗位类型（`full-time`、`intern`、`part-time`、`contract`） |
 | 必填 | `published_at` | 发布日期，默认使用北京时间当天 `YYYY-MM-DD` |
 | 必填 | 正文内容 | 岗位职责、任职要求、投递说明等真实内容 |
-| 推荐 | `work_mode`、`salary`、`experience` | 办公方式（`onsite`、`hybrid`、`remote`）、薪资范围、经验要求 |
+| 推荐 | `industry`、`work_mode`、`salary`、`experience` | 行业类型（用于招聘页行业筛选）、办公方式（`onsite`、`hybrid`、`remote`）、薪资范围、经验要求 |
 | 推荐 | `apply_url`、`apply_email`、`tags` | 投递链接（`http`/`https`）、投递邮箱、技术关键词列表 |
 | 可选 | `status`、`featured`、`updated_at` | 状态（默认 `open`，关闭填 `closed`）、是否置顶、更新日期 |
 | 可选 | 英文翻译 | 是否同步创建 `jobs/<slug>.en.md` 供英文页面无缝切换 |
@@ -46,6 +46,7 @@ Front Matter 模板：
 ---
 title: "岗位名称"
 company: "招聘单位"
+industry: "嵌入式操作系统"
 summary: "一句话概括岗位核心方向与职责。"
 location: "北京 / 远程"
 employment_type: full-time

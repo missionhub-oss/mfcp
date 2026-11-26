@@ -175,7 +175,7 @@ test('trusted site rendering publishes real records from a separate data directo
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
-    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'jobs.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.jpg', 'assets/ambassadors/kunyuanxu-star.jpg', 'assets/ambassadors/lianux-mm.jpg']) {
+    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'jobs.mjs', 'tasks.mjs', 'site.css', 'jobs.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.jpg', 'assets/ambassadors/kunyuanxu-star.jpg', 'assets/ambassadors/lianux-mm.jpg']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
     }
     for (const replay of events.replays.filter(replay => replay.slides)) {

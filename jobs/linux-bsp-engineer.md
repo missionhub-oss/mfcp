@@ -1,6 +1,7 @@
 ---
 title: Linux BSP 工程师
 company: Process Mission
+industry: 嵌入式操作系统
 summary: 负责嵌入式 Linux 操作系统在多 SoC 平台的 BSP 移植与板级 Bring-up，打通 U-Boot、内核、设备树与外设驱动的完整启动链路。
 location: 上海
 employment_type: full-time
