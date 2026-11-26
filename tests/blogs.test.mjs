@@ -23,13 +23,14 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     const indexPath = resolve(output, 'blogs/index.html');
     const index = load(await readFile(indexPath, 'utf8'));
     assert.deepEqual(blogs.map(post => post.slug), [
+      'zephyr-ivshmem-flat-driver',
       'rustsbi-security-firmware-2026',
       'humanize-runtime-and-flow-science',
       'qemu-riscv-performance-optimization',
       'linux-contribution-workflow',
       'zephyr-contribution-workflow',
     ]);
-    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-20', '2026-11-13', '2026-11-06', '2026-10-30', '2026-10-23']);
+    assert.deepEqual(blogs.map(post => post.published_at), ['2026-11-26', '2026-11-20', '2026-11-13', '2026-11-06', '2026-10-30', '2026-10-23']);
     assert.deepEqual(index('.blog-entry h2 a').map((_, element) => index(element).attr('href')).get(),
       blogs.map(post => `${post.slug}/`));
     assert.deepEqual(index('.blog-entry').map((_, element) => index(element).hasClass('is-reversed')).get(),
@@ -167,6 +168,24 @@ test('blogs publishes top-level Markdown articles with standalone URLs and valid
     assert.ok(!linux('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('&amp;'));
     const linuxHeadingIds = linux('.blog-body [id]').map((_, element) => linux(element).attr('id')).get();
     assert.equal(new Set(linuxHeadingIds).size, linuxHeadingIds.length);
+
+    const ivshmemPath = resolve(output, 'blogs/zephyr-ivshmem-flat-driver/index.html');
+    const ivshmem = load(await readFile(ivshmemPath, 'utf8'));
+    assert.equal(ivshmem('.blog-body[lang="zh-CN"] .blog-media img').length, 12);
+    assert.equal(ivshmem('.blog-body[lang="en"] .blog-media img').length, 12);
+    for (const lang of ['zh-CN', 'en']) {
+      const srcs = ivshmem(`.blog-body[lang="${lang}"] .blog-media img`).map((_, element) => ivshmem(element).attr('src')).get();
+      for (let i = 1; i <= 12; i += 1) {
+        const expected = `../assets/zephyr-ivshmem-flat-driver/slide-${String(i).padStart(2, '0')}.webp`;
+        assert.ok(srcs.includes(expected), `Missing slide image in ivshmem-flat (${lang}) blog: ${expected}`);
+      }
+    }
+    assert.ok(ivshmem('.blog-toc-sidebar ul[data-lang-block="zh"] a').length >= 5);
+    assert.ok(ivshmem('.blog-toc-sidebar ul[data-lang-block="en"] a').length >= 5);
+    assert.ok(ivshmem('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('Q&A'));
+    assert.ok(!ivshmem('.blog-toc-sidebar ul[data-lang-block="en"]').text().includes('&amp;'));
+    const ivshmemHeadingIds = ivshmem('.blog-body [id]').map((_, element) => ivshmem(element).attr('id')).get();
+    assert.equal(new Set(ivshmemHeadingIds).size, ivshmemHeadingIds.length);
   } finally {
     await rm(output, {recursive: true, force: true});
   }
