@@ -7,6 +7,7 @@ author: "刘楷"
 tags: ["Zephyr", "QEMU", "ivshmem-flat", "RTOS", "MFCP"]
 cover: "assets/zephyr-ivshmem-flat-driver/slide-01.webp"
 cover_alt: "Zephyr ivshmem-flat 驱动设计与验证封面页"
+video_url: "https://www.bilibili.com/video/BV1Pj17zsEk4/"
 slides_path: "slides/zephyr-ivshmem-flat-2026-11-26.pdf"
 ---
 
