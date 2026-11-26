@@ -91,8 +91,8 @@ GITHUB_TOKEN=$(gh auth token) npm run build:pages
 
 核对构建产物：
 
-- `site-dist/jobs/index.html` 包含新增或更新的岗位卡片，顺序、状态徽章与标签无误。
-- `site-dist/jobs/<slug>/index.html` 标题、元信息网格、目录锚点、投递按钮与中英文切换均正常渲染。
+- `site-dist/jobs/index.html` 包含新增或更新的岗位条目，排序、元信息行与摘要无误。
+- `site-dist/jobs/<slug>/index.html` 标题、元信息行、目录锚点、投递链接与中英文切换均正常渲染。
 - 若需人工目视核对，可启动本地静态服务：`python3 -m http.server 4173 --bind 127.0.0.1 --directory site-dist`，访问 `http://127.0.0.1:4173/jobs/`。
 
 ## 按仓库规范提交 Commit 与发起 PR

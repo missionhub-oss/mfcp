@@ -42,7 +42,14 @@ ranked entry. The footer contains one line of copyright and a GitHub link.
 The palette comes from the supplied Process Mission presentation template:
 primary red `#B22600`, accent `#E84C22`, black `#111111`, white `#FFFFFF` and
 warm paper `#EEECE1`. Neutral shades and transparent overlays support the
-web layout. The supplied transparent Process Mission PNG uses the page background.
+web layout. The header includes a daytime/nighttime theme toggle (`#theme-toggle`,
+remembered in `localStorage` as `mfcp.theme`, defaulting to system
+`prefers-color-scheme: light` when unset) whose daytime palette matches the
+MissionHub warm paper band (`#EEECE1` background, `#141414` ink, `#4D4C47` muted
+copy and `#B22600` accents), including warm-paper styling for the contributor
+growth roadmap and light-mode partner logo contrast adjustments (such as
+multiplying the RustSBI mark directly onto the paper background and inverting
+white-only marks). The supplied transparent Process Mission PNG uses the page background.
 Typography uses system sans-serif fonts with PingFang SC and Microsoft
 YaHei fallbacks. The large headings, generous spacing and geometric
 composition are informed by the supplied Humanfia website reference.
