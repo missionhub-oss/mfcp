@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { normalizeProfile, rulesSchema, governanceSchema, activeSettlement } from './lib/profile.mjs';
 import { loadHighlights } from './lib/highlights.mjs';
 import { loadHallOfFame } from './lib/hall-of-fame.mjs';
+import { loadJobs } from './lib/jobs.mjs';
 
 if (process.argv[2]) process.chdir(process.argv[2]);
 
@@ -35,6 +36,8 @@ const highlights = await loadHighlights('.', participants);
 console.log(`Validated ${highlights.size} open-source highlights records.`);
 const hallOfFame = await loadHallOfFame();
 console.log(`Validated ${hallOfFame.entries.length} hall of fame records.`);
+const jobs = await loadJobs();
+console.log(`Validated ${jobs.length} job postings.`);
 for (const year of (await readdir('programs')).filter(name => /^\d{4}$/.test(name))) {
   let files;
   try {files = await readdir(`programs/${year}/rules`);} catch (error) {if (error.code === 'ENOENT') continue; throw error;}

@@ -42,7 +42,16 @@ test('trusted site rendering publishes real records from a separate data directo
     assert.equal(eventPage('#main-nav a[target]').length, 0);
     assert.equal(eventPage('#main-nav a.nav-tasks-cta').attr('href'), '../tasks/');
     assert.equal($('#main-nav a[href="leaderboard/"]').length, 1);
+    assert.equal($('#main-nav a[href="jobs/"]').length, 1);
     assert.equal($('#main-nav a[href="events/"]').length, 1);
+    assert.deepEqual($('#main-nav a').slice(0, 3).map((_, element) => ({
+      href: $(element).attr('href'),
+      text: $(element).text().trim(),
+    })).get(), [
+      {href: 'leaderboard/', text: '名人堂'},
+      {href: 'jobs/', text: '招聘'},
+      {href: 'events/', text: '活动'},
+    ]);
     assert.equal($('#main-nav a[href="https://missionhub-oss.github.io/website/"]').text().trim(), '社区门户');
     assert.equal($('#main-nav a.nav-tasks-cta').attr('href'), 'tasks/');
     assert.equal($('#main-nav a[target]').length, 0);
@@ -166,7 +175,7 @@ test('trusted site rendering publishes real records from a separate data directo
       const target = $(element).attr('href').slice(1);
       assert.equal($(`[id="${target}"]`).length, 1, `Broken in-page navigation: ${target}`);
     });
-    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.jpg', 'assets/ambassadors/kunyuanxu-star.jpg', 'assets/ambassadors/lianux-mm.jpg']) {
+    for (const name of ['app.mjs', 'account.mjs', 'events.mjs', 'tasks.mjs', 'site.css', 'jobs.css', 'tasks.css', 'assets/process-mission.png', 'assets/mfcp-feishu-group.png', 'assets/ambassadors/luojia65.jpg', 'assets/ambassadors/kunyuanxu-star.jpg', 'assets/ambassadors/lianux-mm.jpg']) {
       assert.deepEqual(await readFile(join(output, name)), await readFile(join('site', name)));
     }
     for (const replay of events.replays.filter(replay => replay.slides)) {
