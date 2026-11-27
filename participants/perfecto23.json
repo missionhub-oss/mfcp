@@ -1,4 +1,39 @@
 {
   "github_id": 91355573,
-  "github_login": "Perfecto23"
+  "github_login": "Perfecto23",
+  "schema_version": 1,
+  "level": 1,
+  "experience": 0,
+  "contributions": [],
+  "promotions": [
+    {
+      "id": "registration-377",
+      "from": 0,
+      "to": 1,
+      "policy": {
+        "id": "2026.v7",
+        "sha": "ed218e6899f3236d6673805589e915a0e2f225a1"
+      },
+      "proof": {
+        "source": {
+          "kind": "registration",
+          "pr": 377
+        },
+        "actor": 91355573,
+        "at": "2026-11-27T03:12:34Z",
+        "digest": "fa3e34abafdde159bcf793150245804d41d2337f6ac8b298882fad87fcbe32bf",
+        "details": "{\"registration_pr\":\"https://github.com/missionhub-oss/mfcp/pull/377\",\"merge_commit\":\"384015d5e62480b0a6a1da80b6f935e55030b757\"}"
+      },
+      "reason": "Identity registration PR merged.",
+      "evidence": [],
+      "review_pr": null
+    }
+  ],
+  "adjustments": [],
+  "recognitions": [],
+  "last_event": {
+    "kind": "registration",
+    "pr": 377
+  },
+  "updated_at": "2026-11-27T03:12:34Z"
 }
